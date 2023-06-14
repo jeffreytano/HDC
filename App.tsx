@@ -1,14 +1,64 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SearchCh from "./component/SearchCh";
 
-export default function App() {
-  return (
-    <>
-      <TopBar />
-      <TeamPanel />
-      <TeamDetail />
-    </>
-  );
+const Stack = createNativeStackNavigator();
+
+// const MyStack = () => {
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator>
+//         <Stack.Screen
+//           name="Home"
+//           component={HomeScreen}
+//           options={{ title: "Welcome" }}
+//         />
+//         <Stack.Screen name="Profile" component={DetailsScreen} />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// };
+
+// function HomeScreen({ navigation }) {
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Home Screen</Text>
+//       <Button
+//         title="Go to Details"
+//         onPress={() => navigation.navigate("Details")}
+//       />
+//     </View>
+//   );
+// }
+
+// function DetailsScreen({ navigation }) {
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Details Screen</Text>
+//       <Button
+//         title="Go to Details... again"
+//         onPress={() => navigation.navigate("Details")}
+//       />
+//     </View>
+//   );
+// }
+
+interface Cha {
+  charName: string;
+  styleName: string;
+  level: number;
+  LimitBreak: number;
+  Rein: number;
+}
+
+// type team = {
+//   teamMember: Cha[];
+// };
+
+interface team {
+  teamMember: Cha[];
 }
 
 const styles = StyleSheet.create({
@@ -42,35 +92,49 @@ const topBarStyle = StyleSheet.create({
   },
 });
 
-function TeamPanel() {
+export default function App() {
+  const emptyCha = {
+    styleName: "Empty",
+    charName: "Empty",
+    level: 0,
+    LimitBreak: 0,
+    Rein: 0,
+  } as Cha;
+  const Team: team = {
+    teamMember: Array(6).fill(emptyCha),
+  };
+  const Team2 = Array(6).fill(emptyCha);
+  return (
+    <NavigationContainer>
+      <TopBar />
+      <TeamPanel teamMember={Team2} />
+      <TeamDetail />
+    </NavigationContainer>
+  );
+}
+
+function TeamPanel(input: team) {
+  const teams = input as team;
   return (
     <View
       style={{
         flex: 1,
       }}
     >
-      <CharSlot />
-      <CharSlot />
-      <CharSlot />
-      <CharSlot />
-      <CharSlot />
-      <CharSlot />
+      {teams.teamMember.map((item, index) => (
+        <CharSlot
+          styleName={item.styleName}
+          charName={item.charName}
+          level={item.level}
+          Rein={item.Rein}
+          LimitBreak={item.LimitBreak}
+        />
+      ))}
     </View>
   );
 }
 
-function TeamDetail() {
-  return (
-    <View
-      style={{
-        backgroundColor: "green",
-        height: 100,
-      }}
-    ></View>
-  );
-}
-
-function CharSlot() {
+function CharSlot(input: Cha) {
   let bColor: String = "#fff";
   return (
     <View
@@ -83,9 +147,32 @@ function CharSlot() {
       }}
     >
       <CharIcon></CharIcon>
-      <CharStyle></CharStyle>
-      <CharLevel></CharLevel>
+      <CharStyle
+        styleName={input.styleName}
+        charName={input.charName}
+        level={input.level}
+        Rein={input.Rein}
+        LimitBreak={input.LimitBreak}
+      ></CharStyle>
+      <CharLevel
+        styleName={input.styleName}
+        charName={input.charName}
+        level={input.level}
+        Rein={input.Rein}
+        LimitBreak={input.LimitBreak}
+      ></CharLevel>
     </View>
+  );
+}
+
+function TeamDetail() {
+  return (
+    <View
+      style={{
+        backgroundColor: "green",
+        height: 100,
+      }}
+    ></View>
   );
 }
 
@@ -107,18 +194,24 @@ function CharIcon() {
 //   <Image source={require(charImage)} style={{ width: 40, height: 40 }} />
 // );
 
-function CharStyle() {
+function CharStyle(input: Cha) {
   return (
     <View style={{ flex: 1, backgroundColor: "red" }}>
-      <Text>Styles</Text>
+      <Text>{input.styleName}</Text>
     </View>
   );
 }
 
-function CharLevel() {
+function CharLevel(input: Cha) {
   return (
     <View style={{ aspectRatio: 1 / 1, backgroundColor: "purple" }}>
-      <Text>Level</Text>
+      <Button title="Details"></Button>
+      <Text>
+        LimitBreaked: {input.LimitBreak}
+        {"\n"} Level: {input.level}
+        {"\n"} Reincarnation: {input.Rein}
+        {"\n"}
+      </Text>
     </View>
   );
 }
