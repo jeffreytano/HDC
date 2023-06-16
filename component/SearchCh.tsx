@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import Cha from "./TeamBuilding";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface ChData {
   id: string;
@@ -90,6 +91,11 @@ const DATA: ChData[] = [
 function SearchCh() {
   type ItemProps = { item: ChData };
 
+  const navigation = useNavigation();
+  const route = useRoute();
+  const posID = route.params;
+  console.log(posID, "From Searchch", typeof posID);
+
   const Item = ({ item }: ItemProps) => (
     <TouchableWithoutFeedback onPress={() => console.log(item.chName)}>
       <View
@@ -101,7 +107,14 @@ function SearchCh() {
           flexDirection: "row",
         }}
       >
-        <Image source={require("./icon/21.png")}></Image>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.goBack();
+            // navigation.navigate("TeamBuild", item.id);
+          }}
+        >
+          <Image source={require("./icon/21.png")}></Image>
+        </TouchableWithoutFeedback>
         <Text
           style={{
             marginHorizontal: 10,
@@ -124,10 +137,10 @@ function SearchCh() {
   const handleSearch = (query: string) => {
     if (query) {
       const newData = DATA.filter((item) => {
-        const itemData = item.chName;
-        // ? item.chName.toUpperCase()
-        // : "".toUpperCase();
-        const textData = query;
+        const itemData = item.chName
+          ? item.chName.toUpperCase()
+          : "".toUpperCase();
+        const textData = query.toUpperCase();
         console.log(itemData);
         console.log(textData);
         console.log(itemData.indexOf(textData));
@@ -144,6 +157,11 @@ function SearchCh() {
 
   return (
     <>
+      <View
+        style={{
+          height: 70,
+        }}
+      ></View>
       <TextInput
         style={{
           marginHorizontal: 10,
@@ -161,7 +179,11 @@ function SearchCh() {
       ></TextInput>
 
       <View>
-        <FlatList data={resultData} renderItem={oneCh}></FlatList>
+        <FlatList
+          data={resultData}
+          renderItem={oneCh}
+          keyExtractor={(data) => data.id}
+        ></FlatList>
       </View>
     </>
   );

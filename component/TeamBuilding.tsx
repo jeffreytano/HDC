@@ -1,7 +1,16 @@
 import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { TouchableHighlight } from "react-native";
+import { useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from "@react-navigation/native";
 
 function TeamBuilding() {
   const emptyCha = {
+    posID: -1,
     styleName: "Empty",
     charName: "Empty",
     level: 0,
@@ -22,6 +31,7 @@ function TeamBuilding() {
 }
 
 export interface Cha {
+  posID: number;
   charName: string;
   styleName: string;
   level: number;
@@ -58,6 +68,7 @@ function TeamPanel(input: team) {
     >
       {teams.teamMember.map((item, index) => (
         <CharSlot
+          posID={index}
           styleName={item.styleName}
           charName={item.charName}
           level={item.level}
@@ -81,8 +92,16 @@ function CharSlot(input: Cha) {
         flexDirection: "row",
       }}
     >
-      <CharIcon></CharIcon>
+      <CharIcon
+        posID={input.posID}
+        styleName={input.styleName}
+        charName={input.charName}
+        level={input.level}
+        Rein={input.Rein}
+        LimitBreak={input.LimitBreak}
+      ></CharIcon>
       <CharStyle
+        posID={input.posID}
         styleName={input.styleName}
         charName={input.charName}
         level={input.level}
@@ -90,6 +109,7 @@ function CharSlot(input: Cha) {
         LimitBreak={input.LimitBreak}
       ></CharStyle>
       <CharLevel
+        posID={input.posID}
         styleName={input.styleName}
         charName={input.charName}
         level={input.level}
@@ -111,18 +131,36 @@ function TeamDetail() {
   );
 }
 
-function CharIcon() {
+function CharIcon(prop: Cha) {
+  const navigation = useNavigation();
+  const route = useRoute();
+  // const [selected, setSelected] = useState(-1);
+  const IsFocused = useIsFocused();
+  let sid: string = "Empty";
   let empty = true;
+  // if (IsFocused) {
+  //   sid = route.params;
+  //   console.log(sid);
+  // }
   let charImage = "./assets/default.png";
+  const changeChar = (item: number) => {
+    // setSelected(item);
+    // console.log("seleced: ", selected);
+    navigation.navigate("CharacterSearch", item);
+  };
+
   return (
-    <View
+    <TouchableHighlight
       style={{
         aspectRatio: 1 / 1,
         backgroundColor: "orange",
       }}
+      onPress={() => changeChar(prop.posID)}
     >
-      <Text>Icon</Text>
-    </View>
+      <View>
+        <Text>Icon</Text>
+      </View>
+    </TouchableHighlight>
   );
 }
 // return (
