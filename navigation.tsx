@@ -7,6 +7,7 @@ import SearchCh from "./component/SearchCh";
 import Ionicons from "@expo/vector-icons";
 import { createAppContainer } from "react-navigation";
 import { createContext, useState } from "react";
+import BossBattle from "./component/BossBattle";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -37,7 +38,7 @@ const emptySlot = {
 
 // export const Context = createContext(state);
 
-function TabGroup() {
+function StackGroup() {
   return (
     // <Context.Provider value={{}}>
     <Stack.Navigator
@@ -45,7 +46,7 @@ function TabGroup() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="TeamBuild" component={Home} />
+      <Stack.Screen name="TeamBuild" component={TeamBuilding} />
       <Stack.Screen name="CharacterSearch" component={SearchCh} />
     </Stack.Navigator>
     // </Context.Provider>
@@ -61,15 +62,15 @@ function TabGroup() {
 //   }
 // }
 
-function Home() {
+function TabGroup() {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Tab.Screen name="TeamBuild" component={TeamBuilding} />
-      <Tab.Screen name="Character Search" component={SearchCh} />
+      <Tab.Screen name="StackGroup" component={StackGroup} />
+      <Tab.Screen name="Boss" component={BossBattle} />
     </Tab.Navigator>
   );
 }

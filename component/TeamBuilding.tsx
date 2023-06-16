@@ -17,14 +17,17 @@ function TeamBuilding() {
     LimitBreak: 0,
     Rein: 0,
   } as Cha;
-  const Team: team = {
-    teamMember: Array(6).fill(emptyCha),
-  };
-  const Team2 = Array(6).fill(emptyCha);
+  const emptyTeam = Array(6).fill(emptyCha);
+  const [team, setTeam] = useState(emptyTeam);
+  const route = useRoute();
+
+  let Team = Array(6).fill(emptyCha);
+  console.log(Team);
   return (
     <>
       <TopBar />
-      <TeamPanel teamMember={Team2} />
+      {/* <TeamPanel teamMember={Team} /> */}
+      <TeamPanel teamMember={team} />
       {/* <TeamDetail /> */}
     </>
   );
@@ -59,22 +62,24 @@ function TopBar() {
 }
 
 function TeamPanel(input: team) {
-  const teams = input as team;
+  // const teams = input as team;
   return (
     <View
       style={{
         flex: 1,
       }}
     >
-      {teams.teamMember.map((item, index) => (
-        <CharSlot
-          posID={index}
-          styleName={item.styleName}
-          charName={item.charName}
-          level={item.level}
-          Rein={item.Rein}
-          LimitBreak={item.LimitBreak}
-        />
+      {input.teamMember.map((item, index) => (
+        <>
+          <CharSlot
+            posID={index}
+            styleName={item.styleName}
+            charName={item.charName}
+            level={item.level}
+            Rein={item.Rein}
+            LimitBreak={item.LimitBreak}
+          />
+        </>
       ))}
     </View>
   );
@@ -82,6 +87,7 @@ function TeamPanel(input: team) {
 
 function CharSlot(input: Cha) {
   let bColor: String = "#fff";
+  console.log("key", input.posID);
   return (
     <View
       style={{
@@ -136,12 +142,6 @@ function CharIcon(prop: Cha) {
   const route = useRoute();
   // const [selected, setSelected] = useState(-1);
   const IsFocused = useIsFocused();
-  let sid: string = "Empty";
-  let empty = true;
-  // if (IsFocused) {
-  //   sid = route.params;
-  //   console.log(sid);
-  // }
   let charImage = "./assets/default.png";
   const changeChar = (item: number) => {
     // setSelected(item);

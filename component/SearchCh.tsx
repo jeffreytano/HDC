@@ -109,8 +109,8 @@ function SearchCh() {
       >
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.goBack();
-            // navigation.navigate("TeamBuild", item.id);
+            // navigation.goBack();
+            navigation.navigate("TeamBuild", item.id);
           }}
         >
           <Image source={require("./icon/21.png")}></Image>
