@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import Cha from "./TeamBuilding";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import CharDataBase from "./CharacterData/CharDataBase";
 
 interface ChData {
   id: string;
@@ -19,72 +20,85 @@ interface ChData {
   rarity: string;
   Ult: string;
   Skill: string;
+  SearchKey: string;
 }
 
 const DATA: ChData[] = [
   {
-    id: "1",
-    chName: "Kayamori Ruka",
-    styleName: "Rock star",
+    id: "1-1",
+    chName: "茅森月歌",
+    styleName: "Attack or Music",
     rarity: "A",
     Ult: "N/A",
-    Skill: "",
+    Skill: "クロス斬り",
+    SearchKey: "茅森月歌 kayamoriruka Attack or Music",
   },
   {
-    id: "2",
-    chName: "Izumi Yuki",
-    styleName: "Rock star",
+    id: "1-2",
+    chName: "茅森月歌",
+    styleName: "戦場のフレット",
     rarity: "S",
     Ult: "N/A",
-    Skill: "",
+    Skill: "フルブレイカー",
+    SearchKey: "茅森月歌 kayamoriruka kayamori ruka 戦場のフレット",
   },
   {
-    id: "3",
-    chName: "Asakura Karen",
-    styleName: "Rock star",
+    id: "1-3",
+    chName: "茅森月歌",
+    styleName: "閃光のサーキットバースト",
     rarity: "SS",
-    Ult: "N/A",
-    Skill: "",
+    Ult: "夢幻泡影",
+    Skill: "リカバー",
+    SearchKey: "茅森月歌 kayamori ruka 閃光のサーキットバースト",
   },
   {
-    id: "4",
-    chName: "Toujo Tsukasa",
-    styleName: "Rock star",
-    rarity: "SS",
+    id: "2-1",
+    chName: "和泉ユキ",
+    styleName: "Attack or March",
+    rarity: "A",
     Ult: "N/A",
-    Skill: "",
+    Skill: "ブレイクバースト",
+    SearchKey:
+      "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき Attack or March",
   },
   {
-    id: "5",
-    chName: "Aikawa megumi",
-    styleName: "Rock star",
-    rarity: "SS",
+    id: "2-2",
+    chName: "和泉ユキ",
+    styleName: "夢幻のSleeping Ocelot",
+    rarity: "S",
     Ult: "N/A",
-    Skill: "",
+    Skill: "クールダウン",
+    SearchKey:
+      "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき 夢幻のSleeping Ocelot",
   },
   {
-    id: "6",
-    chName: "Kunimi Tama",
-    styleName: "Rock star",
+    id: "2-3",
+    chName: "和泉ユキ",
+    styleName: "",
     rarity: "SS",
-    Ult: "N/A",
+    Ult: "流星",
     Skill: "",
+    SearchKey: "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき",
   },
   {
-    id: "7",
-    chName: "Asakura Karen",
-    styleName: "Rock star",
-    rarity: "SS",
+    id: "3-1",
+    chName: "逢川めぐみ",
+    styleName: "Plain or Wild",
+    rarity: "A",
     Ult: "N/A",
-    Skill: "",
+    Skill: "スタンブレード",
+    SearchKey:
+      "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Plain or Wild",
   },
   {
-    id: "8",
-    chName: "Asakura Karen",
-    styleName: "Rock star",
-    rarity: "SS",
+    id: "3-2",
+    chName: "逢川めぐみ",
+    styleName: "Impact Stream",
+    rarity: "S",
     Ult: "N/A",
-    Skill: "",
+    Skill: "ハードブレード",
+    SearchKey:
+      "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Impact Stream",
   },
 ];
 
@@ -94,10 +108,16 @@ function SearchCh() {
   const navigation = useNavigation();
   const route = useRoute();
   const posID = route.params;
+  // const { posID, setSelected } = route.params;
   console.log(posID, "From Searchch", typeof posID);
 
   const Item = ({ item }: ItemProps) => (
-    <TouchableWithoutFeedback onPress={() => console.log(item.chName)}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        // @ts-ignore
+        navigation.navigate("TeamBuild", item.id);
+      }}
+    >
       <View
         style={{
           backgroundColor: "#CCCCCC",
@@ -107,14 +127,16 @@ function SearchCh() {
           flexDirection: "row",
         }}
       >
-        <TouchableWithoutFeedback
+        {/* <TouchableWithoutFeedback
           onPress={() => {
+            // setSelected(posID);
             // navigation.goBack();
+            // @ts-ignore
             navigation.navigate("TeamBuild", item.id);
           }}
-        >
-          <Image source={require("./icon/21.png")}></Image>
-        </TouchableWithoutFeedback>
+        > */}
+        <Image source={require("./icon/21.png")}></Image>
+        {/* </TouchableWithoutFeedback> */}
         <Text
           style={{
             marginHorizontal: 10,
@@ -137,16 +159,16 @@ function SearchCh() {
   const handleSearch = (query: string) => {
     if (query) {
       const newData = DATA.filter((item) => {
-        const itemData = item.chName
-          ? item.chName.toUpperCase()
+        const itemData = item.SearchKey
+          ? item.SearchKey.toUpperCase()
           : "".toUpperCase();
         const textData = query.toUpperCase();
-        console.log(itemData);
-        console.log(textData);
-        console.log(itemData.indexOf(textData));
+        // console.log(itemData);
+        // console.log(textData);
+        // console.log(itemData.indexOf(textData));
         return itemData.indexOf(textData) > -1;
       });
-      console.log(newData);
+      // console.log(newData);
       setResultData(newData);
       setQueryKeyWords(query);
     } else {

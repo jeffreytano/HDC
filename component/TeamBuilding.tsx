@@ -146,6 +146,7 @@ function CharIcon(prop: Cha) {
   const changeChar = (item: number) => {
     // setSelected(item);
     // console.log("seleced: ", selected);
+    // @ts-ignore
     navigation.navigate("CharacterSearch", item);
   };
 

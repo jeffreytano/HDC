@@ -7,8 +7,9 @@ import SearchCh from "./component/SearchCh";
 import Ionicons from "@expo/vector-icons";
 import { createAppContainer } from "react-navigation";
 import { createContext, useState } from "react";
+import TeamBuildingTesting from "./component/TeamBuildingTestingVersion";
 import BossBattle from "./component/BossBattle";
-
+import TeamBuildVersion2 from "./component/TeamBuildingTestingVersion";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +47,7 @@ function StackGroup() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="TeamBuild" component={TeamBuilding} />
+      <Stack.Screen name="TeamBuild" component={TeamBuildVersion2} />
       <Stack.Screen name="CharacterSearch" component={SearchCh} />
     </Stack.Navigator>
     // </Context.Provider>
