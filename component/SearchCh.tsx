@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import Cha from "./TeamBuilding";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import CharDataBase from "./CharacterData/CharDataBase";
+import { CharDataBase } from "./CharacterData/CharDataBase";
 
 interface ChData {
   id: string;
@@ -23,84 +23,85 @@ interface ChData {
   SearchKey: string;
 }
 
-const DATA: ChData[] = [
-  {
-    id: "1-1",
-    chName: "茅森月歌",
-    styleName: "Attack or Music",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "クロス斬り",
-    SearchKey: "茅森月歌 kayamoriruka Attack or Music",
-  },
-  {
-    id: "1-2",
-    chName: "茅森月歌",
-    styleName: "戦場のフレット",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "フルブレイカー",
-    SearchKey: "茅森月歌 kayamoriruka kayamori ruka 戦場のフレット",
-  },
-  {
-    id: "1-3",
-    chName: "茅森月歌",
-    styleName: "閃光のサーキットバースト",
-    rarity: "SS",
-    Ult: "夢幻泡影",
-    Skill: "リカバー",
-    SearchKey: "茅森月歌 kayamori ruka 閃光のサーキットバースト",
-  },
-  {
-    id: "2-1",
-    chName: "和泉ユキ",
-    styleName: "Attack or March",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "ブレイクバースト",
-    SearchKey:
-      "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき Attack or March",
-  },
-  {
-    id: "2-2",
-    chName: "和泉ユキ",
-    styleName: "夢幻のSleeping Ocelot",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "クールダウン",
-    SearchKey:
-      "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき 夢幻のSleeping Ocelot",
-  },
-  {
-    id: "2-3",
-    chName: "和泉ユキ",
-    styleName: "",
-    rarity: "SS",
-    Ult: "流星",
-    Skill: "",
-    SearchKey: "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき",
-  },
-  {
-    id: "3-1",
-    chName: "逢川めぐみ",
-    styleName: "Plain or Wild",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "スタンブレード",
-    SearchKey:
-      "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Plain or Wild",
-  },
-  {
-    id: "3-2",
-    chName: "逢川めぐみ",
-    styleName: "Impact Stream",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "ハードブレード",
-    SearchKey:
-      "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Impact Stream",
-  },
-];
+const DATA: ChData[] = CharDataBase;
+// [
+//   {
+//     id: "1-1",
+//     chName: "茅森月歌",
+//     styleName: "Attack or Music",
+//     rarity: "A",
+//     Ult: "N/A",
+//     Skill: "クロス斬り",
+//     SearchKey: "茅森月歌 kayamoriruka Attack or Music",
+//   },
+//   {
+//     id: "1-2",
+//     chName: "茅森月歌",
+//     styleName: "戦場のフレット",
+//     rarity: "S",
+//     Ult: "N/A",
+//     Skill: "フルブレイカー",
+//     SearchKey: "茅森月歌 kayamoriruka kayamori ruka 戦場のフレット",
+//   },
+//   {
+//     id: "1-3",
+//     chName: "茅森月歌",
+//     styleName: "閃光のサーキットバースト",
+//     rarity: "SS",
+//     Ult: "夢幻泡影",
+//     Skill: "リカバー",
+//     SearchKey: "茅森月歌 kayamori ruka 閃光のサーキットバースト",
+//   },
+//   {
+//     id: "2-1",
+//     chName: "和泉ユキ",
+//     styleName: "Attack or March",
+//     rarity: "A",
+//     Ult: "N/A",
+//     Skill: "ブレイクバースト",
+//     SearchKey:
+//       "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき Attack or March",
+//   },
+//   {
+//     id: "2-2",
+//     chName: "和泉ユキ",
+//     styleName: "夢幻のSleeping Ocelot",
+//     rarity: "S",
+//     Ult: "N/A",
+//     Skill: "クールダウン",
+//     SearchKey:
+//       "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき 夢幻のSleeping Ocelot",
+//   },
+//   {
+//     id: "2-3",
+//     chName: "和泉ユキ",
+//     styleName: "",
+//     rarity: "SS",
+//     Ult: "流星",
+//     Skill: "",
+//     SearchKey: "和泉ユキ izumiyuki izumi yuki yukki ユッキ ゆっき 和泉ゆき",
+//   },
+//   {
+//     id: "3-1",
+//     chName: "逢川めぐみ",
+//     styleName: "Plain or Wild",
+//     rarity: "A",
+//     Ult: "N/A",
+//     Skill: "スタンブレード",
+//     SearchKey:
+//       "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Plain or Wild",
+//   },
+//   {
+//     id: "3-2",
+//     chName: "逢川めぐみ",
+//     styleName: "Impact Stream",
+//     rarity: "S",
+//     Ult: "N/A",
+//     Skill: "ハードブレード",
+//     SearchKey:
+//       "逢川めぐみ aikawamegumi aikawa megumi meguminn めぐみん Impact Stream",
+//   },
+// ];
 
 function SearchCh() {
   type ItemProps = { item: ChData };
@@ -205,6 +206,7 @@ function SearchCh() {
           data={resultData}
           renderItem={oneCh}
           keyExtractor={(data) => data.id}
+          contentContainerStyle={{ paddingBottom: 110 }}
         ></FlatList>
       </View>
     </>

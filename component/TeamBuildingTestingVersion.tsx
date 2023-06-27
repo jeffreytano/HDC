@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Button } from "react-native";
-import { TouchableHighlight } from "react-native";
+import { TouchableHighlight, TextInput } from "react-native";
 import { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -15,72 +15,8 @@ interface ChData {
   Ult: string;
   Skill: string;
 }
-const DATA: ChData[] = [
-  {
-    id: "1-1",
-    chName: "茅森月歌",
-    styleName: "Attack or Music",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "クロス斬り",
-  },
-  {
-    id: "1-2",
-    chName: "茅森月歌",
-    styleName: "戦場のフレット",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "フルブレイカー",
-  },
-  {
-    id: "1-3",
-    chName: "茅森月歌",
-    styleName: "閃光のサーキットバースト",
-    rarity: "SS",
-    Ult: "夢幻泡影",
-    Skill: "リカバー",
-  },
-  {
-    id: "2-1",
-    chName: "和泉ユキ",
-    styleName: "Attack or March",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "ブレイクバースト",
-  },
-  {
-    id: "2-2",
-    chName: "和泉ユキ",
-    styleName: "夢幻のSleeping Ocelot",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "クールダウン",
-  },
-  {
-    id: "2-3",
-    chName: "和泉ユキ",
-    styleName: "",
-    rarity: "SS",
-    Ult: "流星",
-    Skill: "",
-  },
-  {
-    id: "3-1",
-    chName: "逢川めぐみ",
-    styleName: "Plain or Wild",
-    rarity: "A",
-    Ult: "N/A",
-    Skill: "スタンブレード",
-  },
-  {
-    id: "3-2",
-    chName: "逢川めぐみ",
-    styleName: "Impact Stream",
-    rarity: "S",
-    Ult: "N/A",
-    Skill: "ハードブレード",
-  },
-];
+import { CharDataBase } from "./CharacterData/CharDataBase";
+const DATA: ChData[] = CharDataBase;
 
 function TeamBuildVersion2() {
   return (
@@ -217,6 +153,15 @@ function CharStyle({ posID, styleID }) {
   });
   return (
     <View style={{ flex: 1, borderWidth: 1, borderColor: "lightblue" }}>
+      {/* <Text>
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
+      </Text> */}
       <Text>{found?.chName}</Text>
       <Text>{found?.styleName}</Text>
     </View>
@@ -229,9 +174,15 @@ function CharLevel() {
       style={{ aspectRatio: 2 / 3, borderWidth: 1, borderColor: "lightblue" }}
     >
       <Button title="Details"></Button>
-      <Text>レベル</Text>
-      <Text>限界突破</Text>
-      <Text>転生</Text>
+      <Text>
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
     </View>
   );
 }
