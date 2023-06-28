@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Button } from "react-native";
-import { TouchableHighlight } from "react-native";
+import { TouchableHighlight, TextInput, ScrollView } from "react-native";
 import { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -7,77 +7,72 @@ import {
   useRoute,
   useIsFocused,
 } from "@react-navigation/native";
+interface ChData {
+  id: string;
+  chName: string;
+  styleName: string;
+  rarity: string;
+  Ult: string;
+  Skill: string;
+}
+import { CharDataBase } from "./CharacterData/CharDataBase";
+const DATA: ChData[] = CharDataBase;
 
-function TeamBuilding() {
-  const emptyCha = {
-    posID: -1,
-    styleName: "Empty",
-    charName: "Empty",
-    level: 0,
-    LimitBreak: 0,
-    Rein: 0,
-  } as Cha;
-  const emptyTeam = Array(6).fill(emptyCha);
-  const [team, setTeam] = useState(emptyTeam);
-  const route = useRoute();
-
-  let Team = Array(6).fill(emptyCha);
-  console.log(Team);
+function TeamBuild() {
   return (
-    <>
+    <ScrollView>
       <TopBar />
-      {/* <TeamPanel teamMember={Team} /> */}
-      <TeamPanel teamMember={team} />
-      {/* <TeamDetail /> */}
-    </>
+      <TeamPanel />
+    </ScrollView>
   );
 }
 
-export interface Cha {
-  posID: number;
-  charName: string;
-  styleName: string;
-  level: number;
-  LimitBreak: number;
-  Rein: number;
-}
-
-// type team = {
-//   teamMember: Cha[];
-// };
-
-interface team {
-  teamMember: Cha[];
+interface teamList {
+  style: string[];
 }
 
 function TopBar() {
   return (
     <View
       style={{
-        backgroundColor: "blue",
         height: 70,
       }}
     ></View>
   );
 }
 
-function TeamPanel(input: team) {
-  // const teams = input as team;
+function TeamPanel() {
+  const emptyTeam = Array(6).fill("Empty");
+  // const emptyState = Array(6).fill(false);
+  // const [selected, setSelected] = useState(emptyState);
+  const [selected, setSelected] = useState(-1);
+  const [Team, setTeam] = useState(emptyTeam);
+  const route = useRoute();
+  // let newTeam = Team;
+  // newTeam[selected] = route.params;
+  // Team.map((item,index)=>{
+  //   if(selected[index]){
+  //     Team[index] = route.params;
+  //   }
+  // })
+  Team[selected] = route.params;
+
+  console.log(Team);
+
+  // setTeam(newTeam);
   return (
     <View
       style={{
         flex: 1,
       }}
     >
-      {input.teamMember.map((item, index) => (
+      {Team.map((i, index) => (
         <>
           <CharSlot
+            styleID={i}
+            key={index}
             posID={index}
-            styleName={item.styleName}
-            charName={item.charName}
-            level={item.level}
-            Rein={item.Rein}
-            LimitBreak={item.LimitBreak}
+            setSelected={setSelected}
           />
         </>
       ))}
@@ -85,43 +80,24 @@ function TeamPanel(input: team) {
   );
 }
 
-function CharSlot(input: Cha) {
+//@ts-ignore
+function CharSlot({ posID, styleID, setSelected }) {
   let bColor: String = "#fff";
-  console.log("key", input.posID);
   return (
     <View
       style={{
-        borderWidth: 1,
-        borderColor: "lightblue",
         backgroundColor: "#fff",
         flex: 1,
         flexDirection: "row",
       }}
     >
       <CharIcon
-        posID={input.posID}
-        styleName={input.styleName}
-        charName={input.charName}
-        level={input.level}
-        Rein={input.Rein}
-        LimitBreak={input.LimitBreak}
+        posID={posID}
+        styleID={styleID}
+        setSelected={setSelected}
       ></CharIcon>
-      <CharStyle
-        posID={input.posID}
-        styleName={input.styleName}
-        charName={input.charName}
-        level={input.level}
-        Rein={input.Rein}
-        LimitBreak={input.LimitBreak}
-      ></CharStyle>
-      <CharLevel
-        posID={input.posID}
-        styleName={input.styleName}
-        charName={input.charName}
-        level={input.level}
-        Rein={input.Rein}
-        LimitBreak={input.LimitBreak}
-      ></CharLevel>
+      <CharStyle posID={posID} styleID={styleID}></CharStyle>
+      <CharLevel></CharLevel>
     </View>
   );
 }
@@ -137,26 +113,28 @@ function TeamDetail() {
   );
 }
 
-function CharIcon(prop: Cha) {
+//@ts-ignore
+function CharIcon({ posID, styleID, setSelected }) {
   const navigation = useNavigation();
   const route = useRoute();
-  // const [selected, setSelected] = useState(-1);
   const IsFocused = useIsFocused();
   let charImage = "./assets/default.png";
   const changeChar = (item: number) => {
-    // setSelected(item);
-    // console.log("seleced: ", selected);
     // @ts-ignore
     navigation.navigate("CharacterSearch", item);
+    setTimeout(() => {
+      setSelected(item);
+    }, 170);
   };
 
   return (
     <TouchableHighlight
       style={{
         aspectRatio: 1 / 1,
-        backgroundColor: "orange",
+        borderWidth: 1,
+        borderColor: "lightblue",
       }}
-      onPress={() => changeChar(prop.posID)}
+      onPress={() => changeChar(posID)}
     >
       <View>
         <Text>Icon</Text>
@@ -168,26 +146,45 @@ function CharIcon(prop: Cha) {
 //   <Image source={require(charImage)} style={{ width: 40, height: 40 }} />
 // );
 
-function CharStyle(input: Cha) {
+//@ts-ignore
+function CharStyle({ posID, styleID }) {
+  const found = DATA.find((obj) => {
+    return obj.id === styleID;
+  });
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
-      <Text>{input.styleName}</Text>
+    <View style={{ flex: 1, borderWidth: 1, borderColor: "lightblue" }}>
+      {/* <Text>
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
+      </Text> */}
+      <Text>{found?.chName}</Text>
+      <Text>{found?.styleName}</Text>
     </View>
   );
 }
 
-function CharLevel(input: Cha) {
+function CharLevel() {
   return (
-    <View style={{ aspectRatio: 1 / 1, backgroundColor: "purple" }}>
+    <View
+      style={{ aspectRatio: 2 / 3, borderWidth: 1, borderColor: "lightblue" }}
+    >
       <Button title="Details"></Button>
       <Text>
-        LimitBreaked: {input.LimitBreak}
-        {"\n"} Level: {input.level}
-        {"\n"} Reincarnation: {input.Rein}
-        {"\n"}
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
       </Text>
     </View>
   );
 }
 
-export default TeamBuilding;
+export default TeamBuild;

@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useState } from "react";
-import Cha from "./TeamBuilding";
+import Cha from "./TeamBuildingOriginalBackup";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CharDataBase } from "./CharacterData/CharDataBase";
 
