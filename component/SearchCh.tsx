@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import Cha from "./TeamBuildingOriginalBackup";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { CharDataBase } from "./CharacterData/CharDataBase";
+import { CharDataBase } from "./CharDataBase";
 
 interface ChData {
   id: string;
@@ -21,6 +21,7 @@ interface ChData {
   Ult: string;
   Skill: string;
   SearchKey: string;
+  image: any;
 }
 
 const DATA: ChData[] = CharDataBase;
@@ -123,6 +124,7 @@ function SearchCh() {
         style={{
           backgroundColor: "#CCCCCC",
           padding: 10,
+          height: 125,
           marginVertical: 2,
           marginHorizontal: 4,
           flexDirection: "row",
@@ -136,7 +138,15 @@ function SearchCh() {
             navigation.navigate("TeamBuild", item.id);
           }}
         > */}
-        <Image source={require("./icon/21.png")}></Image>
+        <Image
+          style={{
+            aspectRatio: 1 / 1,
+            width: 105,
+            height: 105,
+            resizeMode: "contain",
+          }}
+          source={item.image}
+        />
         {/* </TouchableWithoutFeedback> */}
         <Text
           style={{

@@ -15,7 +15,7 @@ interface ChData {
   Ult: string;
   Skill: string;
 }
-import { CharDataBase } from "./CharacterData/CharDataBase";
+import { CharDataBase } from "./CharDataBase";
 const DATA: ChData[] = CharDataBase;
 
 function TeamBuild() {
@@ -89,6 +89,7 @@ function CharSlot({ posID, styleID, setSelected }) {
         backgroundColor: "#fff",
         flex: 1,
         flexDirection: "row",
+        height: 125,
       }}
     >
       <CharIcon
@@ -118,7 +119,7 @@ function CharIcon({ posID, styleID, setSelected }) {
   const navigation = useNavigation();
   const route = useRoute();
   const IsFocused = useIsFocused();
-  let charImage = "./assets/default.png";
+  let charImage = "./icon/gosumori.png";
   const changeChar = (item: number) => {
     // @ts-ignore
     navigation.navigate("CharacterSearch", item);
@@ -136,9 +137,10 @@ function CharIcon({ posID, styleID, setSelected }) {
       }}
       onPress={() => changeChar(posID)}
     >
-      <View>
-        <Text>Icon</Text>
-      </View>
+      <Image
+        source={require(charImage)}
+        style={{ resizeMode: "contain", height: 125, width: 125 }}
+      />
     </TouchableHighlight>
   );
 }

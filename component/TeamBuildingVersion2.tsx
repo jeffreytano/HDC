@@ -15,7 +15,7 @@ interface ChData {
   Ult: string;
   Skill: string;
 }
-import { CharDataBase } from "./CharacterData/CharDataBase";
+import { CharDataBase } from "./CharDataBase";
 const DATA: ChData[] = CharDataBase;
 
 function TeamBuildVersion2() {
