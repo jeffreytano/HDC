@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import Cha from "./TeamBuildingOriginalBackup";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { CharDataBase } from "./CharDataBase";
+import { CharDataBase } from "./StyleDataBase";
 
 interface ChData {
   id: string;

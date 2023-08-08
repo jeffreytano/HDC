@@ -1,15 +1,18 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TeamBuildingOriginalBackup from "./component/TeamBuildingOriginalBackup";
-import TeamBuildVersion2 from "./component/TeamBuildingVersion2";
+import TeamBuildingOriginalBackup from "./src/component/TeamBuildingOriginalBackup";
+import TeamBuildVersion2 from "./src/TeamBuilder/TeamBuildingVersion2";
+import TeamBuildVersion3 from "./src/TeamBuilder/TeamBuildingVersion3";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SearchCh from "./component/SearchCh";
+// import SearchCh from "./src/component/SearchCh";
+import SearchCh from "./src/component/SearchChversion2";
+import TeamBuild2 from "./src/TeamBuilder/TeamBuildReforge";
 import Ionicons from "@expo/vector-icons";
 import { createAppContainer } from "react-navigation";
 import { createContext, useState } from "react";
-import TeamBuild from "./component/TeamBuilding";
-import BossBattle from "./component/BossBattle";
+import TeamBuild from "./src/component/TeamBuilding";
+import BossBattle from "./src/component/BossBattle";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -47,7 +50,7 @@ function StackGroup() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="TeamBuild" component={TeamBuild} />
+      <Stack.Screen name="TeamBuild" component={TeamBuild2} />
       <Stack.Screen name="CharacterSearch" component={SearchCh} />
     </Stack.Navigator>
     // </Context.Provider>
@@ -72,7 +75,7 @@ function TabGroup() {
     >
       <Tab.Screen name="StackGroup" component={StackGroup} />
       <Tab.Screen name="Boss" component={BossBattle} />
-      <Stack.Screen name="TB2" component={TeamBuildVersion2} />
+      <Stack.Screen name="TB2" component={TeamBuild2} />
     </Tab.Navigator>
   );
 }

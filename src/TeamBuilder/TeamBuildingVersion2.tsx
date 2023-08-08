@@ -15,20 +15,17 @@ interface ChData {
   Ult: string;
   Skill: string;
 }
-import { CharDataBase } from "./CharDataBase";
-const DATA: ChData[] = CharDataBase;
+import { StyleDataBase } from "../component/StyleDataBase";
+import { useSelector } from "react-redux";
+const DATA: ChData[] = StyleDataBase;
 
-function TeamBuild() {
+function TeamBuildVersion2() {
   return (
     <ScrollView>
       <TopBar />
       <TeamPanel />
     </ScrollView>
   );
-}
-
-interface teamList {
-  style: string[];
 }
 
 function TopBar() {
@@ -45,6 +42,7 @@ function TeamPanel() {
   const emptyTeam = Array(6).fill("Empty");
   // const emptyState = Array(6).fill(false);
   // const [selected, setSelected] = useState(emptyState);
+  const team = useSelector((state: any) => state.team);
   const [selected, setSelected] = useState(-1);
   const [Team, setTeam] = useState(emptyTeam);
   const route = useRoute();
@@ -56,8 +54,6 @@ function TeamPanel() {
   //   }
   // })
   Team[selected] = route.params;
-
-  console.log(Team);
 
   // setTeam(newTeam);
   return (
@@ -86,31 +82,76 @@ function CharSlot({ posID, styleID, setSelected }) {
   return (
     <View
       style={{
-        backgroundColor: "#fff",
-        flex: 1,
-        flexDirection: "row",
-        height: 125,
+        flexDirection: "column",
       }}
     >
-      <CharIcon
-        posID={posID}
-        styleID={styleID}
-        setSelected={setSelected}
-      ></CharIcon>
-      <CharStyle posID={posID} styleID={styleID}></CharStyle>
-      <CharLevel></CharLevel>
+      <View
+        style={{
+          backgroundColor: "#fff",
+          flexDirection: "row",
+        }}
+      >
+        <CharIcon
+          posID={posID}
+          styleID={styleID}
+          setSelected={setSelected}
+        ></CharIcon>
+
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
+          <CharStyle posID={posID} styleID={styleID}></CharStyle>
+          <CharStat></CharStat>
+        </View>
+        <Booster />
+      </View>
+      <Accessory></Accessory>
     </View>
   );
 }
 
-function TeamDetail() {
+function Accessory() {
+  const AccessoryArray = [1, 2, 3, 4, 5, 6];
   return (
     <View
       style={{
-        backgroundColor: "green",
+        flexDirection: "row",
+        alignSelf: "center",
         height: 100,
+        borderWidth: 1,
+        borderColor: "lightblue",
       }}
-    ></View>
+    >
+      {AccessoryArray.map((item) => (
+        <Text style={{ alignSelf: "center" }}>{item}</Text>
+      ))}
+    </View>
+  );
+}
+
+function Booster() {
+  const chipArray = [1, 1, 1, 1];
+  return (
+    <View
+      style={{
+        flexDirection: "column",
+        alignItems: "center",
+        height: 100,
+        width: 80,
+        borderWidth: 1,
+        borderColor: "lightblue",
+      }}
+    >
+      <Text>Booster1</Text>
+      {chipArray.map((item) => (
+        <View>
+          <Text>{item}</Text>
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -119,7 +160,7 @@ function CharIcon({ posID, styleID, setSelected }) {
   const navigation = useNavigation();
   const route = useRoute();
   const IsFocused = useIsFocused();
-  let charImage = "./icon/gosumori.png";
+  let charImage = "./assets/default.png";
   const changeChar = (item: number) => {
     // @ts-ignore
     navigation.navigate("CharacterSearch", item);
@@ -137,10 +178,9 @@ function CharIcon({ posID, styleID, setSelected }) {
       }}
       onPress={() => changeChar(posID)}
     >
-      <Image
-        source={require(charImage)}
-        style={{ resizeMode: "contain", height: 125, width: 125 }}
-      />
+      <View>
+        <Text>Icon</Text>
+      </View>
     </TouchableHighlight>
   );
 }
@@ -155,38 +195,20 @@ function CharStyle({ posID, styleID }) {
   });
   return (
     <View style={{ flex: 1, borderWidth: 1, borderColor: "lightblue" }}>
-      {/* <Text>
-        レベル<TextInput keyboardType="numeric">110</TextInput>
-      </Text>
-      <Text>
-        限界突破<TextInput keyboardType="numeric">0</TextInput>
-      </Text>
-      <Text>
-        転生<TextInput keyboardType="numeric">0</TextInput>
-      </Text> */}
       <Text>{found?.chName}</Text>
       <Text>{found?.styleName}</Text>
     </View>
   );
 }
 
-function CharLevel() {
+function CharStat() {
   return (
     <View
-      style={{ aspectRatio: 2 / 3, borderWidth: 1, borderColor: "lightblue" }}
+      style={{ flexDirection: "row", borderWidth: 1, borderColor: "lightblue" }}
     >
-      <Button title="Details"></Button>
-      <Text>
-        レベル<TextInput keyboardType="numeric">110</TextInput>
-      </Text>
-      <Text>
-        限界突破<TextInput keyboardType="numeric">0</TextInput>
-      </Text>
-      <Text>
-        転生<TextInput keyboardType="numeric">0</TextInput>
-      </Text>
+      <Text>力 体力 知性 {"\n"}器用さ 精神 運</Text>
     </View>
   );
 }
 
-export default TeamBuild;
+export default TeamBuildVersion2;

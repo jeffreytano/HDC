@@ -1,13 +1,25 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { Provider } from "react-redux";
+import store from "./src/Redux/store";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Navigation from "./Navigation";
-import SearchCh from "./component/SearchCh";
+import SearchCh from "./src/component/SearchCh";
+import { Platform, StatusBar } from "react-native";
 
 export default function App() {
   return (
-    <Navigation></Navigation>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <Provider store={store}>
+        <Navigation></Navigation>
+      </Provider>
+    </View>
     // <NavigationContainer>
     //   <TopBar />
     //   <TeamPanel teamMember={Team2} />

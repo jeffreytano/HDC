@@ -15,13 +15,12 @@ interface ChData {
   Ult: string;
   Skill: string;
 }
-import { CharDataBase } from "./CharDataBase";
-const DATA: ChData[] = CharDataBase;
+import { StyleDataBase } from "./StyleDataBase";
+const DATA: ChData[] = StyleDataBase;
 
-function TeamBuildVersion2() {
+function TeamBuild() {
   return (
     <ScrollView>
-      <TopBar />
       <TeamPanel />
     </ScrollView>
   );
@@ -57,6 +56,8 @@ function TeamPanel() {
   // })
   Team[selected] = route.params;
 
+  console.log(Team);
+
   // setTeam(newTeam);
   return (
     <View
@@ -84,76 +85,31 @@ function CharSlot({ posID, styleID, setSelected }) {
   return (
     <View
       style={{
-        flexDirection: "column",
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: "#fff",
-          flexDirection: "row",
-        }}
-      >
-        <CharIcon
-          posID={posID}
-          styleID={styleID}
-          setSelected={setSelected}
-        ></CharIcon>
-
-        <View
-          style={{
-            flexDirection: "column",
-            flex: 1,
-          }}
-        >
-          <CharStyle posID={posID} styleID={styleID}></CharStyle>
-          <CharStat></CharStat>
-        </View>
-        <Booster />
-      </View>
-      <Accessory></Accessory>
-    </View>
-  );
-}
-
-function Accessory() {
-  const AccessoryArray = [1, 2, 3, 4, 5, 6];
-  return (
-    <View
-      style={{
+        backgroundColor: "#fff",
+        flex: 1,
         flexDirection: "row",
-        alignSelf: "center",
-        height: 100,
-        borderWidth: 1,
-        borderColor: "lightblue",
+        height: 125,
       }}
     >
-      {AccessoryArray.map((item) => (
-        <Text style={{ alignSelf: "center" }}>{item}</Text>
-      ))}
+      <CharIcon
+        posID={posID}
+        styleID={styleID}
+        setSelected={setSelected}
+      ></CharIcon>
+      <CharStyle posID={posID} styleID={styleID}></CharStyle>
+      <CharLevel></CharLevel>
     </View>
   );
 }
 
-function Booster() {
-  const chipArray = [1, 1, 1, 1];
+function TeamDetail() {
   return (
     <View
       style={{
-        flexDirection: "column",
-        alignItems: "center",
+        backgroundColor: "green",
         height: 100,
-        width: 80,
-        borderWidth: 1,
-        borderColor: "lightblue",
       }}
-    >
-      <Text>Booster1</Text>
-      {chipArray.map((item) => (
-        <View>
-          <Text>{item}</Text>
-        </View>
-      ))}
-    </View>
+    ></View>
   );
 }
 
@@ -162,7 +118,7 @@ function CharIcon({ posID, styleID, setSelected }) {
   const navigation = useNavigation();
   const route = useRoute();
   const IsFocused = useIsFocused();
-  let charImage = "./assets/default.png";
+  let charImage = "./icon/gosumori.png";
   const changeChar = (item: number) => {
     // @ts-ignore
     navigation.navigate("CharacterSearch", item);
@@ -180,9 +136,10 @@ function CharIcon({ posID, styleID, setSelected }) {
       }}
       onPress={() => changeChar(posID)}
     >
-      <View>
-        <Text>Icon</Text>
-      </View>
+      <Image
+        source={require(charImage)}
+        style={{ resizeMode: "contain", height: 125, width: 125 }}
+      />
     </TouchableHighlight>
   );
 }
@@ -197,20 +154,38 @@ function CharStyle({ posID, styleID }) {
   });
   return (
     <View style={{ flex: 1, borderWidth: 1, borderColor: "lightblue" }}>
+      {/* <Text>
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
+      </Text> */}
       <Text>{found?.chName}</Text>
       <Text>{found?.styleName}</Text>
     </View>
   );
 }
 
-function CharStat() {
+function CharLevel() {
   return (
     <View
-      style={{ flexDirection: "row", borderWidth: 1, borderColor: "lightblue" }}
+      style={{ aspectRatio: 2 / 3, borderWidth: 1, borderColor: "lightblue" }}
     >
-      <Text>力 体力 知性 {"\n"}器用さ 精神 運</Text>
+      <Button title="Details"></Button>
+      <Text>
+        レベル<TextInput keyboardType="numeric">110</TextInput>
+      </Text>
+      <Text>
+        限界突破<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
+      <Text>
+        転生<TextInput keyboardType="numeric">0</TextInput>
+      </Text>
     </View>
   );
 }
 
-export default TeamBuildVersion2;
+export default TeamBuild;
