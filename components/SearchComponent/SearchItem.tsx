@@ -1,20 +1,45 @@
 import {View, TouchableHighlight, Text, Image} from 'react-native';
 // @ts-ignore
 import Dummyimage from '../../assets/images/hisamecchi.png';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import {StyleData} from '../../redux/dataType';
+import {Add} from '../../redux/reducers/teamDraft';
+import {DEFAULT_MEMBER} from '../../redux/constants/dataConstant';
+import {useNavigation} from 'expo-router';
 
 type props = {
+  slotId: string;
   style: StyleData;
 };
 
 export default function SearchItem(input: props) {
+  const {slotId, style} = input;
+  const nav = useNavigation();
+  const dispatch = useDispatch();
+  const TeamMember = {
+    ...DEFAULT_MEMBER,
+    styleID: style.Sid,
+    rarity: style.rarity,
+    styleName: style.styleName,
+    charName: style.name,
+    charID: style.Cid,
+  };
+  const handleSelect = (slotId: string) => {
+    console.log('inserting ', TeamMember.styleName, 'into slot', slotId);
+    const payload = {
+      index: parseInt(slotId),
+      teamMember: TeamMember,
+    };
+    dispatch(Add(payload));
+    nav.goBack();
+  };
+
   return (
     <TouchableHighlight
       style={{borderColor: 'lightgreen', borderWidth: 1}}
       onPress={() => {
-        console.log(input.style.id);
+        handleSelect(slotId);
       }}
     >
       <View
@@ -41,7 +66,7 @@ export default function SearchItem(input: props) {
             marginHorizontal: 10,
           }}
         >
-          {'charName'}
+          {input.style.name}
           {'\t\t'}
           {input.style.rarity}
           {'\n'}

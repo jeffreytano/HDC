@@ -3,7 +3,7 @@ import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
 import {useLocalSearchParams} from 'expo-router';
-import {TextInput, Button} from 'react-native';
+import {TextInput, FlatList, Button, ListRenderItemInfo} from 'react-native';
 import {useEffect, useState} from 'react';
 import SearchItem from '../../components/SearchComponent/SearchItem';
 import * as FileSystem from 'expo-file-system';
@@ -12,59 +12,48 @@ import {RootState} from '../../redux/store';
 import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {GET_ALL_STYLE_DATA} from '../../redux/constants/dataConstant';
-import {AllStyleData} from '../../redux/action/styleDataAction';
 import {FetchStyleList} from '../../redux/reducers/styleData';
 import {StyleData} from '../../redux/dataType';
 
+type SearchParamType = {
+  SearchSlot: string;
+};
+
 export default function SearchSlot() {
-  const {id} = useLocalSearchParams();
-  const [searchKey, setSearchKey] = useState('');
+  const {SearchSlot} = useLocalSearchParams<SearchParamType>();
+  const [queryKeyword, setQueryKeyWords] = useState('');
   const dispatch = useDispatch();
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
 
-  const styleData = useSelector((state: RootState) => state.styleData);
+  const styleData = useSelector((state: RootState) => state.styleData.styles);
 
   useEffect(() => {
     // readJsonFile('StyleDatabase');
+    console.log('slotId', SearchSlot);
     checkUpdate('CharacterDataBase');
   }, []);
 
-  // const readData = async () => {
-  //   try {
-  //     const fileContent = await FileSystem.readAsStringAsync(fileUri);
-  //     console.log('file content', fileContent);
-  //   } catch (error) {
-  //     console.log('Error reading file:', error);
-  //   }
-  // };
+  const [resultData, setResultData] = useState<StyleData[]>(styleData);
 
-  // const checkIfJSONExists = async () => {
-  //   try {
-  //     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-
-  //     if (fileInfo.exists) {
-  //       console.log('json exist');
-  //       readData();
-  //     } else {
-  //       console.log('json not exist');
-  //     }
-  //   } catch (error) {
-  //     console.log('Error:', error);
-  //   }
-  // };
-
-  // const DownloadJson = async () => {
-  //   try {
-  //     // Download the JSON file
-  //     const response = await fetch('https://example.com/data.json');
-  //     const jsonContent = await response.json();
-  //     await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(jsonContent));
-  //   } catch (error) {
-  //     console.log('Error:', error);
-  //   }
-  // };
+  const handleSearch = (query: string) => {
+    if (query) {
+      const newData = styleData.filter((item) => {
+        if (item?.searchKey) {
+          const itemData = item?.searchKey
+            ? item.searchKey.toUpperCase()
+            : ''.toUpperCase();
+          const textData = query.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      });
+      setResultData(newData);
+      setQueryKeyWords(query);
+    } else {
+      setResultData(styleData);
+      setQueryKeyWords(query);
+    }
+  };
 
   const checkUpdate = async (key: string) => {
     let lastUpdate;
@@ -96,6 +85,8 @@ export default function SearchSlot() {
     } catch (error) {
       console.log('failed at get online update time', error);
     }
+    console.log('needUpdate:', needUpdate);
+    // console.log('data', data);
     try {
       if (needUpdate) {
         if (onlineResponse) {
@@ -110,31 +101,34 @@ export default function SearchSlot() {
     }
   };
 
-  const handleChangeText = (newText: string) => {
-    setSearchKey(newText);
-  };
+  const renderItem = (listItem: ListRenderItemInfo<StyleData>) => (
+    <SearchItem slotId={SearchSlot} style={listItem.item}></SearchItem>
+  );
 
-  // const StyleList = () => {
-  //   if (styleData.length > 0) {
-  //     return styleData.map((item: any) => (
-  //       <SearchItem StyleID={item.id}></SearchItem>
-  //     ));
-  //   }
-  // };
+  const keyExtractor = (item: StyleData) => item.Sid?.toString(); // Use a unique identifier from your data
 
   return (
     <View>
       <TextInput
         style={{backgroundColor: 'gray', height: 40, paddingHorizontal: 20}}
-        value={searchKey}
-        onChangeText={handleChangeText}
+        value={queryKeyword}
+        onChangeText={(newText) => {
+          // console.log(newText);
+          handleSearch(newText);
+        }}
         placeholder="Search keyword here"
       />
-      <Text>Result found: {styleData.styles.length}</Text>
-      {styleData &&
-        styleData.styles.map((item: StyleData, index: number) => (
-          <SearchItem style={item}></SearchItem>
-        ))}
+      <Text>Result found: {styleData.length}</Text>
+      <FlatList
+        data={resultData}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={{paddingBottom: 110}}
+      ></FlatList>
+      {/* {styleData &&
+          styleData.map((item: StyleData, index: number) => (
+            <SearchItem style={item} key={index}></SearchItem>
+          ))} */}
     </View>
   );
 }

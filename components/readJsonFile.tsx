@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useDispatch} from 'react-redux';
-import {GET_ALL_STYLE_DATA} from '../redux/constants/dataConstant';
 
 const readJsonFile = async (key: string) => {
   const dispatch = useDispatch();

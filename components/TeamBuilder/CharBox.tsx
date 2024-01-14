@@ -6,8 +6,15 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
+import {TeamMemberData} from '../../redux/dataType';
 
-export default function Charbox() {
+type props = {
+  slotId: number;
+  member: TeamMemberData;
+};
+
+export default function Charbox(input: props) {
+  const {slotId, member} = input;
   const router = useRouter();
   return (
     <View
@@ -30,8 +37,12 @@ export default function Charbox() {
           borderColor: 'lightblue',
         }}
         onPress={() => {
-          console.log('icon pressed');
-          router.push('/Search/1');
+          const id = slotId;
+          console.log('icon pressed', id);
+          router.push({
+            pathname: '/Search/[SearchSlot]',
+            params: {SearchSlot: id.toString()},
+          });
         }}
       >
         <Text>Icon</Text>
@@ -46,8 +57,10 @@ export default function Charbox() {
           flex: 3,
         }}
       >
-        <Text>Name</Text>
-        <Text>Style</Text>
+        <Text>
+          {member?.charName} {member.rarity}
+        </Text>
+        <Text>{member?.styleName}</Text>
       </View>
       <View
         style={{

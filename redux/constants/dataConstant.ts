@@ -1,12 +1,18 @@
-import {TeamMemberData, TeamDrafter} from '../dataType';
+import {TeamMemberData} from '../dataType';
 
-export const GET_ALL_STYLE_DATA = 'GET_ALL_STYLE_DATA';
-
-export const EMPTY_MEMBER_DATA: TeamMemberData = {};
-
-export const EMPTY_TEAM: TeamDrafter = {
-  team: [],
+export const EMPTY_MEMBER_DATA: TeamMemberData = {
+  styleID: '-1',
+  charID: '-1',
 };
+
+export const EMPTY_TEAM = [
+  EMPTY_MEMBER_DATA,
+  EMPTY_MEMBER_DATA,
+  EMPTY_MEMBER_DATA,
+  EMPTY_MEMBER_DATA,
+  EMPTY_MEMBER_DATA,
+  EMPTY_MEMBER_DATA,
+];
 
 export const DEFAULT_MEMBER: TeamMemberData = {
   level: 1,

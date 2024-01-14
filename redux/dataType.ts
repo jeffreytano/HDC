@@ -13,20 +13,21 @@ export interface TeamMemberData {
   image?: Object;
 }
 
-export interface TeamDrafter {
-  team: TeamMemberData[];
-}
-
 export interface StyleData {
-  id: number;
-  charName: string;
-  styleName: string
+  Sid: number;
+  Cid: number;
+  name: string;
+  styleName: string;
   rarity: 'A' | 'S' | 'SS' | 'Free';
+  searchKey?: string;
 }
 
-export const DefaultStyleData : StyleData[] = [{
-  id: 0,
-  charName: "dummyName",
-  styleName: "dummyStyle",
-  rarity: "Free"
-}]
+export const DefaultStyleData: StyleData[] = [
+  {
+    Sid: -1,
+    Cid: -1,
+    name: 'dummyName',
+    styleName: 'dummyStyle',
+    rarity: 'Free',
+  },
+];
