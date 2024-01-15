@@ -59,7 +59,7 @@ export default function SearchItem(input: props) {
             height: 105,
             resizeMode: 'contain',
           }}
-          source={Dummyimage}
+          source={style.image ? {uri: style.image} : Dummyimage}
         />
         <Text
           style={{

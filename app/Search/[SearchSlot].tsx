@@ -1,9 +1,15 @@
-import {StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet} from 'react-native';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
 import {useLocalSearchParams} from 'expo-router';
-import {TextInput, FlatList, Button, ListRenderItemInfo} from 'react-native';
+import {
+  TextInput,
+  FlatList,
+  Button,
+  ListRenderItemInfo,
+  Image,
+} from 'react-native';
 import {useEffect, useState} from 'react';
 import SearchItem from '../../components/SearchComponent/SearchItem';
 import * as FileSystem from 'expo-file-system';
@@ -12,8 +18,9 @@ import {RootState} from '../../redux/store';
 import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {FetchStyleList} from '../../redux/reducers/styleData';
+import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {StyleData} from '../../redux/dataType';
+import {downloadTama} from '../../components/expoFileSystem';
 
 type SearchParamType = {
   SearchSlot: string;
@@ -22,19 +29,75 @@ type SearchParamType = {
 export default function SearchSlot() {
   const {SearchSlot} = useLocalSearchParams<SearchParamType>();
   const [queryKeyword, setQueryKeyWords] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const [resultData, setResultData] = useState<StyleData[]>();
+  const [imageData, setImageData] = useState('');
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
 
   const styleData = useSelector((state: RootState) => state.styleData.styles);
 
   useEffect(() => {
-    // readJsonFile('StyleDatabase');
+    downloadTama();
     console.log('slotId', SearchSlot);
     checkUpdate('CharacterDataBase');
   }, []);
 
-  const [resultData, setResultData] = useState<StyleData[]>(styleData);
+  useEffect(() => {
+    if (styleData.length > 0) {
+      setIsLoading(false);
+      setResultData(styleData);
+    }
+  }, [styleData]);
+
+  // const downloadTama = async () => {
+  //   const filename = 'tamaS.png';
+  //   const result = await FileSystem.downloadAsync(
+  //     'https://jeffreytano.github.io/image/tamaS.png',
+  //     FileSystem.documentDirectory + filename,
+  //   );
+  //   console.log(result);
+  //   setImageData(result.uri);
+  // };
+
+  // async function downloadTama(file: string) {
+  //   try {
+  //     const dirInfo = await FileSystem.getInfoAsync(file);
+  //     if (dirInfo.exists) {
+  //       console.log('found tamaS.png');
+  //       FileSystem.createDownloadResumable(
+  //         'https://jeffreytano.github.io/image/tamaS.png',
+  //         FileSystem.documentDirectory + 'tamaS.png',
+  //         {},
+  //       );
+  //     }
+  //     const base64Image = FileSystem.readAsStringAsync('tamaS.png');
+  //     return `data:image/jpeg;base64,${base64Image}`;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // const fetchImage = async () => {
+  //   const data: any = await downloadTama('tamaS.png');
+  //   setImageData(data);
+  // };
+
+  const downloadTama = async () => {
+    const filename = 'tamaS.png';
+    const result = await FileSystem.downloadAsync(
+      'https://jeffreytano.github.io/image/tamaS.png',
+      FileSystem.documentDirectory + filename,
+    );
+    console.log(result);
+    const payload = {
+      index: 36,
+      image: result.uri,
+    };
+    dispatch(InsertImage(payload));
+    // useDispatch();
+  };
 
   const handleSearch = (query: string) => {
     if (query) {
@@ -66,7 +129,6 @@ export default function SearchSlot() {
       jsonData = await AsyncStorage.getItem(key);
       if (jsonData !== null) {
         data = JSON.parse(jsonData);
-
         lastUpdate = data.lastUpdate;
       } else {
         console.log('unable to find target');
@@ -91,6 +153,7 @@ export default function SearchSlot() {
       if (needUpdate) {
         if (onlineResponse) {
           await AsyncStorage.setItem(key, JSON.stringify(onlineResponse.data));
+          dispatch(FetchStyleList(onlineResponse.data.styles));
           console.log('JSON content saved successfully!');
         }
       } else {
@@ -119,6 +182,18 @@ export default function SearchSlot() {
         placeholder="Search keyword here"
       />
       <Text>Result found: {styleData.length}</Text>
+      {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+      {imageData && (
+        <Image
+          style={{
+            aspectRatio: 1 / 1,
+            width: 105,
+            height: 105,
+            resizeMode: 'contain',
+          }}
+          source={{uri: imageData}}
+        ></Image>
+      )}
       <FlatList
         data={resultData}
         renderItem={renderItem}

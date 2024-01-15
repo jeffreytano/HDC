@@ -11,8 +11,16 @@ const styleDataSlice = createSlice({
     FetchStyleList: (state, action) => {
       state.styles = action.payload;
     },
+    InsertImage: (state,action) => {
+      const {index, image} = action.payload;
+      state.styles[index] = 
+      {
+        ...state.styles[index],
+        image
+      }
+    }
   },
 });
 
-export const {FetchStyleList} = styleDataSlice.actions;
+export const {FetchStyleList, InsertImage} = styleDataSlice.actions;
 export default styleDataSlice.reducer;

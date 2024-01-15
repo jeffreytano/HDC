@@ -10,7 +10,7 @@ export interface TeamMemberData {
   levelGap?: number;
   skills?: Object;
   Stat?: number[];
-  image?: Object;
+  image?: string;
 }
 
 export interface StyleData {
@@ -20,6 +20,7 @@ export interface StyleData {
   styleName: string;
   rarity: 'A' | 'S' | 'SS' | 'Free';
   searchKey?: string;
+  image?: string;
 }
 
 export const DefaultStyleData: StyleData[] = [
@@ -29,5 +30,6 @@ export const DefaultStyleData: StyleData[] = [
     name: 'dummyName',
     styleName: 'dummyStyle',
     rarity: 'Free',
+    image: ''
   },
 ];
