@@ -20,7 +20,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {StyleData} from '../../redux/dataType';
-import {downloadTama} from '../../components/expoFileSystem';
+import {useTheme} from '@react-navigation/native';
 
 type SearchParamType = {
   SearchSlot: string;
