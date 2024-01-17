@@ -22,32 +22,37 @@ export default function Charbox(input: props) {
   const router = useRouter();
 
   const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.dark ? '#121212' : '#FFFFFF',
+      flex: 1,
+      flexDirection: 'row',
+      // height: 125,
+      width: '100%',
+      borderBottomWidth: slotId == 5 ? 1 : 0,
+    },
     text: {
-      color: theme.colors.text,
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+    border: {
+      borderColor: theme.dark ? '#757575' : 'lightblue',
+      borderWidth: 1,
+    },
+    button: {
+      color: theme.dark ? '#B794F6' : '#00BFA5',
     },
   });
 
   return (
-    <View
-      style={{
-        backgroundColor: theme.colors.primary,
-        flex: 1,
-        flexDirection: 'row',
-        // height: 125,
-        width: '100%',
-        borderColor: theme.colors.border,
-        borderWidth: 1,
-        borderBottomWidth: slotId == 5 ? 1 : 0,
-      }}
-    >
+    <View style={[styles.border, styles.container]}>
       <TouchableHighlight
-        style={{
-          aspectRatio: 1 / 1,
-          // backgroundColor: 'orange',
-          borderWidth: 1,
-          // flex: 1,
-          borderColor: theme.colors.border,
-        }}
+        style={[
+          styles.border,
+          {
+            aspectRatio: 1 / 1,
+            // backgroundColor: 'orange',
+            // flex: 1,
+          },
+        ]}
         onPress={() => {
           const id = slotId;
           console.log('icon pressed', id);
@@ -60,14 +65,15 @@ export default function Charbox(input: props) {
         <Text style={styles.text}>Icon</Text>
       </TouchableHighlight>
       <View
-        style={{
-          // aspectRatio: 1 / 1,
+        style={[
+          styles.border,
+          {
+            // aspectRatio: 1 / 1,
 
-          // backgroundColor: 'yellow',
-          borderWidth: 1,
-          borderColor: theme.colors.border,
-          flex: 3,
-        }}
+            // backgroundColor: 'yellow',
+            flex: 3,
+          },
+        ]}
       >
         <Text style={styles.text}>
           {member?.charName} {member.rarity}
@@ -75,23 +81,26 @@ export default function Charbox(input: props) {
         <Text style={styles.text}>{member?.styleName}</Text>
       </View>
       <View
-        style={{
-          // aspectRatio: 1 / 1,
-          // backgroundColor: 'green',
-          borderWidth: 1,
-          borderColor: theme.colors.border,
-          flexDirection: 'column',
-        }}
+        style={[
+          styles.border,
+          {
+            // aspectRatio: 1 / 1,
+            // backgroundColor: 'green',
+            flexDirection: 'column',
+            padding: 4,
+            justifyContent: 'space-evenly',
+          },
+        ]}
       >
         <Button
           title="Remove"
           onPress={() => console.log('Remove pressed')}
-          color={theme.colors.button}
+          color={theme.dark ? '#B794F6' : '#00BFA5'}
         ></Button>
         <Button
           title="Detail"
           onPress={() => console.log('Detail pressed')}
-          color={theme.colors.button}
+          color={theme.dark ? '#B794F6' : '#00BFA5'}
         ></Button>
       </View>
     </View>

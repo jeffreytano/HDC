@@ -1,4 +1,4 @@
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet, TextComponent} from 'react-native';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
@@ -51,6 +51,8 @@ export default function SearchSlot() {
     }
   }, [styleData]);
 
+  const theme = useTheme();
+
   // const downloadTama = async () => {
   //   const filename = 'tamaS.png';
   //   const result = await FileSystem.downloadAsync(
@@ -90,7 +92,6 @@ export default function SearchSlot() {
       'https://jeffreytano.github.io/image/tamaS.png',
       FileSystem.documentDirectory + filename,
     );
-    console.log(result);
     const payload = {
       index: 36,
       image: result.uri,
@@ -102,12 +103,13 @@ export default function SearchSlot() {
   const handleSearch = (query: string) => {
     if (query) {
       const newData = styleData.filter((item) => {
-        if (item?.searchKey) {
+        if (item?.searchKey || item?.styleName) {
           const itemData = item?.searchKey
             ? item.searchKey.toUpperCase()
             : ''.toUpperCase();
           const textData = query.toUpperCase();
-          return itemData.indexOf(textData) > -1;
+          const styleData = item.styleName.toUpperCase();
+          return styleData.concat(' ', itemData).indexOf(textData) > -1;
         }
       });
       setResultData(newData);
@@ -170,35 +172,50 @@ export default function SearchSlot() {
 
   const keyExtractor = (item: StyleData) => item.Sid?.toString(); // Use a unique identifier from your data
 
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.dark ? '#121212' : '#FFFFFF',
+    },
+    TextBar: {
+      // backgroundColor: theme.colors.primary,
+      margin: 3,
+      height: 40,
+      paddingHorizontal: 20,
+      borderColor: theme.dark ? '#B794F6' : '#2E2E2D',
+      borderWidth: 1,
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+  });
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
-        style={{backgroundColor: 'gray', height: 40, paddingHorizontal: 20}}
+        style={styles.TextBar}
         value={queryKeyword}
         onChangeText={(newText) => {
           // console.log(newText);
           handleSearch(newText);
         }}
         placeholder="Search keyword here"
+        placeholderTextColor={theme.dark ? '#FFFFFF' : '#000000'}
+        cursorColor={theme.dark ? '#BDBDBD' : '#FFFFFF'}
       />
-      <Text>Result found: {styleData.length}</Text>
+      <Text
+        style={[
+          styles.container,
+          {
+            color: theme.dark ? '#FFFFFF' : '#000000',
+          },
+        ]}
+      >
+        Result found: {styleData.length}
+      </Text>
       {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
-      {imageData && (
-        <Image
-          style={{
-            aspectRatio: 1 / 1,
-            width: 105,
-            height: 105,
-            resizeMode: 'contain',
-          }}
-          source={{uri: imageData}}
-        ></Image>
-      )}
       <FlatList
         data={resultData}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{paddingBottom: 110}}
+        contentContainerStyle={{paddingBottom: 60}}
+        style={styles.container}
       ></FlatList>
       {/* {styleData &&
           styleData.map((item: StyleData, index: number) => (

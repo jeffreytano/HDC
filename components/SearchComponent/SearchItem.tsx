@@ -1,4 +1,4 @@
-import {View, TouchableHighlight, Text, Image} from 'react-native';
+import {View, TouchableHighlight, Text, Image, StyleSheet} from 'react-native';
 // @ts-ignore
 import Dummyimage from '../../assets/images/hisamecchi.png';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,6 +7,7 @@ import {StyleData} from '../../redux/dataType';
 import {Add} from '../../redux/reducers/teamDraft';
 import {DEFAULT_MEMBER} from '../../redux/constants/dataConstant';
 import {useNavigation} from 'expo-router';
+import {useTheme} from '@react-navigation/native';
 
 type props = {
   slotId: string;
@@ -14,6 +15,7 @@ type props = {
 };
 
 export default function SearchItem(input: props) {
+  const theme = useTheme();
   const {slotId, style} = input;
   const nav = useNavigation();
   const dispatch = useDispatch();
@@ -35,23 +37,30 @@ export default function SearchItem(input: props) {
     nav.goBack();
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.dark ? '#573E7C' : '#FFFFFF',
+      borderColor: theme.dark ? '#2A0069' : 'lightblue',
+      borderWidth: theme.dark ? 3 : 1,
+      padding: 10,
+      height: 125,
+      flexDirection: 'row',
+      marginVertical: 1,
+      // marginHorizontal: 4,
+    },
+    text: {
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+  });
+
   return (
     <TouchableHighlight
-      style={{borderColor: 'lightgreen', borderWidth: 1}}
+      // style={{borderColor: 'lightgreen', borderWidth: 1}}
       onPress={() => {
         handleSelect(slotId);
       }}
     >
-      <View
-        style={{
-          backgroundColor: '#CCCCCC',
-          padding: 10,
-          height: 125,
-          // marginVertical: 2,
-          // marginHorizontal: 4,
-          flexDirection: 'row',
-        }}
-      >
+      <View style={styles.container}>
         <Image
           style={{
             aspectRatio: 1 / 1,
@@ -62,9 +71,12 @@ export default function SearchItem(input: props) {
           source={style.image ? {uri: style.image} : Dummyimage}
         />
         <Text
-          style={{
-            marginHorizontal: 10,
-          }}
+          style={[
+            styles.text,
+            {
+              marginHorizontal: 10,
+            },
+          ]}
         >
           {input.style.name}
           {'\t\t'}

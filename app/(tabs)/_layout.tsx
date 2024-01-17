@@ -29,10 +29,10 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Tab One',
+          tabBarStyle: {backgroundColor: theme.dark ? '#121212' : '#FFFFFF'},
+          headerStyle: {backgroundColor: theme.dark ? '#6200EE' : '#FFFFFF'},
+          headerTitleStyle: {color: theme.dark ? '#FFFFFF' : '#000000'},
           tabBarIcon: ({color}) => <TabBarIcon name="code" color={color} />,
-          headerBackgroundContainerStyle: {
-            backgroundColor: theme.colors.primary,
-          },
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
