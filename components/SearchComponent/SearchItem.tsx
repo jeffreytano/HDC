@@ -3,7 +3,7 @@ import {View, TouchableHighlight, Text, Image, StyleSheet} from 'react-native';
 import Dummyimage from '../../assets/images/hisamecchi.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
-import {StyleData} from '../../redux/dataType';
+import {styleData} from '../../redux/dataType';
 import {Add} from '../../redux/reducers/teamDraft';
 import {DEFAULT_MEMBER} from '../../redux/constants/dataConstant';
 import {useNavigation} from 'expo-router';
@@ -11,7 +11,7 @@ import {useTheme} from '@react-navigation/native';
 
 type props = {
   slotId: string;
-  style: StyleData;
+  style: styleData;
 };
 
 export default function SearchItem(input: props) {

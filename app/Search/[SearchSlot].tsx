@@ -18,8 +18,11 @@ import {RootState} from '../../redux/store';
 import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
-import {StyleData} from '../../redux/dataType';
+import {
+  FetchStyleList,
+  // , InsertImage
+} from '../../redux/reducers/styleData';
+import {jsonStyleData, styleData} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 
 type SearchParamType = {
@@ -31,12 +34,15 @@ export default function SearchSlot() {
   const [queryKeyword, setQueryKeyWords] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const [resultData, setResultData] = useState<StyleData[]>();
+  const [resultData, setResultData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
+  const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
 
-  const styleData = useSelector((state: RootState) => state.styleData.styles);
+  const jsonStyleData = useSelector(
+    (state: RootState) => state.styleData.styles,
+  );
 
   useEffect(() => {
     downloadTama();
@@ -45,11 +51,33 @@ export default function SearchSlot() {
   }, []);
 
   useEffect(() => {
-    if (styleData.length > 0) {
+    if (jsonStyleData.length > 0) {
+      let combinedArray: any[] = [];
+      const charsStyle = jsonStyleData.map(
+        ({Cid, name, team, weapon, chKey, detail}) => {
+          const singleChStyle = detail.map((styleItem) => {
+            const result = {
+              Cid: Cid,
+              name: name,
+              team: team,
+              weapon: weapon,
+              chKey: chKey,
+              ...styleItem,
+            };
+            return result;
+          });
+          combinedArray = combinedArray.concat(singleChStyle);
+        },
+      );
+      // const combinedArray = charsStyle.reduce((acc,current) => [...acc, ...current],[]);
+      // styleData.map((chItem)=>{chItem.detail.map((styleItem)=>({
+      //   ...{styleItem}
+      // }))})
       setIsLoading(false);
-      setResultData(styleData);
+      setStyleData(combinedArray);
+      setResultData(combinedArray);
     }
-  }, [styleData]);
+  }, [jsonStyleData]);
 
   const theme = useTheme();
 
@@ -96,20 +124,23 @@ export default function SearchSlot() {
       index: 36,
       image: result.uri,
     };
-    dispatch(InsertImage(payload));
+    // dispatch(InsertImage(payload));
     // useDispatch();
   };
 
   const handleSearch = (query: string) => {
-    if (query) {
+    if (query && styleData) {
       const newData = styleData.filter((item) => {
-        if (item?.searchKey || item?.styleName) {
+        if (item?.searchKey || item?.styleName || item?.chKey) {
           const itemData = item?.searchKey
             ? item.searchKey.toUpperCase()
             : ''.toUpperCase();
           const textData = query.toUpperCase();
-          const styleData = item.styleName.toUpperCase();
-          return styleData.concat(' ', itemData).indexOf(textData) > -1;
+          const styleData = item?.styleName.toUpperCase();
+          const chData = item?.chKey.toUpperCase();
+          return (
+            styleData.concat(' ', itemData, ' ', chData).indexOf(textData) > -1
+          );
         }
       });
       setResultData(newData);
@@ -166,11 +197,11 @@ export default function SearchSlot() {
     }
   };
 
-  const renderItem = (listItem: ListRenderItemInfo<StyleData>) => (
+  const renderItem = (listItem: ListRenderItemInfo<styleData>) => (
     <SearchItem slotId={SearchSlot} style={listItem.item}></SearchItem>
   );
 
-  const keyExtractor = (item: StyleData) => item.Sid?.toString(); // Use a unique identifier from your data
+  const keyExtractor = (item: styleData) => item.Sid.toString(); // Use a unique identifier from your data
 
   const styles = StyleSheet.create({
     container: {
@@ -207,7 +238,7 @@ export default function SearchSlot() {
           },
         ]}
       >
-        Result found: {styleData.length}
+        Result found: {styleData?.length}
       </Text>
       {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
       <FlatList
