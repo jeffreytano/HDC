@@ -16,6 +16,7 @@ type props = {
 
 export default function SearchItem(input: props) {
   const theme = useTheme();
+  const styleImage = useSelector((state: RootState) => state.styleData.image);
   const {slotId, style} = input;
   const nav = useNavigation();
   const dispatch = useDispatch();
@@ -68,7 +69,11 @@ export default function SearchItem(input: props) {
             height: 105,
             resizeMode: 'contain',
           }}
-          source={style.image ? {uri: style.image} : Dummyimage}
+          source={
+            styleImage[input.style.Sid]
+              ? {uri: styleImage[input.style.Sid]}
+              : Dummyimage
+          }
         />
         <Text
           style={[
@@ -82,7 +87,8 @@ export default function SearchItem(input: props) {
           {'\t\t'}
           {input.style.rarity}
           {'\n'}
-          {input.style.styleName}
+          {input.style.styleName} {'\n'}
+          {input.style.Sid}
         </Text>
       </View>
     </TouchableHighlight>

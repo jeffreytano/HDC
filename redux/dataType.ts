@@ -16,14 +16,14 @@ export interface TeamMemberData {
 export interface styleDataDetail {
   Sid: number;
   styleName?: string;
-  rarity?: string
+  rarity?: string;
   role?: string;
   element?: number;
   target?: number;
   searchKey?: string;
 }
 
-export interface styleData{
+export interface styleData {
   Cid: string;
   name: string;
   team?: string;
@@ -54,7 +54,7 @@ export interface jsonStyleData {
   detail: styleItem[];
 }
 
-export interface styleItem{
+export interface styleItem {
   Sid: number;
   styleName: string;
   rarity: 'A' | 'S' | 'SS' | 'Free';
@@ -65,25 +65,27 @@ export interface styleItem{
   image?: string;
 }
 
-export const defaultStyleItem: styleItem[] = [{
-  Sid: -1,
-  styleName: 'dummyStyleName',
-  rarity: 'SS',
-  role: "",
-  element: -1,
-  target: -1,
-  searchKey: "",
-  image: ""
-}]
-
+export const defaultStyleItem: styleItem[] = [
+  {
+    Sid: -1,
+    styleName: 'dummyStyleName',
+    rarity: 'SS',
+    role: '',
+    element: -1,
+    target: -1,
+    searchKey: '',
+  },
+];
 
 export const DefaultStyleData: jsonStyleData[] = [
   {
-    Cid: "-1",
+    Cid: '-1',
     name: 'dummyName',
-    team: "",
+    team: '',
     weapon: -1,
-    chKey: "",
+    chKey: '',
     detail: defaultStyleItem,
   },
 ];
+
+export const styleImage = [...Array(999)].map(() => '');

@@ -18,10 +18,7 @@ import {RootState} from '../../redux/store';
 import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  FetchStyleList,
-  // , InsertImage
-} from '../../redux/reducers/styleData';
+import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {jsonStyleData, styleData} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 
@@ -115,7 +112,7 @@ export default function SearchSlot() {
   // };
 
   const downloadTama = async () => {
-    const filename = 'tamaS.png';
+    const filename = '36.png';
     const result = await FileSystem.downloadAsync(
       'https://jeffreytano.github.io/image/tamaS.png',
       FileSystem.documentDirectory + filename,
@@ -124,8 +121,7 @@ export default function SearchSlot() {
       index: 36,
       image: result.uri,
     };
-    // dispatch(InsertImage(payload));
-    // useDispatch();
+    dispatch(InsertImage(payload));
   };
 
   const handleSearch = (query: string) => {
