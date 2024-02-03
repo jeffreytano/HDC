@@ -39,22 +39,15 @@ export interface styleData {
   image?: string;
 }
 export interface jsonStyleData {
-  // Sid: number;
-  // Cid: number;
-  // name: string;
-  // styleName: string;
-  // rarity: 'A' | 'S' | 'SS' | 'Free';
-  // searchKey?: string;
-  // image?: string;
   Cid: string;
   name: string;
   team?: string;
   weapon?: number;
   chKey?: string;
-  detail: styleItem[];
+  detail: jsonStyleItem[];
 }
 
-export interface styleItem {
+export interface jsonStyleItem {
   Sid: number;
   styleName: string;
   rarity: 'A' | 'S' | 'SS' | 'Free';
@@ -65,26 +58,37 @@ export interface styleItem {
   image?: string;
 }
 
-export const defaultStyleItem: styleItem[] = [
-  {
-    Sid: -1,
-    styleName: 'dummyStyleName',
-    rarity: 'SS',
-    role: '',
-    element: -1,
-    target: -1,
-    searchKey: '',
-  },
-];
+// export const defaultStyleDetailItem: jsonStyleItem[] = [
+//   {
+//     Sid: -1,
+//     styleName: 'dummyStyleName',
+//     rarity: 'SS',
+//     role: '',
+//     element: -1,
+//     target: -1,
+//     searchKey: '',
+//   },
+// ];
 
-export const DefaultStyleData: jsonStyleData[] = [
+// export const DefaultStyleData: jsonStyleData[] = [
+//   {
+//     Cid: '-1',
+//     name: 'dummyName',
+//     team: '',
+//     weapon: -1,
+//     chKey: '',
+//     detail: defaultStyleDetailItem,
+//   },
+// ];
+
+export const initialStyleData: styleData[] = [
   {
     Cid: '-1',
-    name: 'dummyName',
-    team: '',
-    weapon: -1,
+    name: 'dummpy name',
     chKey: '',
-    detail: defaultStyleItem,
+    Sid: -1,
+    styleName: 'dummyStyleName',
+    searchKey: 'dummy searchkey',
   },
 ];
 

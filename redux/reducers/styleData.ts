@@ -1,15 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {EMPTY_TEAM} from '../constants/dataConstant';
-import {
-  jsonStyleData,
-  DefaultStyleData,
-  styleImage,
-} from '../../redux/dataType';
+import {initialStyleData, styleImage} from '../../redux/dataType';
 
 const styleDataSlice = createSlice({
   name: 'styleData',
   initialState: {
-    styles: DefaultStyleData,
+    styles: initialStyleData,
     image: styleImage,
   },
   reducers: {

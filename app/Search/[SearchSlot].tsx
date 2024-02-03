@@ -19,7 +19,7 @@ import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
-import {jsonStyleData, styleData} from '../../redux/dataType';
+import {styleData} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 
 type SearchParamType = {
@@ -33,96 +33,26 @@ export default function SearchSlot() {
   const dispatch = useDispatch();
   const [resultData, setResultData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
-  const [styleData, setStyleData] = useState<styleData[]>();
+  // const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
 
-  const jsonStyleData = useSelector(
-    (state: RootState) => state.styleData.styles,
-  );
+  const styleData = useSelector((state: RootState) => state.styleData.styles);
+  const styleImage = useSelector((state: RootState) => state.styleData.image);
 
   useEffect(() => {
-    downloadTama();
     console.log('slotId', SearchSlot);
-    checkUpdate('CharacterDataBase');
+    // checkUpdate('CharacterDataBase');
   }, []);
 
   useEffect(() => {
-    if (jsonStyleData.length > 0) {
-      let combinedArray: any[] = [];
-      const charsStyle = jsonStyleData.map(
-        ({Cid, name, team, weapon, chKey, detail}) => {
-          const singleChStyle = detail.map((styleItem) => {
-            const result = {
-              Cid: Cid,
-              name: name,
-              team: team,
-              weapon: weapon,
-              chKey: chKey,
-              ...styleItem,
-            };
-            return result;
-          });
-          combinedArray = combinedArray.concat(singleChStyle);
-        },
-      );
-      // const combinedArray = charsStyle.reduce((acc,current) => [...acc, ...current],[]);
-      // styleData.map((chItem)=>{chItem.detail.map((styleItem)=>({
-      //   ...{styleItem}
-      // }))})
+    if (styleData.length > 2) {
       setIsLoading(false);
-      setStyleData(combinedArray);
-      setResultData(combinedArray);
     }
-  }, [jsonStyleData]);
+    setResultData(styleData);
+  }, [styleData, styleImage]);
 
   const theme = useTheme();
-
-  // const downloadTama = async () => {
-  //   const filename = 'tamaS.png';
-  //   const result = await FileSystem.downloadAsync(
-  //     'https://jeffreytano.github.io/image/tamaS.png',
-  //     FileSystem.documentDirectory + filename,
-  //   );
-  //   console.log(result);
-  //   setImageData(result.uri);
-  // };
-
-  // async function downloadTama(file: string) {
-  //   try {
-  //     const dirInfo = await FileSystem.getInfoAsync(file);
-  //     if (dirInfo.exists) {
-  //       console.log('found tamaS.png');
-  //       FileSystem.createDownloadResumable(
-  //         'https://jeffreytano.github.io/image/tamaS.png',
-  //         FileSystem.documentDirectory + 'tamaS.png',
-  //         {},
-  //       );
-  //     }
-  //     const base64Image = FileSystem.readAsStringAsync('tamaS.png');
-  //     return `data:image/jpeg;base64,${base64Image}`;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // const fetchImage = async () => {
-  //   const data: any = await downloadTama('tamaS.png');
-  //   setImageData(data);
-  // };
-
-  const downloadTama = async () => {
-    const filename = '36.png';
-    const result = await FileSystem.downloadAsync(
-      'https://jeffreytano.github.io/image/tamaS.png',
-      FileSystem.documentDirectory + filename,
-    );
-    const payload = {
-      index: 36,
-      image: result.uri,
-    };
-    dispatch(InsertImage(payload));
-  };
 
   const handleSearch = (query: string) => {
     if (query && styleData) {

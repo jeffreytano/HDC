@@ -5,11 +5,16 @@ import {
   View,
   TouchableHighlight,
   Button,
+  Image,
   BackHandler,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
 import {TeamMemberData} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
+// @ts-ignore
+import dummyImage from '../../assets/images/hisamecchi.png';
 
 type props = {
   slotId: number;
@@ -20,6 +25,8 @@ export default function Charbox(input: props) {
   const theme = useTheme();
   const {slotId, member} = input;
   const router = useRouter();
+
+  const styleImage = useSelector((state: RootState) => state.styleData.image);
 
   const styles = StyleSheet.create({
     container: {
@@ -62,7 +69,24 @@ export default function Charbox(input: props) {
           });
         }}
       >
-        <Text style={styles.text}>Icon</Text>
+        {member?.styleID ? (
+          <Image
+            style={[
+              {
+                aspectRatio: 1 / 1,
+                resizeMode: 'contain',
+              },
+              member.styleID == '-1' ? {width: 115, height: 115} : null, // temporarily fix icon overflow for dummy
+            ]}
+            source={
+              styleImage[parseInt(member?.styleID)]
+                ? {uri: styleImage[parseInt(member?.styleID)]}
+                : dummyImage
+            }
+          />
+        ) : (
+          <Text style={styles.text}>Icon</Text>
+        )}
       </TouchableHighlight>
       <View
         style={[
