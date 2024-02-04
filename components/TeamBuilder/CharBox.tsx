@@ -6,15 +6,21 @@ import {
   TouchableHighlight,
   Button,
   Image,
+  Modal,
   BackHandler,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
 import {TeamMemberData} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
+import {useState} from 'react';
 import {RootState} from '../../redux/store';
+import {Remove} from '../../redux/reducers/teamDraft';
 // @ts-ignore
 import dummyImage from '../../assets/images/hisamecchi.png';
+import {Platform} from 'react-native';
+import Stat from './StatBox';
 
 type props = {
   slotId: number;
@@ -25,8 +31,18 @@ export default function Charbox(input: props) {
   const theme = useTheme();
   const {slotId, member} = input;
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const styleImage = useSelector((state: RootState) => state.styleData.image);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -47,10 +63,24 @@ export default function Charbox(input: props) {
     button: {
       color: theme.dark ? '#B794F6' : '#00BFA5',
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
+    },
+    modalContent: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF', //6200EE
+      padding: 16,
+      borderRadius: 8,
+    },
   });
 
   return (
-    <View style={[styles.border, styles.container]}>
+    <KeyboardAvoidingView
+      style={[styles.border, styles.container]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <TouchableHighlight
         style={[
           styles.border,
@@ -69,18 +99,18 @@ export default function Charbox(input: props) {
           });
         }}
       >
-        {member?.styleID ? (
+        {member?.Sid ? (
           <Image
             style={[
               {
                 aspectRatio: 1 / 1,
                 resizeMode: 'contain',
               },
-              member.styleID == '-1' ? {width: 115, height: 115} : null, // temporarily fix icon overflow for dummy
+              member.Sid == '-1' ? {width: 115, height: 115} : null, // temporarily fix icon overflow for dummy
             ]}
             source={
-              styleImage[parseInt(member?.styleID)]
-                ? {uri: styleImage[parseInt(member?.styleID)]}
+              styleImage[parseInt(member?.Sid)]
+                ? {uri: styleImage[parseInt(member?.Sid)]}
                 : dummyImage
             }
           />
@@ -100,9 +130,20 @@ export default function Charbox(input: props) {
         ]}
       >
         <Text style={styles.text}>
-          {member?.charName} {member.rarity}
+          {member?.charName}{' '}
+          {member.rarity
+            ? (member.rarity = 'Free' ? 'SS' : member.rarity)
+            : null}{' '}
+          {member.totsu ? member.totsu + '凸' : null}
+          {'\n'}
+          {member?.styleName}
+          {'\n'}
+          {member?.level ? 'レべル: ' + member.level : null}
+          {member?.tensei ? '+' + member.tensei : null}
         </Text>
-        <Text style={styles.text}>{member?.styleName}</Text>
+        {/* <View style={[styles.border, {borderWidth: 0, borderTopWidth: 1}]}>
+          <Stat />
+        </View> */}
       </View>
       <View
         style={[
@@ -111,22 +152,31 @@ export default function Charbox(input: props) {
             // aspectRatio: 1 / 1,
             // backgroundColor: 'green',
             flexDirection: 'column',
-            padding: 4,
+            padding: 2,
             justifyContent: 'space-evenly',
           },
         ]}
       >
         <Button
           title="Remove"
-          onPress={() => console.log('Remove pressed')}
+          onPress={() => dispatch(Remove({index: input.slotId}))}
           color={theme.dark ? '#B794F6' : '#00BFA5'}
         ></Button>
         <Button
           title="Detail"
-          onPress={() => console.log('Detail pressed')}
+          onPress={() => setModalVisible(true)}
           color={theme.dark ? '#B794F6' : '#00BFA5'}
         ></Button>
       </View>
-    </View>
+      <Modal visible={modalVisible} transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.text}>This is the modal content</Text>
+            <TextInput></TextInput>
+            <Button title="Close" onPress={closeModal} />
+          </View>
+        </View>
+      </Modal>
+    </KeyboardAvoidingView>
   );
 }

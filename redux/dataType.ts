@@ -1,13 +1,13 @@
 export interface TeamMemberData {
-  charID?: string;
+  Cid?: string;
   charName?: string;
-  styleID?: string;
+  Sid?: string;
   styleName?: string;
   rarity?: 'A' | 'S' | 'SS' | 'Free';
   level?: number;
   tensei?: number;
   totsu?: number;
-  levelGap?: number;
+  levelGap: number;
   skills?: Object;
   Stat?: number[];
   image?: string;

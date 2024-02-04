@@ -22,11 +22,11 @@ export default function SearchItem(input: props) {
   const dispatch = useDispatch();
   const TeamMember = {
     ...DEFAULT_MEMBER,
-    styleID: style.Sid,
+    Sid: style.Sid,
     rarity: style.rarity,
     styleName: style.styleName,
     charName: style.name,
-    charID: style.Cid,
+    Cid: style.Cid,
   };
   const handleSelect = (slotId: string) => {
     console.log('inserting ', TeamMember.styleName, 'into slot', slotId);

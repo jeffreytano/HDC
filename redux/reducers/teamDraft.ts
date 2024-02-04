@@ -15,8 +15,8 @@ const teamDraftSlice = createSlice({
         // const dulplicants = Array.from(copiedTeam).findIndex((item:TeamMemberData)=> item.styleID === action.payload.Sid)
         let dulplicants = Array.from(state.TeamMember).findIndex(
           (item: TeamMemberData) =>
-            item.styleID === action.payload.teamMember.styleID ||
-            item.charID === action.payload.teamMember.charID,
+            item.Sid === action.payload.teamMember.Sid ||
+            item.Cid === action.payload.teamMember.Cid,
         );
         console.log(
           'found',
@@ -28,8 +28,45 @@ const teamDraftSlice = createSlice({
       }
       state.TeamMember[index] = action.payload.teamMember;
     },
+    Remove: (state, action) => {
+      const index = action.payload.index;
+      state.TeamMember[index] = EMPTY_MEMBER_DATA;
+    },
+    Level: (state, action) => {
+      const {index, level} = action.payload;
+      const targetMember = state.TeamMember[index];
+      if (level <= targetMember.levelGap) {
+        targetMember.level = level;
+      } else {
+        targetMember.level = targetMember.levelGap;
+      }
+    },
+    LimitBreak: (state, action) => {
+      const {index, limitBreak} = action.payload;
+      const targetMember = state.TeamMember[index];
+      targetMember.totsu = limitBreak;
+      switch (targetMember.rarity) {
+        case 'Free':
+          targetMember.levelGap = 130 + 5 * limitBreak;
+        case 'SS':
+          targetMember.levelGap = 130 + 10 * limitBreak;
+        case 'S':
+          targetMember.levelGap = 110 + 2 * limitBreak;
+        case 'A':
+          targetMember.levelGap = 100 + limitBreak;
+      }
+    },
+    Tensei: (state, action) => {
+      const {index, tensei} = action.payload;
+      const targetMember = state.TeamMember[index];
+      if (tensei <= 20) {
+        targetMember.tensei = tensei;
+      } else {
+        targetMember.tensei = 20;
+      }
+    },
   },
 });
 
-export const {Add} = teamDraftSlice.actions;
+export const {Add, Remove, Level, LimitBreak, Tensei} = teamDraftSlice.actions;
 export default teamDraftSlice.reducer;
