@@ -4,9 +4,9 @@ export interface TeamMemberData {
   Sid?: string;
   styleName?: string;
   rarity?: 'A' | 'S' | 'SS' | 'Free';
-  level?: number;
-  tensei?: number;
-  totsu?: number;
+  level: number;
+  tensei: number;
+  totsu: number;
   levelGap: number;
   skills?: Object;
   Stat?: number[];

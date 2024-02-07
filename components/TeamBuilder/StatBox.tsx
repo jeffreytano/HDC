@@ -1,19 +1,5 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  Button,
-  Image,
-  BackHandler,
-} from 'react-native';
-import {Link, useRouter} from 'expo-router';
-import {TeamMemberData} from '../../redux/dataType';
+import {StyleSheet, Text, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../redux/store';
-// @ts-ignore
-import dummyImage from '../../assets/images/hisamecchi.png';
 
 type props = {
   Stat: number[];
@@ -53,7 +39,7 @@ export default function Stat() {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.textBox}>
+      {/* <View style={styles.textBox}>
         <TextBox
           title="　ＤＰ"
           stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
@@ -63,8 +49,12 @@ export default function Stat() {
           stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
         ></TextBox>
         <View style={{flex: 1}}></View>
-      </View>
+      </View> */}
       <View style={styles.textBox}>
+        <TextBox
+          title="　ＤＰ"
+          stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
+        ></TextBox>
         <TextBox
           title="　　力"
           stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
@@ -79,6 +69,10 @@ export default function Stat() {
         ></TextBox>
       </View>
       <View style={styles.textBox}>
+        <TextBox
+          title="　ＨＰ"
+          stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
+        ></TextBox>
         <TextBox
           title="器用さ"
           stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}

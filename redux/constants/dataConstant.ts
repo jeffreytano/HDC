@@ -4,6 +4,10 @@ export const EMPTY_MEMBER_DATA: TeamMemberData = {
   Sid: '-1',
   Cid: '-1',
   levelGap: 100,
+  level: 1,
+  totsu: 0,
+  tensei: 0,
+
 };
 
 export const EMPTY_TEAM = [

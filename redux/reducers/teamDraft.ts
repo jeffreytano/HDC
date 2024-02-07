@@ -18,12 +18,6 @@ const teamDraftSlice = createSlice({
             item.Sid === action.payload.teamMember.Sid ||
             item.Cid === action.payload.teamMember.Cid,
         );
-        console.log(
-          'found',
-          dulplicants,
-          action.payload.teamMember.styleID,
-          state.TeamMember[dulplicants],
-        );
         state.TeamMember[dulplicants] = EMPTY_MEMBER_DATA;
       }
       state.TeamMember[index] = action.payload.teamMember;
