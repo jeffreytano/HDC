@@ -204,6 +204,7 @@ export default function Charbox(input: props) {
       </View>
       {showDetail == slotId && (
         <View>
+          <Text style={styles.text}>Booster and chip</Text>
           <Stat />
           <View
             style={{
