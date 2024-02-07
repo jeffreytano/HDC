@@ -205,11 +205,20 @@ export default function Charbox(input: props) {
       {showDetail == slotId && (
         <View>
           <Stat />
-          <Button
-            title="Edit"
-            onPress={() => setModalVisible(true)}
-            color={theme.dark ? '#B794F6' : '#00BFA5'}
-          ></Button>
+          <View
+            style={{
+              width: '40%',
+              alignSelf: 'center',
+              paddingTop: 3,
+              paddingBottom: 10,
+            }}
+          >
+            <Button
+              title="Edit"
+              onPress={() => setModalVisible(true)}
+              color={theme.dark ? '#B794F6' : '#00BFA5'}
+            ></Button>
+          </View>
         </View>
       )}
 
