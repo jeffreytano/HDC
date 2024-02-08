@@ -15,17 +15,22 @@ const StatInput: React.FC<StatInputComponentProps> = ({
   ...rest
 }) => {
   //   const {style, min, max, onChangeText,...rest} = props;
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState(min.toString());
   const theme = useTheme();
   const handleTextChange = (text: string) => {
-    const numericValue = parseInt(text, 10);
-    if (numericValue < min) setValue(min.toString());
-    else if (numericValue > max) setValue(max.toString());
-    else setValue(text);
-    if (onChangeText) {
-      onChangeText(text);
+    if (text == '') {
+      setValue(min.toString());
+    } else {
+      const numericValue = parseInt(text, 10);
+      if (numericValue < min) setValue(min.toString());
+      else if (numericValue > max) setValue(max.toString());
+      else setValue(text);
+      if (onChangeText) {
+        onChangeText(text);
+      }
     }
   };
+
   const styles = StyleSheet.create({
     input: {
       // Add your custom styles here
