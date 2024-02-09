@@ -2,11 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 type props = {
-  Stat: number[];
+  Stat?: number[];
 };
 
-export default function Stat() {
-  const stat = [999, 2, 3, 4, 5, 6];
+export default function Stat(input: props) {
+  // const stat = [999, 2, 3, 4, 5, 6];
+  const stat = input.Stat;
   const theme = useTheme();
 
   const styles = StyleSheet.create({
@@ -53,37 +54,37 @@ export default function Stat() {
       <View style={styles.textBox}>
         <TextBox
           title="　ＤＰ"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
+          stat={stat ? ([0] ? stat[0].toString() : '0') : '1199'}
         ></TextBox>
         <TextBox
           title="　　力"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[2].toString() : '0') : '999'}
         ></TextBox>
         <TextBox
           title="　体力"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[4].toString() : '0') : '999'}
         ></TextBox>
         <TextBox
           title="　知性"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[6].toString() : '0') : '999'}
         ></TextBox>
       </View>
       <View style={styles.textBox}>
         <TextBox
           title="　ＨＰ"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '999'}
+          stat={stat ? ([0] ? stat[1].toString() : '0') : '1999'}
         ></TextBox>
         <TextBox
           title="器用さ"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[3].toString() : '0') : '999'}
         ></TextBox>
         <TextBox
           title="　精神"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[5].toString() : '0') : '999'}
         ></TextBox>
         <TextBox
           title="　　運"
-          stat={stat ? ([0] ? stat[0].toString() : '0') : '0'}
+          stat={stat ? ([0] ? stat[7].toString() : '0') : '999'}
         ></TextBox>
       </View>
     </View>

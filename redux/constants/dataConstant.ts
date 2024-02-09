@@ -24,6 +24,7 @@ export const DEFAULT_MEMBER: TeamMemberData = {
   tensei: 0,
   totsu: 0,
   levelGap: 100,
+  Stat: [1,2,3,4,5,6,7,8],
 };
 
 export const SKILL_TARGET = {
