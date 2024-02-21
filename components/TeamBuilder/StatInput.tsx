@@ -12,22 +12,29 @@ const StatInput: React.FC<StatInputComponentProps> = ({
   min,
   max,
   onChangeText,
+  onSubmitEditing,
   ...rest
 }) => {
   //   const {style, min, max, onChangeText,...rest} = props;
   const [value, setValue] = useState(min.toString());
   const theme = useTheme();
   const handleTextChange = (text: string) => {
-    if (text == '') {
+    // if (text == '') {
+    //   setValue(min.toString());
+    // } else {
+    const numericValue = parseInt(text, 10);
+    if (numericValue < min) setValue(min.toString());
+    else if (numericValue > max) setValue(max.toString());
+    else setValue(text);
+    if (onChangeText) {
+      onChangeText(text);
+    }
+    // }
+  };
+
+  const handleInputSubmit = () => {
+    if (value == '') {
       setValue(min.toString());
-    } else {
-      const numericValue = parseInt(text, 10);
-      if (numericValue < min) setValue(min.toString());
-      else if (numericValue > max) setValue(max.toString());
-      else setValue(text);
-      if (onChangeText) {
-        onChangeText(text);
-      }
     }
   };
 
@@ -45,6 +52,7 @@ const StatInput: React.FC<StatInputComponentProps> = ({
     <TextInput
       value={value}
       onChangeText={handleTextChange}
+      onSubmitEditing={handleInputSubmit}
       style={[styles.input, style]}
       keyboardType="numeric"
       {...rest}
