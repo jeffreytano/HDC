@@ -80,15 +80,19 @@ export default function SearchItem(input: props) {
             styles.text,
             {
               marginHorizontal: 10,
+              flex: 1,
             },
           ]}
         >
           {input.style.name}
           {'\t\t'}
           {input.style.rarity}
+          {'\t\t'}
+          {input.style.Sid}
           {'\n'}
           {input.style.styleName} {'\n'}
-          {input.style.Sid}
+          {'\n'}
+          {input.style.skill}
         </Text>
       </View>
     </TouchableHighlight>

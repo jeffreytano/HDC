@@ -16,7 +16,7 @@ export default function TabOneScreen() {
   const styleData = useSelector((state: RootState) => state.styleData.styles);
 
   useEffect(() => {
-    checkUpdate('CharacterDataBase');
+    fetchDataFromGoogle('HBRStyleData');
   }, []);
 
   useEffect(() => {
@@ -40,69 +40,99 @@ export default function TabOneScreen() {
     dispatch(InsertImage(payload));
   };
 
-  const checkUpdate = async (key: string) => {
-    let lastUpdate;
-    let needUpdate = true;
-    let onlineResponse;
-    let data;
-    let jsonData;
-    let styleData: jsonStyleData[] = [];
+  const fetchDataFromGoogle = async (sheet: string) => {
+    const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
+    const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
+    const range = 'A2:M10000';
+
+    const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 
     try {
-      jsonData = await AsyncStorage.getItem(key);
-      if (jsonData !== null) {
-        data = JSON.parse(jsonData);
-        lastUpdate = data.lastUpdate;
-        styleData = data.styles;
-      } else {
-        console.log('unable to find target');
-      }
-    } catch (error) {
-      console.log('failed at get local json update time', error);
-    }
-    try {
-      onlineResponse = await axios.get(
-        'https://jeffreytano.github.io/image/styleData.json',
-      );
-
-      if (lastUpdate) {
-        needUpdate = onlineResponse.data.lastUpdate > lastUpdate;
-      }
-    } catch (error) {
-      console.log('failed at get online update time', error);
-    }
-    console.log('needUpdate:', needUpdate);
-    // console.log('data', data);
-    try {
-      if (needUpdate) {
-        if (onlineResponse) {
-          await AsyncStorage.setItem(key, JSON.stringify(onlineResponse.data));
-          styleData = onlineResponse.data.styles;
-          console.log('JSON content saved successfully!');
-        }
-      }
-    } catch (error) {
-      console.log('failed writing data to local', error);
-    }
-    if (styleData) {
-      let combinedArray: any[] = [];
-      styleData.map(({Cid, name, team, weapon, chKey, detail}) => {
-        const singleChStyle = detail.map((styleItem) => {
-          const result = {
-            Cid: Cid,
-            name: name,
-            team: team,
-            weapon: weapon,
-            chKey: chKey,
-            ...styleItem,
-          };
-          return result;
+      const res = await axios.get(dataUrl);
+      const rows = res.data.values;
+      if (rows.length) {
+        const keys = rows[0];
+        const result = rows.slice(1).map((row: any) => {
+          const obj: any = {};
+          keys.forEach((key: string, index: number) => {
+            if (row[index]) {
+              obj[key] = row[index];
+            } else {
+              obj[key] = '';
+            }
+          });
+          return obj;
         });
-        combinedArray = combinedArray.concat(singleChStyle);
-      });
-      dispatch(FetchStyleList(combinedArray));
+        dispatch(FetchStyleList(result));
+      }
+    } catch (e) {
+      console.log('error', e);
     }
   };
+
+  // const checkUpdate = async (key: string) => {
+  //   let lastUpdate;
+  //   let needUpdate = true;
+  //   let onlineResponse;
+  //   let data;
+  //   let jsonData;
+  //   let styleData: jsonStyleData[] = [];
+
+  //   try {
+  //     jsonData = await AsyncStorage.getItem(key);
+  //     if (jsonData !== null) {
+  //       data = JSON.parse(jsonData);
+  //       lastUpdate = data.lastUpdate;
+  //       styleData = data.styles;
+  //     } else {
+  //       console.log('unable to find target');
+  //     }
+  //   } catch (error) {
+  //     console.log('failed at get local json update time', error);
+  //   }
+  //   try {
+  //     onlineResponse = await axios.get(
+  //       'https://jeffreytano.github.io/image/styleData.json',
+  //     );
+
+  //     if (lastUpdate) {
+  //       needUpdate = onlineResponse.data.lastUpdate > lastUpdate;
+  //     }
+  //   } catch (error) {
+  //     console.log('failed at get online update time', error);
+  //   }
+  //   console.log('needUpdate:', needUpdate);
+  //   // console.log('data', data);
+  //   try {
+  //     if (needUpdate) {
+  //       if (onlineResponse) {
+  //         await AsyncStorage.setItem(key, JSON.stringify(onlineResponse.data));
+  //         styleData = onlineResponse.data.styles;
+  //         console.log('JSON content saved successfully!');
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('failed writing data to local', error);
+  //   }
+  //   if (styleData) {
+  //     let combinedArray: any[] = [];
+  //     styleData.map(({Cid, name, team, weapon, chKey, detail}) => {
+  //       const singleChStyle = detail.map((styleItem) => {
+  //         const result = {
+  //           Cid: Cid,
+  //           name: name,
+  //           team: team,
+  //           weapon: weapon,
+  //           chKey: chKey,
+  //           ...styleItem,
+  //         };
+  //         return result;
+  //       });
+  //       combinedArray = combinedArray.concat(singleChStyle);
+  //     });
+  //     dispatch(FetchStyleList(combinedArray));
+  //   }
+  // };
 
   return (
     <View style={styles.container}>

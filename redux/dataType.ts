@@ -37,6 +37,7 @@ export interface styleData {
   element?: number;
   target?: number;
   image?: string;
+  skill?:string;
 }
 export interface jsonStyleData {
   Cid: string;
