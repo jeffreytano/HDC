@@ -93,4 +93,14 @@ export const initialStyleData: styleData[] = [
   },
 ];
 
+export interface boosterSet{
+  booster: string;
+  chips: chipDetails[];
+}
+
+export interface chipDetails{
+  stat: string,
+  amount: number
+}
+
 export const styleImage = [...Array(999)].map(() => '');

@@ -7,7 +7,6 @@ import {
   Button,
   Image,
   Modal,
-  BackHandler,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
 import {TeamMemberData, initialStyleData} from '../../redux/dataType';
@@ -18,10 +17,12 @@ import {RootState} from '../../redux/store';
 import {Remove} from '../../redux/reducers/teamDraft';
 // @ts-ignore
 import dummyImage from '../../assets/images/hisamecchi.png';
-import {Platform} from 'react-native';
 import Stat from './StatBox';
-import ValuePicker from './ValuePicker';
 import StatInput from './StatInput';
+import ItemPicker from './ItemPicker';
+import {Dropdown} from 'react-native-element-dropdown';
+import ChipItem from './ChipItem';
+import {IconButton} from 'react-native-paper';
 
 type props = {
   slotId: number;
@@ -35,8 +36,46 @@ export default function Charbox(input: props) {
   const dispatch = useDispatch();
   const styleImage = useSelector((state: RootState) => state.styleData.image);
   const [showDetail, setShowDetail] = useState(-1);
-
   const [modalVisible, setModalVisible] = useState(false);
+
+  type Perk = {
+    stat: string;
+    amount: number;
+  };
+
+  const defaultPerk = {
+    stat: 'none',
+    amount: 0,
+  };
+
+  const [maxChip, setMaxChip] = useState(4);
+  const [perks, setPerks] = useState<Perk[]>([defaultPerk]);
+
+  const updatePerk = ({
+    index,
+    stat,
+    amount,
+  }: {
+    index: number;
+    stat: string;
+    amount: number;
+  }) => {
+    let newPerks = perks;
+    newPerks[index] = {stat: stat, amount: amount};
+    setPerks(newPerks);
+    console.log(newPerks);
+  };
+  const addPerk = () => {
+    if (perks.length < maxChip) {
+      setPerks(perks.concat(defaultPerk));
+    }
+  };
+
+  const removePerk = (index: number) => {
+    if (perks.length > 1) {
+      setPerks(perks.splice(index));
+    }
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -81,6 +120,15 @@ export default function Charbox(input: props) {
       backgroundColor: theme.dark ? '#323232' : '#FFFFFF', //6200EE
       padding: 16,
       borderRadius: 8,
+    },
+    dropdownContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF',
+    },
+    dropdownListContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF',
+    },
+    dropdownItemText: {
+      color: theme.dark ? '#FFFFFF' : '#000000',
     },
   });
 
@@ -216,7 +264,7 @@ export default function Charbox(input: props) {
           >
             <Button
               title="Edit"
-              onPress={() => setModalVisible(true)}
+              onPress={openModal}
               color={theme.dark ? '#B794F6' : '#00BFA5'}
             ></Button>
           </View>
@@ -226,8 +274,44 @@ export default function Charbox(input: props) {
       <Modal visible={modalVisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.text}>This is the modal content</Text>
-            <TextInput></TextInput>
+            <ItemPicker items={['B1', 'B2', 'B3']}></ItemPicker>
+            {perks.map((item, index) => (
+              <View key={index} style={{flexDirection: 'row'}}>
+                <ChipItem
+                  index={index}
+                  items={['B1', 'B2', 'B3']}
+                  max={maxChip}
+                ></ChipItem>
+                <IconButton
+                  icon="minus-thick"
+                  iconColor={theme.dark ? '#FFFFFF' : '#000000'}
+                  size={16}
+                  onPress={(event) => removePerk(index)}
+                ></IconButton>
+              </View>
+            ))}
+            {perks.length > 0 && (
+              <IconButton
+                icon="plus-thick"
+                iconColor={theme.dark ? '#FFFFFF' : '#000000'}
+                size={16}
+                onPress={addPerk}
+              ></IconButton>
+            )}
+            {/* <Dropdown
+              placeholderStyle={styles.text}
+              style={styles.dropdownListContainer}
+              containerStyle={[styles.dropdownContainer]}
+              itemTextStyle={styles.dropdownItemText}
+              data={data}
+              labelField="label"
+              valueField="value"
+              value={value}
+              onChange={(item) => {
+                setValue(item.value);
+                setIsFocus(false);
+              }}
+            ></Dropdown> */}
             <Button title="Close" onPress={closeModal} />
           </View>
         </View>

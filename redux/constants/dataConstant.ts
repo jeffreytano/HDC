@@ -1,4 +1,4 @@
-import {TeamMemberData} from '../dataType';
+import {TeamMemberData, boosterSet} from '../dataType';
 
 export const EMPTY_MEMBER_DATA: TeamMemberData = {
   Sid: '-1',
@@ -7,7 +7,6 @@ export const EMPTY_MEMBER_DATA: TeamMemberData = {
   level: 1,
   totsu: 0,
   tensei: 0,
-
 };
 
 export const EMPTY_TEAM = [
@@ -18,6 +17,15 @@ export const EMPTY_TEAM = [
   EMPTY_MEMBER_DATA,
   EMPTY_MEMBER_DATA,
 ];
+
+export const DEFAULT_BOOSTER_SETS: boosterSet[] = [
+  {booster: 'None', chips: [{stat:'None',amount: 0}]},
+  {booster: 'None', chips: [{stat:'None',amount: 0}]},
+  {booster: 'None', chips: [{stat:'None',amount: 0}]},
+  {booster: 'None', chips: [{stat:'None',amount: 0}]},
+  {booster: 'None', chips: [{stat:'None',amount: 0}]},
+  {booster: 'None', chips: [{stat:'None',amount: 0}]}
+]
 
 export const DEFAULT_MEMBER: TeamMemberData = {
   level: 1,

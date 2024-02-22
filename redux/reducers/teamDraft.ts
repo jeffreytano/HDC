@@ -1,11 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {EMPTY_MEMBER_DATA, EMPTY_TEAM} from '../constants/dataConstant';
+import {DEFAULT_BOOSTER_SETS, EMPTY_MEMBER_DATA, EMPTY_TEAM} from '../constants/dataConstant';
 import {TeamMemberData} from '../dataType';
 
 const teamDraftSlice = createSlice({
   name: 'teamDraft',
   initialState: {
     TeamMember: EMPTY_TEAM,
+    BoosterSet: DEFAULT_BOOSTER_SETS
   },
   reducers: {
     Add: (state, action) => {
@@ -13,12 +14,12 @@ const teamDraftSlice = createSlice({
       if (state.TeamMember != EMPTY_TEAM) {
         // const copiedTeam = Object.entries(state.TeamMember).map(([key, value]) => ({ [key]: value }));
         // const dulplicants = Array.from(copiedTeam).findIndex((item:TeamMemberData)=> item.styleID === action.payload.Sid)
-        let dulplicants = Array.from(state.TeamMember).findIndex(
+        let duplicant = Array.from(state.TeamMember).findIndex(
           (item: TeamMemberData) =>
             item.Sid === action.payload.teamMember.Sid ||
             item.Cid === action.payload.teamMember.Cid,
         );
-        state.TeamMember[dulplicants] = EMPTY_MEMBER_DATA;
+        state.TeamMember[duplicant] = EMPTY_MEMBER_DATA;
       }
       state.TeamMember[index] = action.payload.teamMember;
     },
