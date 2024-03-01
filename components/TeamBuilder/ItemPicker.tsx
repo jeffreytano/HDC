@@ -3,13 +3,17 @@ import React, {useState} from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import {Dropdown} from 'react-native-element-dropdown';
 import {StyleSheet} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {ChangeBooster} from '../../redux/reducers/teamDraft';
 
 type props = {
   items: string[];
+  index: number;
 };
 
 export default function ItemPicker(input: props) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const {items} = input;
   const [selectedValue, setSelectedValue] = useState('');
   const [isFocus, setIsFocus] = useState(false);
@@ -18,6 +22,7 @@ export default function ItemPicker(input: props) {
   });
   const handleValueChange = (value: string) => {
     setSelectedValue(value);
+    dispatch(ChangeBooster({booster: value}));
     setIsFocus(false);
   };
 

@@ -5,21 +5,19 @@ import {Text, View} from '../../components/Themed';
 import {useState} from 'react';
 import axios from 'axios';
 
-import {getGoogleSheet} from '../../components/getGoogleSheet';
-
 const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
 const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
 const sheetName = 'HBRStyleData';
 const range = 'A3:M10000';
 
-const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
+const getStyleDataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 
 export default function TabTwoScreen() {
   const [data, setData] = useState('');
 
   const handleButton = async () => {
     try {
-      const res = await axios.get(dataUrl);
+      const res = await axios.get(getStyleDataUrl);
       const {data} = res;
       console.log(data);
       setData(data.values[8][4]);

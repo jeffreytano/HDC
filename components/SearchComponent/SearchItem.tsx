@@ -70,9 +70,7 @@ export default function SearchItem(input: props) {
             resizeMode: 'contain',
           }}
           source={
-            styleImage[input.style.Sid]
-              ? {uri: styleImage[input.style.Sid]}
-              : Dummyimage
+            styleImage[style.Sid] ? {uri: styleImage[style.Sid]} : Dummyimage
           }
         />
         <Text
@@ -84,15 +82,15 @@ export default function SearchItem(input: props) {
             },
           ]}
         >
-          {input.style.name}
+          {style.name}
           {'\t\t'}
-          {input.style.rarity}
+          {style.rarity == 'Free' ? 'SS' : style.rarity}
           {'\t\t'}
-          {input.style.Sid}
+          {style.Sid}
           {'\n'}
-          {input.style.styleName} {'\n'}
+          {style.styleName} {'\n'}
           {'\n'}
-          {input.style.skill}
+          {style.skill}
         </Text>
       </View>
     </TouchableHighlight>

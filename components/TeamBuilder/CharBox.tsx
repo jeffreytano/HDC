@@ -17,7 +17,7 @@ import {RootState} from '../../redux/store';
 import {Remove} from '../../redux/reducers/teamDraft';
 // @ts-ignore
 import dummyImage from '../../assets/images/hisamecchi.png';
-import Stat from './StatBox';
+import Stat from './Stat';
 import StatInput from './StatInput';
 import ItemPicker from './ItemPicker';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -30,26 +30,37 @@ type props = {
 };
 
 export default function Charbox(input: props) {
-  const theme = useTheme();
-  const {slotId, member} = input;
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const styleImage = useSelector((state: RootState) => state.styleData.image);
-  const [showDetail, setShowDetail] = useState(-1);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  type Perk = {
-    stat: string;
-    amount: number;
-  };
-
   const defaultPerk = {
     stat: 'none',
     amount: 0,
   };
-
+  const theme = useTheme();
+  const {slotId, member} = input;
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const BoosterSet = useSelector(
+    (state: RootState) => state.teamDraft.BoosterSet,
+  );
+  const styleImage = useSelector((state: RootState) => state.styleData.image);
+  const [showDetail, setShowDetail] = useState(-1);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [chipNumber, setChipNumber] = useState(0);
   const [maxChip, setMaxChip] = useState(4);
   const [perks, setPerks] = useState<Perk[]>([defaultPerk]);
+
+  const handleChipChange = (number: number) => {
+    console.log(chipNumber);
+    if (
+      (number == 1 && chipNumber < maxChip) ||
+      (number == -1 && chipNumber > 0)
+    ) {
+      setChipNumber(chipNumber + number);
+    }
+  };
+  type Perk = {
+    stat: string;
+    amount: number;
+  };
 
   const updatePerk = ({
     index,
@@ -247,13 +258,13 @@ export default function Charbox(input: props) {
             title="Detail"
             onPress={() => setShowDetail(showDetail == slotId ? -1 : slotId)}
             color={theme.dark ? '#B794F6' : '#00BFA5'}
-          ></Button>
+          />
         </View>
       </View>
       {showDetail == slotId && (
         <View>
           <Text style={styles.text}>Booster and chip</Text>
-          <Stat Stat={member?.Stat} />
+          <Stat stat={member?.Stat} />
           <View
             style={{
               width: '40%',
@@ -270,17 +281,18 @@ export default function Charbox(input: props) {
           </View>
         </View>
       )}
-
       <Modal visible={modalVisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <ItemPicker items={['B1', 'B2', 'B3']}></ItemPicker>
+            <ItemPicker index={slotId} items={['B1', 'B2', 'B3']}></ItemPicker>
             {perks.map((item, index) => (
               <View key={index} style={{flexDirection: 'row'}}>
                 <ChipItem
-                  index={index}
+                  index={slotId}
                   items={['B1', 'B2', 'B3']}
                   max={maxChip}
+                  handleChipChange={handleChipChange}
+                  total={chipNumber}
                 ></ChipItem>
                 <IconButton
                   icon="minus-thick"
@@ -290,28 +302,17 @@ export default function Charbox(input: props) {
                 ></IconButton>
               </View>
             ))}
-            {perks.length > 0 && (
-              <IconButton
-                icon="plus-thick"
-                iconColor={theme.dark ? '#FFFFFF' : '#000000'}
-                size={16}
-                onPress={addPerk}
-              ></IconButton>
-            )}
-            {/* <Dropdown
-              placeholderStyle={styles.text}
-              style={styles.dropdownListContainer}
-              containerStyle={[styles.dropdownContainer]}
-              itemTextStyle={styles.dropdownItemText}
-              data={data}
-              labelField="label"
-              valueField="value"
-              value={value}
-              onChange={(item) => {
-                setValue(item.value);
-                setIsFocus(false);
-              }}
-            ></Dropdown> */}
+            {perks.length > 0 &&
+              perks.length < maxChip &&
+              chipNumber < maxChip && (
+                <IconButton
+                  icon="plus-thick"
+                  iconColor={theme.dark ? '#FFFFFF' : '#000000'}
+                  size={16}
+                  onPress={addPerk}
+                ></IconButton>
+              )}
+            <Stat boosterSet={BoosterSet[slotId]} raw={false}></Stat>
             <Button title="Close" onPress={closeModal} />
           </View>
         </View>

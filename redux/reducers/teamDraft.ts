@@ -1,12 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {DEFAULT_BOOSTER_SETS, EMPTY_MEMBER_DATA, EMPTY_TEAM} from '../constants/dataConstant';
+import {DEFAULT_BOOSTER_SETS, DEFAULT_STATMOD, EMPTY_MEMBER_DATA, EMPTY_TEAM} from '../constants/dataConstant';
 import {TeamMemberData} from '../dataType';
 
 const teamDraftSlice = createSlice({
   name: 'teamDraft',
   initialState: {
     TeamMember: EMPTY_TEAM,
-    BoosterSet: DEFAULT_BOOSTER_SETS
+    BoosterSet: DEFAULT_BOOSTER_SETS,
+    StatModifier: DEFAULT_STATMOD,
+    CharacterBaseStat: []
   },
   reducers: {
     Add: (state, action) => {
@@ -60,8 +62,22 @@ const teamDraftSlice = createSlice({
         targetMember.tensei = 20;
       }
     },
+    ChangeBooster: (state,action) => {
+      const {index, booster} = action.payload;
+      const target = state.BoosterSet[index];
+      target.booster = booster;
+    },
+    ChangeChips: (state,action) => {
+      const {index, chips} = action.payload;
+      const target = state.BoosterSet[index]
+      target.chips = chips
+    },
+    FetchCharacterStat: (state,action) => {
+      const data = action.payload;
+      state.CharacterBaseStat = data;
+    }
   },
 });
 
-export const {Add, Remove, Level, LimitBreak, Tensei} = teamDraftSlice.actions;
+export const {Add, Remove, Level, LimitBreak, Tensei,ChangeBooster,ChangeChips,FetchCharacterStat} = teamDraftSlice.actions;
 export default teamDraftSlice.reducer;

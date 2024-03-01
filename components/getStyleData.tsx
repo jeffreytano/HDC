@@ -1,9 +1,11 @@
+//Not used
+
 import axios from 'axios';
 const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
 const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
 // const sheetName = 'HBRStyleData';
 
-const getGoogleSheet = (sheetName: string, range = 'A2:M1000'): any => {
+const getStyleData = (sheetName: string, range = 'A2:M1000'): any => {
   const getData = async (url: string) => {
     try {
       const res = await axios.get(url);
@@ -21,4 +23,4 @@ const getGoogleSheet = (sheetName: string, range = 'A2:M1000'): any => {
   return getData(dataUrl);
 };
 
-export {getGoogleSheet};
+export {getStyleData};

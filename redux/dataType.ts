@@ -9,7 +9,7 @@ export interface TeamMemberData {
   totsu: number;
   levelGap: number;
   skills?: Object;
-  Stat?: number[];
+  Stat?: stat;
   image?: string;
 }
 
@@ -101,6 +101,24 @@ export interface boosterSet{
 export interface chipDetails{
   stat: string,
   amount: number
+}
+
+export interface stat{
+  dp: number,
+  hp: number,
+  power: number,
+  agility: number,
+  physical: number,
+  mental: number,
+  witness: number,
+  luck: number,
+}
+
+export interface statModifier{
+  styleP: stat,
+  styleC: stat,
+  booster: stat,
+  accessories: stat
 }
 
 export const styleImage = [...Array(999)].map(() => '');

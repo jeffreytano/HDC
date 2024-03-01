@@ -3,13 +3,7 @@ import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
 import {useLocalSearchParams} from 'expo-router';
-import {
-  TextInput,
-  FlatList,
-  Button,
-  ListRenderItemInfo,
-  Image,
-} from 'react-native';
+import {TextInput, FlatList, ListRenderItemInfo} from 'react-native';
 import {useEffect, useState} from 'react';
 import SearchItem from '../../components/SearchComponent/SearchItem';
 import * as FileSystem from 'expo-file-system';

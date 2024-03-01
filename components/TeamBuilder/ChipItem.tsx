@@ -9,11 +9,13 @@ type props = {
   items: string[];
   max: number;
   index: number;
+  handleChipChange: (number: number) => void;
+  total: number;
 };
 
 export default function ChipItem(input: props) {
   const theme = useTheme();
-  const {max, items, index} = input;
+  const {max, items, index, handleChipChange, total} = input;
   const [amount, setAmount] = useState(0);
   const [selectedItem, setSelectedItem] = useState('');
   const [isFocus, setIsFocus] = useState(false);
@@ -26,16 +28,16 @@ export default function ChipItem(input: props) {
   };
 
   const handleAmountIncrement = () => {
-    if (amount < max) {
+    if (amount < max && total != max) {
       setAmount(amount + 1);
-      const stat = selectedItem;
+      handleChipChange(1);
     }
   };
 
   const handleAmountDecrement = () => {
     if (amount > 0) {
       setAmount(amount - 1);
-      const stat = selectedItem;
+      handleChipChange(-1);
     }
   };
 

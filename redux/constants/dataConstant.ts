@@ -32,7 +32,16 @@ export const DEFAULT_MEMBER: TeamMemberData = {
   tensei: 0,
   totsu: 0,
   levelGap: 100,
-  Stat: [1,2,3,4,5,6,7,8],
+  Stat: {
+    dp: 1,
+    hp: 2,
+    power: 3,
+    agility: 4,
+    physical: 5,
+    mental: 6,
+    witness: 7,
+    luck: 8,
+  },
 };
 
 export const SKILL_TARGET = {
@@ -60,3 +69,46 @@ export const WEAPON = {
   2: '突',
   3: '打',
 };
+
+export const DEFAULT_STATMOD = {
+  styleP: {
+    dp: 0,
+    hp: 0,
+    power: 0,
+    agility: 0,
+    physical: 0,
+    mental: 0,
+    witness: 0,
+    luck: 0,
+  },
+  styleC:{
+    dp: 0,
+    hp: 0,
+    power: 0,
+    agility: 0,
+    physical: 0,
+    mental: 0,
+    witness: 0,
+    luck: 0,
+  },
+  booster:{
+    dp: 0,
+    hp: 0,
+    power: 0,
+    agility: 0,
+    physical: 0,
+    mental: 0,
+    witness: 0,
+    luck: 0,
+  },
+  accessories:{
+    dp: 0,
+    hp: 0,
+    power: 0,
+    agility: 0,
+    physical: 0,
+    mental: 0,
+    witness: 0,
+    luck: 0
+  }
+}

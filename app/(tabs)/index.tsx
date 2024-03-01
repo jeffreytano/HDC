@@ -11,12 +11,14 @@ import axios from 'axios';
 import {jsonStyleData, styleData} from '../../redux/dataType';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
+import {FetchCharacterStat} from '../../redux/reducers/teamDraft';
+import CharacterData from '../../assets/CharacterData.json';
 
 export default function TabOneScreen() {
   const styleData = useSelector((state: RootState) => state.styleData.styles);
 
   useEffect(() => {
-    fetchDataFromGoogle('HBRStyleData');
+    fetchStyleDataFromGoogle('HBRStyleData');
   }, []);
 
   useEffect(() => {
@@ -40,15 +42,15 @@ export default function TabOneScreen() {
     dispatch(InsertImage(payload));
   };
 
-  const fetchDataFromGoogle = async (sheet: string) => {
+  const fetchStyleDataFromGoogle = async (sheet: string) => {
     const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
     const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
     const range = 'A2:M10000';
 
-    const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
+    const getStyleDataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 
     try {
-      const res = await axios.get(dataUrl);
+      const res = await axios.get(getStyleDataUrl);
       const rows = res.data.values;
       if (rows.length) {
         const keys = rows[0];
@@ -63,7 +65,13 @@ export default function TabOneScreen() {
           });
           return obj;
         });
-        dispatch(FetchStyleList(result));
+        switch (sheet) {
+          case 'HBRStyleData':
+            dispatch(FetchStyleList(result));
+            break;
+          default:
+            console.log('no matching dispatch');
+        }
       }
     } catch (e) {
       console.log('error', e);
