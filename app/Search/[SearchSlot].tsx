@@ -51,15 +51,18 @@ export default function SearchSlot() {
   const handleSearch = (query: string) => {
     if (query && styleData) {
       const newData = styleData.filter((item) => {
-        if (item?.searchKey || item?.styleName || item?.chKey) {
+        if (item?.searchKey || item?.styleName || item?.chKey || item.class) {
           const itemData = item?.searchKey
             ? item.searchKey.toUpperCase()
             : ''.toUpperCase();
           const textData = query.toUpperCase();
           const styleData = item?.styleName.toUpperCase();
           const chData = item?.chKey.toUpperCase();
+          const chClass = item?.class?.toUpperCase();
           return (
-            styleData.concat(' ', itemData, ' ', chData).indexOf(textData) > -1
+            styleData
+              .concat(' ', chClass ? chClass : '', ' ', itemData, ' ', chData)
+              .indexOf(textData) > -1
           );
         }
       });

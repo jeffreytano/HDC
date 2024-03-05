@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {TextInput, TextInputProps, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 interface StatInputComponentProps extends TextInputProps {
   min: number;
@@ -13,15 +14,13 @@ const StatInput: React.FC<StatInputComponentProps> = ({
   max,
   onChangeText,
   onSubmitEditing,
+  defaultValue,
   ...rest
 }) => {
   //   const {style, min, max, onChangeText,...rest} = props;
-  const [value, setValue] = useState(min.toString());
+  const [textValue, setValue] = useState(defaultValue);
   const theme = useTheme();
   const handleTextChange = (text: string) => {
-    // if (text == '') {
-    //   setValue(min.toString());
-    // } else {
     const numericValue = parseInt(text, 10);
     if (numericValue < min) setValue(min.toString());
     else if (numericValue > max) setValue(max.toString());
@@ -29,11 +28,10 @@ const StatInput: React.FC<StatInputComponentProps> = ({
     if (onChangeText) {
       onChangeText(text);
     }
-    // }
   };
 
   const handleInputSubmit = () => {
-    if (value == '') {
+    if (textValue == '') {
       setValue(min.toString());
     }
   };
@@ -50,7 +48,7 @@ const StatInput: React.FC<StatInputComponentProps> = ({
 
   return (
     <TextInput
-      value={value}
+      value={textValue}
       onChangeText={handleTextChange}
       onSubmitEditing={handleInputSubmit}
       style={[styles.input, style]}

@@ -17,10 +17,10 @@ export default function Stat(input: props) {
   const [boosterStat, setBoosterStat] = useState<stat>({
     dp: 0,
     hp: 0,
-    power: 0,
-    agility: 0,
-    physical: 0,
-    mental: 0,
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    spirit: 0,
     witness: 0,
     luck: 0,
   });
@@ -84,13 +84,17 @@ export default function Stat(input: props) {
         <TextBox
           title="　　力"
           raw={raw}
-          stat={stat ? stat.power.toString() : boosterStat.power.toString()}
+          stat={
+            stat ? stat.strength.toString() : boosterStat.strength.toString()
+          }
         ></TextBox>
         <TextBox
           title="　体力"
           raw={raw}
           stat={
-            stat ? stat.physical.toString() : boosterStat.physical.toString()
+            stat
+              ? stat.constitution.toString()
+              : boosterStat.constitution.toString()
           }
         ></TextBox>
         <TextBox
@@ -108,12 +112,14 @@ export default function Stat(input: props) {
         <TextBox
           title="器用さ"
           raw={raw}
-          stat={stat ? stat.agility.toString() : boosterStat.agility.toString()}
+          stat={
+            stat ? stat.dexterity.toString() : boosterStat.dexterity.toString()
+          }
         ></TextBox>
         <TextBox
           title="　精神"
           raw={raw}
-          stat={stat ? stat.mental.toString() : boosterStat.mental.toString()}
+          stat={stat ? stat.spirit.toString() : boosterStat.spirit.toString()}
         ></TextBox>
         <TextBox
           title="　　運"

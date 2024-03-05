@@ -1,7 +1,7 @@
 export interface TeamMemberData {
-  Cid?: string;
+  Cid: number;
   charName?: string;
-  Sid?: string;
+  Sid: number;
   styleName?: string;
   rarity?: 'A' | 'S' | 'SS' | 'Free';
   level: number;
@@ -11,6 +11,7 @@ export interface TeamMemberData {
   skills?: Object;
   Stat?: stat;
   image?: string;
+  statType: string;
 }
 
 export interface styleDataDetail {
@@ -26,7 +27,7 @@ export interface styleDataDetail {
 export interface styleData {
   Cid: string;
   name: string;
-  team?: string;
+  class?: string;
   weapon?: number;
   chKey: string;
   Sid: number;
@@ -37,12 +38,13 @@ export interface styleData {
   element?: number;
   target?: number;
   image?: string;
-  skill?:string;
+  skill?: string;
+  statType?: string;
 }
 export interface jsonStyleData {
   Cid: string;
   name: string;
-  team?: string;
+  class?: string;
   weapon?: number;
   chKey?: string;
   detail: jsonStyleItem[];
@@ -57,6 +59,45 @@ export interface jsonStyleItem {
   target?: number;
   searchKey?: string;
   image?: string;
+}
+
+export interface jsonCharStat {
+  Cid: number;
+  MinDP: number;
+  MaxDP: number;
+  MinHP: number;
+  MaxHP: number;
+  MinSTR: number;
+  MaxSTR: number;
+  MinDEX: number;
+  MaxDEX: number;
+  MinCON: number;
+  MaxCON: number;
+  MinSPR: number;
+  MaxSPR: number;
+  MinWIS: number;
+  MaxWIS: number;
+  MinLCK: number;
+  MaxLCK: number;
+  TenseiBonus: string;
+}
+
+export interface typeStat {
+  TypeId: string;
+  DPP: number;
+  StrP: number;
+  DexP: number;
+  ConP: number;
+  SprP: number;
+  WisP: number;
+  LckP: number;
+  DPC: number;
+  StrC: number;
+  DexC: number;
+  ConC: number;
+  SprC: number;
+  WisC: number;
+  LckC: number;
 }
 
 // export const defaultStyleDetailItem: jsonStyleItem[] = [
@@ -93,32 +134,54 @@ export const initialStyleData: styleData[] = [
   },
 ];
 
-export interface boosterSet{
+export interface boosterSet {
   booster: string;
   chips: chipDetails[];
 }
 
-export interface chipDetails{
-  stat: string,
-  amount: number
+export interface chipDetails {
+  stat: string;
+  amount: number;
 }
 
-export interface stat{
+export interface stat {
+  dp: number;
+  hp: number;
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  spirit: number;
+  witness: number;
+  luck: number;
+}
+
+export function createStat(
   dp: number,
   hp: number,
-  power: number,
-  agility: number,
-  physical: number,
-  mental: number,
+  strength: number,
+  dexterity: number,
+  constitution: number,
+  spirit: number,
   witness: number,
   luck: number,
+) {
+  return {
+    dp: dp,
+    hp: hp,
+    strength: strength,
+    dexterity: dexterity,
+    constitution: constitution,
+    spirit: spirit,
+    witness: witness,
+    luck: luck,
+  };
 }
 
-export interface statModifier{
-  styleP: stat,
-  styleC: stat,
-  booster: stat,
-  accessories: stat
+export interface statModifier {
+  styleP: stat;
+  styleC: stat;
+  booster: stat;
+  accessories: stat;
 }
 
 export const styleImage = [...Array(999)].map(() => '');

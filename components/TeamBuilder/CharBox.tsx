@@ -14,7 +14,12 @@ import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react';
 import {RootState} from '../../redux/store';
-import {Remove} from '../../redux/reducers/teamDraft';
+import {
+  Level,
+  Remove,
+  LimitBreak,
+  Tensei,
+} from '../../redux/reducers/teamDraft';
 // @ts-ignore
 import dummyImage from '../../assets/images/hisamecchi.png';
 import Stat from './Stat';
@@ -172,11 +177,11 @@ export default function Charbox(input: props) {
                   aspectRatio: 1 / 1,
                   resizeMode: 'contain',
                 },
-                member.Sid == '-1' ? {width: 115, height: 115} : null, // temporarily fix icon overflow for dummy
+                member.Sid == -1 ? {width: 115, height: 115} : null, // temporarily fix icon overflow for dummy
               ]}
               source={
-                styleImage[parseInt(member?.Sid)]
-                  ? {uri: styleImage[parseInt(member?.Sid)]}
+                styleImage[member?.Sid]
+                  ? {uri: styleImage[member?.Sid]}
                   : dummyImage
               }
             />
@@ -201,33 +206,48 @@ export default function Charbox(input: props) {
             {member.rarity
               ? (member.rarity = 'Free' ? 'SS' : member.rarity)
               : null}{' '}
-            {member.totsu ? member.totsu + '凸' : null}
             {'\n'}
             {member?.styleName}
           </Text>
-          {member?.level && member.Sid != '-1' ? (
+          {member?.level && member.Sid != -1 ? (
             <View style={{flexDirection: 'row'}}>
               <Text style={[styles.text]}>レべル </Text>
               <StatInput
-                defaultValue={member.level.toString()}
+                value={member.level.toString()}
                 min={1}
-                max={110}
+                max={member.levelGap}
                 style={{width: 30}}
-                onChangeText={() => console.log('changing level')}
+                onChangeText={(text) =>
+                  dispatch(Level({index: slotId, level: parseInt(text)}))
+                }
               ></StatInput>
               <Text style={styles.text}> 限界突破 </Text>
               <StatInput
                 defaultValue={member?.totsu.toString()}
                 min={0}
-                max={4}
-                onChangeText={() => console.log('changing totsu')}
+                max={
+                  member.rarity == 'SS' || member.rarity == 'Free'
+                    ? 4
+                    : member.rarity == 'S'
+                      ? 10
+                      : 20
+                }
+                onChangeText={(text) => {
+                  if (text) {
+                    dispatch(
+                      LimitBreak({index: slotId, limitBreak: parseInt(text)}),
+                    );
+                  }
+                }}
               ></StatInput>
               <Text style={styles.text}> 転生 </Text>
               <StatInput
                 defaultValue={member?.tensei.toString()}
                 min={0}
                 max={20}
-                onChangeText={() => console.log('changing totsu')}
+                onChangeText={(text) =>
+                  dispatch(Tensei({index: slotId, tensei: parseInt(text)}))
+                }
               ></StatInput>
             </View>
           ) : null}

@@ -11,8 +11,6 @@ import axios from 'axios';
 import {jsonStyleData, styleData} from '../../redux/dataType';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
-import {FetchCharacterStat} from '../../redux/reducers/teamDraft';
-import CharacterData from '../../assets/CharacterData.json';
 
 export default function TabOneScreen() {
   const styleData = useSelector((state: RootState) => state.styleData.styles);
@@ -45,7 +43,7 @@ export default function TabOneScreen() {
   const fetchStyleDataFromGoogle = async (sheet: string) => {
     const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
     const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
-    const range = 'A2:M10000';
+    const range = 'A2:N10000';
 
     const getStyleDataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 
