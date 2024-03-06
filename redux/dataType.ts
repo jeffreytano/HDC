@@ -98,6 +98,18 @@ export interface typeStat {
   SprC: number;
   WisC: number;
   LckC: number;
+  StrEx: number;
+  DexEx: number;
+  ConEx: number;
+  SprEx: number;
+  WisEx: number;
+  LckEx: number;
+  StrGEx: number;
+  DexGEx: number;
+  ConGEx: number;
+  SprGEx: number;
+  WisGEx: number;
+  LckGEx: number;
 }
 
 // export const defaultStyleDetailItem: jsonStyleItem[] = [

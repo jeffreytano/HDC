@@ -38,26 +38,82 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
     MinSPR,
     MinWIS,
   } = baseSheet[Cid - 1];
-  const dp = Math.round(MinDP + ((level - 1) * (MaxDP - MinDP)) / 199);
+  const dp =
+    Math.ceil(
+      (Math.round(MinDP + ((level - 1) * (MaxDP - MinDP)) / 199) *
+        (100 + StatModifier.styleP.dp)) /
+        100,
+    ) + StatModifier.styleC.dp;
   const hp = Math.round(MinHP + ((level - 1) * (MaxHP - MinHP)) / 199);
+  console.log(
+    'CON=(',
+    Math.round(MinCON + ((level - 1) * (MaxCON - MinCON)) / 199),
+    '+',
+    StatModifier.tensei.constitution,
+    '+',
+    StatModifier.global.constitution,
+    ')*',
+    (100 +
+      StatModifier.styleP.constitution +
+      StatModifier.limitBreak.constitution) /
+      100,
+    '+',
+    StatModifier.styleC.constitution,
+  );
   const strength =
-    Math.round(MinSTR + ((level - 1) * (MaxSTR - MinSTR)) / 199) +
-    StatModifier.tensei.strength;
+    Math.ceil(
+      ((Math.round(MinSTR + ((level - 1) * (MaxSTR - MinSTR)) / 199) +
+        StatModifier.tensei.strength +
+        StatModifier.global.strength) *
+        (100 +
+          StatModifier.styleP.strength +
+          StatModifier.limitBreak.strength)) /
+        100,
+    ) + StatModifier.styleC.strength;
   const dexterity =
-    Math.round(MinDEX + ((level - 1) * (MaxDEX - MinDEX)) / 199) +
-    StatModifier.tensei.dexterity;
+    Math.ceil(
+      ((Math.round(MinDEX + ((level - 1) * (MaxDEX - MinDEX)) / 199) +
+        StatModifier.tensei.dexterity +
+        StatModifier.global.dexterity) *
+        (100 +
+          StatModifier.styleP.dexterity +
+          StatModifier.limitBreak.dexterity)) /
+        100,
+    ) + StatModifier.styleC.dexterity;
   const constitution =
-    Math.round(MinCON + ((level - 1) * (MaxCON - MinCON)) / 199) +
-    StatModifier.tensei.constitution;
+    Math.ceil(
+      ((Math.round(MinCON + ((level - 1) * (MaxCON - MinCON)) / 199) +
+        StatModifier.tensei.constitution +
+        StatModifier.global.constitution) *
+        (100 +
+          StatModifier.styleP.constitution +
+          StatModifier.limitBreak.constitution)) /
+        100,
+    ) + StatModifier.styleC.constitution;
   const spirit =
-    Math.round(MinSPR + ((level - 1) * (MaxSPR - MinSPR)) / 199) +
-    StatModifier.tensei.spirit;
+    Math.ceil(
+      ((Math.round(MinSPR + ((level - 1) * (MaxSPR - MinSPR)) / 199) +
+        StatModifier.tensei.spirit +
+        StatModifier.global.spirit) *
+        (100 + StatModifier.styleP.spirit + StatModifier.limitBreak.spirit)) /
+        100,
+    ) + StatModifier.styleC.spirit;
   const witness =
-    Math.round(MinWIS + ((level - 1) * (MaxWIS - MinWIS)) / 199) +
-    StatModifier.tensei.witness;
+    Math.ceil(
+      ((Math.round(MinWIS + ((level - 1) * (MaxWIS - MinWIS)) / 199) +
+        StatModifier.tensei.witness +
+        StatModifier.global.witness) *
+        (100 + StatModifier.styleP.witness + StatModifier.limitBreak.witness)) /
+        100,
+    ) + StatModifier.styleC.witness;
   const luck =
-    Math.round(MinLCK + ((level - 1) * (MaxLCK - MinLCK)) / 199) +
-    StatModifier.tensei.luck;
+    Math.ceil(
+      ((Math.round(MinLCK + ((level - 1) * (MaxLCK - MinLCK)) / 199) +
+        StatModifier.tensei.luck +
+        StatModifier.global.luck) *
+        (100 + StatModifier.styleP.luck + StatModifier.limitBreak.luck)) /
+        100,
+    ) + StatModifier.styleC.luck;
   return createStat(
     dp,
     hp,
@@ -114,9 +170,11 @@ const teamDraftSlice = createSlice({
           newMember.levelGap = 160;
           break;
       }
+      console.log(styleType);
       const statMod = typeStatSheet.find((item) => {
         return item.TypeId == styleType;
       });
+      console.log('statMod ', statMod);
       if (statMod) {
         state.StatModifier[index].styleP = createStat(
           statMod.DPP,
@@ -137,6 +195,16 @@ const teamDraftSlice = createSlice({
           statMod.SprC,
           statMod.WisC,
           statMod.LckC,
+        );
+        state.StatModifier[index].global = createStat(
+          0,
+          0,
+          statMod.StrEx,
+          statMod.DexEx,
+          statMod.ConEx,
+          statMod.SprEx,
+          statMod.WisEx,
+          statMod.LckEx,
         );
       }
 

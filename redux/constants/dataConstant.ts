@@ -11,6 +11,16 @@ export const EMPTY_MEMBER_DATA: TeamMemberData = {
 };
 
 export const DEFAULT_STATMOD = {
+  global: {
+    dp: 0,
+    hp: 0,
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    spirit: 0,
+    witness: 0,
+    luck: 0,
+  },
   styleP: {
     dp: 0,
     hp: 0,

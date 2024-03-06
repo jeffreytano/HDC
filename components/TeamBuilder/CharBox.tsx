@@ -213,7 +213,7 @@ export default function Charbox(input: props) {
             <View style={{flexDirection: 'row'}}>
               <Text style={[styles.text]}>レべル </Text>
               <StatInput
-                value={member.level.toString()}
+                defaultValue={member.level.toString()}
                 min={1}
                 max={member.levelGap}
                 style={{width: 30}}

@@ -27,6 +27,7 @@ export default function SearchItem(input: props) {
     styleName: style.styleName,
     charName: style.name,
     Cid: style.Cid,
+    statType: style.statType,
   };
   const handleSelect = (slotId: string) => {
     console.log('inserting ', TeamMember.styleName, 'into slot', slotId);
