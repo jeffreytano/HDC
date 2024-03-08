@@ -295,7 +295,12 @@ export default function Charbox(input: props) {
           >
             <Button
               title="Edit"
-              onPress={openModal}
+              onPress={() => {
+                router.push({
+                  pathname: '/equipment/[equipment]',
+                  params: {equipment: slotId},
+                });
+              }}
               color={theme.dark ? '#B794F6' : '#00BFA5'}
             ></Button>
           </View>
