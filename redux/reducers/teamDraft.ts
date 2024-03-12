@@ -1,10 +1,11 @@
-import {createSlice, lruMemoize} from '@reduxjs/toolkit';
+import {AnyAction, createSlice, lruMemoize} from '@reduxjs/toolkit';
 import {
   DEFAULT_BOOSTER_SETS,
   DEFAULT_STATMOD,
   EMPTY_MEMBER_DATA,
   EMPTY_TEAM,
   EMPTY_STATMOD,
+  DEFAULT_STAT,
 } from '../constants/dataConstant';
 import {
   TeamMemberData,
@@ -15,6 +16,7 @@ import {
 } from '../dataType';
 import CharacterData from '../../assets/CharacterData.json';
 import TypeStat from '../../assets/TypeStat.json';
+import {chipDetails, statModifier} from '../dataType';
 
 const baseSheet = JSON.parse(CharacterData) as Array<jsonCharStat>;
 const typeStatSheet = JSON.parse(TypeStat) as Array<typeStat>;
@@ -38,28 +40,22 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
     MinSPR,
     MinWIS,
   } = baseSheet[Cid - 1];
+
+  // const tempChipStat = [...Array()].map((_, index) => index + 1);
   const dp =
     Math.ceil(
       (Math.round(MinDP + ((level - 1) * (MaxDP - MinDP)) / 199) *
         (100 + StatModifier.styleP.dp)) /
         100,
-    ) + StatModifier.styleC.dp;
+    ) +
+    StatModifier.styleC.dp +
+    StatModifier.chips[0].dp +
+    StatModifier.chips[1].dp +
+    StatModifier.chips[2].dp +
+    StatModifier.chips[3].dp;
+
   const hp = Math.round(MinHP + ((level - 1) * (MaxHP - MinHP)) / 199);
-  console.log(
-    'CON=(',
-    Math.round(MinCON + ((level - 1) * (MaxCON - MinCON)) / 199),
-    '+',
-    StatModifier.tensei.constitution,
-    '+',
-    StatModifier.global.constitution,
-    ')*',
-    (100 +
-      StatModifier.styleP.constitution +
-      StatModifier.limitBreak.constitution) /
-      100,
-    '+',
-    StatModifier.styleC.constitution,
-  );
+
   const strength =
     Math.ceil(
       ((Math.round(MinSTR + ((level - 1) * (MaxSTR - MinSTR)) / 199) +
@@ -69,7 +65,14 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
           StatModifier.styleP.strength +
           StatModifier.limitBreak.strength)) /
         100,
-    ) + StatModifier.styleC.strength;
+    ) +
+    StatModifier.styleC.strength +
+    StatModifier.booster.strength +
+    StatModifier.chips[0].strength +
+    StatModifier.chips[1].strength +
+    StatModifier.chips[2].strength +
+    StatModifier.chips[3].strength;
+
   const dexterity =
     Math.ceil(
       ((Math.round(MinDEX + ((level - 1) * (MaxDEX - MinDEX)) / 199) +
@@ -79,7 +82,13 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
           StatModifier.styleP.dexterity +
           StatModifier.limitBreak.dexterity)) /
         100,
-    ) + StatModifier.styleC.dexterity;
+    ) +
+    StatModifier.styleC.dexterity +
+    StatModifier.booster.dexterity +
+    StatModifier.chips[0].dexterity +
+    StatModifier.chips[1].dexterity +
+    StatModifier.chips[2].dexterity +
+    StatModifier.chips[3].dexterity;
   const constitution =
     Math.ceil(
       ((Math.round(MinCON + ((level - 1) * (MaxCON - MinCON)) / 199) +
@@ -89,7 +98,13 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
           StatModifier.styleP.constitution +
           StatModifier.limitBreak.constitution)) /
         100,
-    ) + StatModifier.styleC.constitution;
+    ) +
+    StatModifier.styleC.constitution +
+    StatModifier.booster.constitution +
+    StatModifier.chips[0].constitution +
+    StatModifier.chips[1].constitution +
+    StatModifier.chips[2].constitution +
+    StatModifier.chips[3].constitution;
   const spirit =
     Math.ceil(
       ((Math.round(MinSPR + ((level - 1) * (MaxSPR - MinSPR)) / 199) +
@@ -97,7 +112,13 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
         StatModifier.global.spirit) *
         (100 + StatModifier.styleP.spirit + StatModifier.limitBreak.spirit)) /
         100,
-    ) + StatModifier.styleC.spirit;
+    ) +
+    StatModifier.styleC.spirit +
+    StatModifier.booster.spirit +
+    StatModifier.chips[0].spirit +
+    StatModifier.chips[1].spirit +
+    StatModifier.chips[2].spirit +
+    StatModifier.chips[3].spirit;
   const witness =
     Math.ceil(
       ((Math.round(MinWIS + ((level - 1) * (MaxWIS - MinWIS)) / 199) +
@@ -105,7 +126,13 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
         StatModifier.global.witness) *
         (100 + StatModifier.styleP.witness + StatModifier.limitBreak.witness)) /
         100,
-    ) + StatModifier.styleC.witness;
+    ) +
+    StatModifier.styleC.witness +
+    StatModifier.booster.witness +
+    StatModifier.chips[0].witness +
+    StatModifier.chips[1].witness +
+    StatModifier.chips[2].witness +
+    StatModifier.chips[3].witness;
   const luck =
     Math.ceil(
       ((Math.round(MinLCK + ((level - 1) * (MaxLCK - MinLCK)) / 199) +
@@ -113,7 +140,13 @@ const calculateStat = (Cid: number, level: number, StatModifier: any) => {
         StatModifier.global.luck) *
         (100 + StatModifier.styleP.luck + StatModifier.limitBreak.luck)) /
         100,
-    ) + StatModifier.styleC.luck;
+    ) +
+    StatModifier.styleC.luck +
+    StatModifier.booster.luck +
+    StatModifier.chips[0].luck +
+    StatModifier.chips[1].luck +
+    StatModifier.chips[2].luck +
+    StatModifier.chips[3].luck;
   return createStat(
     dp,
     hp,
@@ -364,14 +397,61 @@ const teamDraftSlice = createSlice({
       );
     },
     ChangeBooster: (state, action) => {
-      const {index, booster} = action.payload;
+      const {index, booster, stat} = action.payload;
       const target = state.BoosterSet[index];
-      target.booster = booster;
+      const targetMember = state.TeamMember[index];
+      const targetStat = state.StatModifier[index];
+      target.id = booster.id;
+      target.name = booster.name;
+      if (target.id == '-1') {
+        target.slot = 0;
+        targetStat.booster = DEFAULT_STAT;
+      } else {
+        target.slot = booster.slot;
+        targetStat.booster = stat;
+      }
+      switch (target.slot) {
+        case 0:
+          targetStat.chips = [
+            DEFAULT_STAT,
+            DEFAULT_STAT,
+            DEFAULT_STAT,
+            DEFAULT_STAT,
+          ];
+          break;
+        case 1:
+          targetStat.chips[1] = DEFAULT_STAT;
+          targetStat.chips[2] = DEFAULT_STAT;
+          targetStat.chips[3] = DEFAULT_STAT;
+          break;
+        case 2:
+          targetStat.chips[2] = DEFAULT_STAT;
+          targetStat.chips[3] = DEFAULT_STAT;
+          break;
+        case 3:
+          targetStat.chips[3] = DEFAULT_STAT;
+          break;
+        default:
+          break;
+      }
+      targetMember.Stat = calculateStat(
+        targetMember.Cid,
+        targetMember.level,
+        state.StatModifier[index],
+      );
     },
     ChangeChips: (state, action) => {
-      const {index, chips} = action.payload;
-      const target = state.BoosterSet[index];
-      target.chips = chips;
+      const {index, chipIndex, stat, chipId, chipName} = action.payload;
+      const targetChip = state.BoosterSet[index].chips[chipIndex];
+      const targetMember = state.TeamMember[index];
+      targetChip.id = chipId;
+      targetChip.name = chipName;
+      state.StatModifier[index].chips[chipIndex] = stat;
+      targetMember.Stat = calculateStat(
+        targetMember.Cid,
+        targetMember.level,
+        state.StatModifier[index],
+      );
     },
   },
 });

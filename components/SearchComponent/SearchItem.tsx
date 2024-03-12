@@ -45,7 +45,7 @@ export default function SearchItem(input: props) {
       borderColor: theme.dark ? '#2A0069' : 'lightblue',
       borderWidth: theme.dark ? 3 : 1,
       padding: 10,
-      height: 125,
+      height: 130,
       flexDirection: 'row',
       marginVertical: 1,
       // marginHorizontal: 4,
@@ -90,6 +90,8 @@ export default function SearchItem(input: props) {
           {style.Sid}
           {'\n'}
           {style.styleName} {'\n'}
+          {style.SPusage ? '[SP消費 ' + style.SPusage + ']' : ''}
+          {style.SPequal ? '\t[' + style.SPequal + ' SP相当]' : ''}
           {'\n'}
           {style.skill}
         </Text>

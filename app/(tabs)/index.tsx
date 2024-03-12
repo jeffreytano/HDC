@@ -8,7 +8,7 @@ import {InsertImage, FetchStyleList} from '../../redux/reducers/styleData';
 import {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {jsonStyleData, styleData} from '../../redux/dataType';
+import {styleData} from '../../redux/dataType';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 
@@ -43,7 +43,7 @@ export default function TabOneScreen() {
   const fetchStyleDataFromGoogle = async (sheet: string) => {
     const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
     const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
-    const range = 'A2:N10000';
+    const range = 'A2:P10000';
 
     const getStyleDataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 

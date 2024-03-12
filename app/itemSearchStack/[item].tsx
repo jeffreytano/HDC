@@ -10,6 +10,10 @@ import dummyimage from '../../assets/images/hisamecchi.png';
 import {useTheme} from '@react-navigation/native';
 import Stat from '../../components/TeamBuilder/Stat';
 import RenderItem from '../../components/SearchComponent/RenderItem';
+import equipData from '../../assets/equip.json';
+import {boosterDataType, createStat, stat} from '../../redux/dataType';
+
+const equipList = JSON.parse(equipData) as Array<equipItem>;
 
 type prop = {
   item: string;
@@ -21,13 +25,22 @@ type equipItem = {
   id: number;
   name: string;
   detail: string;
+  hp: number;
+  dp: number;
+  str: number;
+  dex: number;
+  con: number;
+  spr: number;
+  wis: number;
+  lck: number;
 };
 
 // Define your sub-pages as separate components
 
 export default function itemSearch() {
   const theme = useTheme();
-  const type = useLocalSearchParams().type;
+  const type = useLocalSearchParams().item;
+  const itemList = equipList.filter((item) => item.type === type).reverse();
   const targetIndex = parseInt(useLocalSearchParams<prop>().targetIndex);
   const target = useSelector(
     (state: RootState) => state.teamDraft.TeamMember[targetIndex],
@@ -48,21 +61,6 @@ export default function itemSearch() {
     },
   });
 
-  const boosterList: Array<equipItem> = [
-    {
-      type: 'booster',
-      name: 'ウツセミ',
-      id: 1,
-      detail: 'details1',
-    },
-    {
-      type: 'booster',
-      name: 'ウツセミ2',
-      id: 2,
-      detail: 'details2',
-    },
-  ];
-
   const renderItem = (item: ListRenderItemInfo<equipItem>) => (
     <RenderItem item={item.item} index={targetIndex} />
   );
@@ -72,7 +70,7 @@ export default function itemSearch() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={boosterList}
+        data={itemList}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={{paddingBottom: 60}}

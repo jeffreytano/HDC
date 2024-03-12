@@ -40,14 +40,8 @@ export interface styleData {
   image?: string;
   skill?: string;
   statType?: string;
-}
-export interface jsonStyleData {
-  Cid: string;
-  name: string;
-  class?: string;
-  weapon?: number;
-  chKey?: string;
-  detail: jsonStyleItem[];
+  SPequal?: number;
+  SPusage: number;
 }
 
 export interface jsonStyleItem {
@@ -112,6 +106,19 @@ export interface typeStat {
   LckGEx: number;
 }
 
+export interface boosterDataType {
+  id: string;
+  name: string;
+  detail: string;
+  slot: number;
+  str: number;
+  dex: number;
+  con: number;
+  spr: number;
+  wis: number;
+  lck: number;
+}
+
 // export const defaultStyleDetailItem: jsonStyleItem[] = [
 //   {
 //     Sid: -1,
@@ -143,17 +150,20 @@ export const initialStyleData: styleData[] = [
     Sid: -1,
     styleName: 'dummyStyleName',
     searchKey: 'dummy searchkey',
+    SPusage: 0,
   },
 ];
 
 export interface boosterSet {
-  booster: string;
+  id: string;
+  name: string;
+  slot: number;
   chips: chipDetails[];
 }
 
 export interface chipDetails {
-  stat: string;
-  amount: number;
+  id: string;
+  name: string;
 }
 
 export interface stat {

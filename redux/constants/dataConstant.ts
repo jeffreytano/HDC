@@ -1,4 +1,4 @@
-import {TeamMemberData, boosterSet} from '../dataType';
+import {TeamMemberData, boosterSet, stat} from '../dataType';
 
 export const EMPTY_MEMBER_DATA: TeamMemberData = {
   Sid: -1,
@@ -10,77 +10,26 @@ export const EMPTY_MEMBER_DATA: TeamMemberData = {
   statType: 'Free',
 };
 
+export const DEFAULT_STAT: stat = {
+  dp: 0,
+  hp: 0,
+  strength: 0,
+  dexterity: 0,
+  constitution: 0,
+  spirit: 0,
+  witness: 0,
+  luck: 0,
+};
+
 export const DEFAULT_STATMOD = {
-  global: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  styleP: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  styleC: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  limitBreak: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  tensei: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  booster: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
-  accessories: {
-    dp: 0,
-    hp: 0,
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    spirit: 0,
-    witness: 0,
-    luck: 0,
-  },
+  global: DEFAULT_STAT,
+  styleP: DEFAULT_STAT,
+  styleC: DEFAULT_STAT,
+  limitBreak: DEFAULT_STAT,
+  tensei: DEFAULT_STAT,
+  booster: DEFAULT_STAT,
+  chips: [DEFAULT_STAT, DEFAULT_STAT, DEFAULT_STAT, DEFAULT_STAT],
+  accessories: DEFAULT_STAT,
 };
 
 export const EMPTY_TEAM = [
@@ -102,12 +51,72 @@ export const EMPTY_STATMOD = [
 ];
 
 export const DEFAULT_BOOSTER_SETS: boosterSet[] = [
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
-  {booster: 'None', chips: [{stat: 'None', amount: 0}]},
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
+  {
+    id: '-1',
+    name: 'None',
+    slot: 0,
+    chips: [
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+      {name: ' ', id: '-1'},
+    ],
+  },
 ];
 
 export const DEFAULT_MEMBER: TeamMemberData = {

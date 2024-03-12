@@ -9,7 +9,11 @@ import {
   Modal,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
-import {TeamMemberData, initialStyleData} from '../../redux/dataType';
+import {
+  TeamMemberData,
+  initialStyleData,
+  chipDetails,
+} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react';
@@ -306,24 +310,25 @@ export default function Charbox(input: props) {
           </View>
         </View>
       )}
-      <Modal visible={modalVisible} transparent={true}>
+      {/* <Modal visible={modalVisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <ItemPicker index={slotId} items={['B1', 'B2', 'B3']}></ItemPicker>
-            {perks.map((item, index) => (
-              <View key={index} style={{flexDirection: 'row'}}>
+            {perks.map((item, chipIndex) => (
+              <View key={chipIndex} style={{flexDirection: 'row'}}>
                 <ChipItem
                   index={slotId}
                   items={['B1', 'B2', 'B3']}
-                  max={maxChip}
-                  handleChipChange={handleChipChange}
-                  total={chipNumber}
+                  chipIndex={chipIndex}
+                  // max={maxChip}
+                  // handleChipChange={handleChipChange}
+                  // total={chipNumber}
                 ></ChipItem>
                 <IconButton
                   icon="minus-thick"
                   iconColor={theme.dark ? '#FFFFFF' : '#000000'}
                   size={16}
-                  onPress={(event) => removePerk(index)}
+                  onPress={(event) => removePerk(chipIndex)}
                 ></IconButton>
               </View>
             ))}
@@ -341,7 +346,7 @@ export default function Charbox(input: props) {
             <Button title="Close" onPress={closeModal} />
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }

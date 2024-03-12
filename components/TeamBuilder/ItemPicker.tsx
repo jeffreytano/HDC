@@ -22,7 +22,7 @@ export default function ItemPicker(input: props) {
   });
   const handleValueChange = (value: string) => {
     setSelectedValue(value);
-    dispatch(ChangeBooster({booster: value}));
+    // dispatch(ChangeBooster({booster: value}));
     setIsFocus(false);
   };
 

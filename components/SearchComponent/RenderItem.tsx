@@ -3,8 +3,8 @@ import {View, TouchableHighlight, Text, Image, StyleSheet} from 'react-native';
 import Dummyimage from '../../assets/images/hisamecchi.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
-import {styleData} from '../../redux/dataType';
-import {Add} from '../../redux/reducers/teamDraft';
+import {stat, styleData, chipDetails, createStat} from '../../redux/dataType';
+import {Add, ChangeBooster} from '../../redux/reducers/teamDraft';
 import {DEFAULT_MEMBER} from '../../redux/constants/dataConstant';
 import {useNavigation} from 'expo-router';
 import {useTheme} from '@react-navigation/native';
@@ -19,19 +19,32 @@ type item = {
   id: number;
   name: string;
   detail: string;
+  slot?: number;
+  dp: number;
+  hp: number;
+  str: number;
+  dex: number;
+  con: number;
+  spr: number;
+  wis: number;
+  lck: number;
 };
 
 export default function RenderItem(input: props) {
   const theme = useTheme();
   const image = useSelector((state: RootState) => state.styleData.image);
   const index = input.index;
-  const {id, name, detail} = input.item;
-  console.log(name);
-  console.log(detail);
+  const {id, name, type, detail, slot, hp, dp, str, dex, con, spr, wis, lck} =
+    input.item;
   const nav = useNavigation();
   const dispatch = useDispatch();
   const handleSelect = () => {
-    console.log('inserting');
+    switch (type) {
+      case 'booster':
+        const booster = {id: id, name: name, slot: slot, chipDetails: {}};
+        const stat = createStat(dp, hp, str, dex, con, spr, wis, lck);
+        dispatch(ChangeBooster({index: index, booster: booster, stat: stat}));
+    }
     nav.goBack();
   };
 

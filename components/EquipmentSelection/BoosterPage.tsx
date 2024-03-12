@@ -1,50 +1,144 @@
 import {Text, View} from '../../components/Themed';
 import {useEffect, useState} from 'react';
-import {Button, IconButton, SegmentedButtons} from 'react-native-paper';
+import {Button, Icon, IconButton, SegmentedButtons} from 'react-native-paper';
 import {router, useLocalSearchParams} from 'expo-router';
 import {StyleSheet, Image, TouchableHighlight} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 // @ts-ignore
 import dummyimage from '../../assets/images/hisamecchi.png';
+import {Dropdown} from 'react-native-element-dropdown';
 import {useTheme} from '@react-navigation/native';
 import Stat from '../../components/TeamBuilder/Stat';
-import {boosterSet} from '../../redux/dataType';
+import {
+  boosterDataType,
+  boosterSet,
+  statModifier,
+  createStat,
+} from '../../redux/dataType';
 import ChipItem from '../TeamBuilder/ChipItem';
+import {useDispatch} from 'react-redux';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ChangeBooster, ChangeChips} from '../../redux/reducers/teamDraft';
+import chipsData from '../../assets/chips.json';
+import {DEFAULT_STAT} from '../../redux/constants/dataConstant';
+
+type chipItem = {
+  id: string;
+  name: string;
+  dp: number;
+  hp: number;
+  str: number;
+  dex: number;
+  con: number;
+  spr: number;
+  wis: number;
+  lck: number;
+};
+
+const chipSheet = (JSON.parse(chipsData) as Array<chipItem>).reverse();
+
 export default function BoosterPage({index}: {index: number}) {
-  const defaultPerk = {
-    stat: 'none',
-    amount: 0,
+  const dispatch = useDispatch();
+  const chip = useSelector(
+    (state: RootState) => state.teamDraft.BoosterSet[index].chips,
+  );
+  console.log(chip);
+  const [isFocus, setIsFocus] = useState(false);
+  const itemList = chipSheet.map((value: chipItem) => {
+    return {label: value.name, value: value.id};
+  });
+  const handleValueChange = (chipIndex: number, value: any) => {
+    const selected = chipSheet.find((item) => item.name == value.label);
+    console.log('finish selecting');
+    if (selected) {
+      console.log('selected', selected);
+      const stat = createStat(
+        selected.dp,
+        selected.hp,
+        selected.str,
+        selected.dex,
+        selected.con,
+        selected.spr,
+        selected.wis,
+        selected.lck,
+      );
+      dispatch(
+        ChangeChips({
+          index: index,
+          chipIndex: chipIndex,
+          chipId: selected.id,
+          chipName: selected.name,
+          stat: stat,
+        }),
+      );
+      console.log('finish dispatching');
+    } else {
+      console.log('failed to find chip');
+    }
+
+    setIsFocus(false);
   };
-  type Perk = {
-    stat: string;
-    amount: number;
-  };
-  const [perks, setPerks] = useState<Perk[]>([defaultPerk]);
   const booster = useSelector(
     (state: RootState) => state.teamDraft.BoosterSet[index],
+  );
+  const chipArray = Array.from({length: booster.slot});
+  const statMod = useSelector(
+    (state: RootState) => state.teamDraft.StatModifier[index],
   );
   const theme = useTheme();
   const styles = StyleSheet.create({
     segmentButton: {
       backgroundColor: '#FFFFFF',
     },
-    text: {
-      color: theme.dark ? '#FFFFFF' : '#000000',
-    },
     border: {
       borderColor: theme.dark ? '#757575' : 'lightblue',
       borderWidth: 1,
     },
+    dropdownContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF',
+    },
+    dropdownListContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF',
+      width: '80%',
+    },
+    text: {
+      // paddingHorizontal: 10,
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+    iconColor: {
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+    buttonContainer: {
+      width: '40%',
+      flexDirection: 'row',
+      paddingHorizontal: 20,
+    },
+    indicator: {
+      color: theme.dark ? '#FFFFFF' : '#000000',
+      padding: 10,
+    },
   });
   return (
-    <View style={{paddingVertical: 15}}>
-      <Stat raw={false} />
+    <ScrollView style={{paddingVertical: 15}}>
+      <Stat
+        raw={false}
+        stat={createStat(
+          statMod.booster.dp,
+          statMod.booster.hp,
+          statMod.booster.strength,
+          statMod.booster.dexterity,
+          statMod.booster.constitution,
+          statMod.booster.spirit,
+          statMod.booster.witness,
+          statMod.booster.luck,
+        )}
+      />
       <TouchableHighlight
         onPress={() => {
           router.push({
             pathname: '/itemSearchStack/[item]',
-            params: {item: 'booster', index: index.toString()},
+            params: {item: 'booster', targetIndex: index.toString()},
           });
         }}
       >
@@ -53,6 +147,10 @@ export default function BoosterPage({index}: {index: number}) {
             flexDirection: 'row',
             marginVertical: 20,
             paddingHorizontal: 30,
+            paddingTop: 10,
+            paddingBottom: 5,
+            borderColor: theme.dark ? '#757575' : 'lightblue',
+            borderWidth: 1,
           }}
         >
           <Image
@@ -64,28 +162,80 @@ export default function BoosterPage({index}: {index: number}) {
             }}
             source={dummyimage}
           />
-          <Text style={styles.text}>
-            {booster ? booster.booster : 'select booster'}
+          <Text style={[styles.text, {padding: 20}]}>
+            {booster.name == 'None' ? 'Tap to select booster' : booster.name}
+            {'\n'}
           </Text>
+          <IconButton
+            icon="close"
+            iconColor={theme.dark ? '#FFFFFF' : '#000000'}
+            style={{alignSelf: 'flex-end'}}
+            size={36}
+            onPress={(event) => {
+              dispatch(
+                ChangeBooster({
+                  index: index,
+                  booster: {id: '-1', name: 'None'},
+                  stat: DEFAULT_STAT,
+                }),
+              );
+            }}
+          ></IconButton>
         </View>
       </TouchableHighlight>
-      {/* {perks.map((item, index) => (
-        <View key={index} style={{flexDirection: 'row'}}>
-          <ChipItem
-            index={index}
-            items={['B1', 'B2', 'B3']}
-            max={maxChip}
-            handleChipChange={handleChipChange}
-            total={chipNumber}
-          ></ChipItem>
-          <IconButtonButton
+      {chipArray.map((item, chipIndex) => {
+        console.log('selectedChip0', chip[0]);
+        console.log('selectedChip1', chip[1]);
+        console.log('selectedChip2', chip[2]);
+        console.log('selectedChip3', chip[3]);
+        const selectedChip = {
+          label: chip[chipIndex].name,
+          value: chip[chipIndex].id,
+        };
+        return (
+          <View
+            key={chipIndex}
+            style={{
+              flexDirection: 'column',
+              padding: 15,
+            }}
+          >
+            <View style={{flexDirection: 'row'}}>
+              <Dropdown
+                dropdownPosition="top"
+                placeholder="selected"
+                activeColor={theme.dark ? '#B794F6' : '#00BFA5'}
+                selectedTextStyle={styles.text}
+                placeholderStyle={styles.text}
+                // selectedStyle={styles.dropdownContainer}r
+                style={[
+                  styles.dropdownListContainer,
+                  isFocus && {borderColor: 'blue'},
+                ]}
+                containerStyle={styles.dropdownContainer}
+                itemTextStyle={styles.text}
+                onChange={(value: any) => {
+                  handleValueChange(chipIndex, value);
+                }}
+                onFocus={() => setIsFocus(true)}
+                value={selectedChip}
+                //@ts-ignore
+                data={itemList}
+                //@ts-ignore
+                labelField={'label'}
+                //@ts-ignore
+                valueField={'value'}
+              />
+            </View>
+            {/* <IconButton
             icon="minus-thick"
             iconColor={theme.dark ? '#FFFFFF' : '#000000'}
             size={16}
             onPress={(event) => removePerk(index)}
-          ></IconButton>
-        </View>
-      ))} */}
-    </View>
+          ></IconButton> */}
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }

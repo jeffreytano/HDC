@@ -27,8 +27,12 @@ export default function equipment() {
   const styleImage = useSelector((state: RootState) => state.styleData.image);
 
   const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+    },
     segmentButton: {
-      backgroundColor: '#FFFFFF',
+      // backgroundColor: '#FFFFFF',
+      paddingHorizontal: 10,
     },
     text: {
       color: theme.dark ? '#FFFFFF' : '#000000',
@@ -39,39 +43,6 @@ export default function equipment() {
     },
   });
 
-  const Page1 = () => (
-    <View style={{paddingVertical: 15}}>
-      <Stat raw={false} />
-      <TouchableHighlight
-        onPress={() => {
-          router.push({
-            pathname: '/itemSearchStack/[item]',
-            params: {item: 'booster', index: index.toString()},
-          });
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            marginVertical: 20,
-            paddingHorizontal: 30,
-          }}
-        >
-          <Image
-            style={{
-              aspectRatio: 1 / 1,
-              width: 70,
-              height: 70,
-              resizeMode: 'contain',
-            }}
-            source={dummyimage}
-          />
-          <Text style={styles.text}>select booster</Text>
-        </View>
-      </TouchableHighlight>
-      <Text style={styles.text}>This is Page 1</Text>
-    </View>
-  );
   const Page2 = () => <Text style={styles.text}>This is Page 2</Text>;
   const Page3 = () => <Text style={styles.text}>This is Page 3</Text>;
 
@@ -89,7 +60,7 @@ export default function equipment() {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         <Image
           style={[
@@ -118,13 +89,13 @@ export default function equipment() {
           {target?.styleName}
         </Text>
       </View>
-      <View style={[styles.border, {padding: 5, margin: 10}]}>
+      <View style={[styles.border, {padding: 5, marginVertical: 20}]}>
         <Stat stat={target.Stat} />
       </View>
       <SegmentedButtons
         value={activePage}
         onValueChange={setActivePage}
-        // style={styles.segmentButton}
+        style={styles.segmentButton}
         theme={{colors: {onSurface: theme.dark ? '#FFFFFF' : '#000000'}}}
         buttons={[
           {
