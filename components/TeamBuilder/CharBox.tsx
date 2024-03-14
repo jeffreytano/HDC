@@ -9,11 +9,7 @@ import {
   Modal,
 } from 'react-native';
 import {Link, useRouter} from 'expo-router';
-import {
-  TeamMemberData,
-  initialStyleData,
-  chipDetails,
-} from '../../redux/dataType';
+import {TeamMemberData, chipDetails} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react';
@@ -30,7 +26,6 @@ import Stat from './Stat';
 import StatInput from './StatInput';
 import ItemPicker from './ItemPicker';
 import {Dropdown} from 'react-native-element-dropdown';
-import ChipItem from './ChipItem';
 import {IconButton} from 'react-native-paper';
 
 type props = {
@@ -286,8 +281,7 @@ export default function Charbox(input: props) {
         </View>
       </View>
       {showDetail == slotId && (
-        <View>
-          <Text style={styles.text}>Booster and chip</Text>
+        <View style={{paddingTop: 10}}>
           <Stat stat={member?.Stat} />
           <View
             style={{

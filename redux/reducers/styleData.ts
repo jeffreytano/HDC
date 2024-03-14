@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {EMPTY_TEAM} from '../constants/dataConstant';
-import {initialStyleData, styleImage} from '../../redux/dataType';
+import {initialStyleData, styleImage} from '../constants/dataConstant';
 
 const styleDataSlice = createSlice({
   name: 'styleData',

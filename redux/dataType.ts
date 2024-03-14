@@ -41,18 +41,8 @@ export interface styleData {
   skill?: string;
   statType?: string;
   SPequal?: number;
-  SPusage: number;
-}
-
-export interface jsonStyleItem {
-  Sid: number;
-  styleName: string;
-  rarity: 'A' | 'S' | 'SS' | 'Free';
-  role?: string;
-  element?: number;
-  target?: number;
-  searchKey?: string;
-  image?: string;
+  SPusage?: number;
+  hit?: number;
 }
 
 export interface jsonCharStat {
@@ -119,41 +109,6 @@ export interface boosterDataType {
   lck: number;
 }
 
-// export const defaultStyleDetailItem: jsonStyleItem[] = [
-//   {
-//     Sid: -1,
-//     styleName: 'dummyStyleName',
-//     rarity: 'SS',
-//     role: '',
-//     element: -1,
-//     target: -1,
-//     searchKey: '',
-//   },
-// ];
-
-// export const DefaultStyleData: jsonStyleData[] = [
-//   {
-//     Cid: '-1',
-//     name: 'dummyName',
-//     team: '',
-//     weapon: -1,
-//     chKey: '',
-//     detail: defaultStyleDetailItem,
-//   },
-// ];
-
-export const initialStyleData: styleData[] = [
-  {
-    Cid: '-1',
-    name: 'dummpy name',
-    chKey: '',
-    Sid: -1,
-    styleName: 'dummyStyleName',
-    searchKey: 'dummy searchkey',
-    SPusage: 0,
-  },
-];
-
 export interface boosterSet {
   id: string;
   name: string;
@@ -206,4 +161,10 @@ export interface statModifier {
   accessories: stat;
 }
 
-export const styleImage = [...Array(999)].map(() => '');
+export interface accessory {
+  type: string;
+  id: string;
+  name: string;
+  detail: string;
+  stat: stat;
+}

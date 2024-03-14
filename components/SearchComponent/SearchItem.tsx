@@ -8,6 +8,7 @@ import {Add} from '../../redux/reducers/teamDraft';
 import {DEFAULT_MEMBER} from '../../redux/constants/dataConstant';
 import {useNavigation} from 'expo-router';
 import {useTheme} from '@react-navigation/native';
+import {SkillTarget} from '../../redux/constants/dataConstant';
 
 type props = {
   slotId: string;
@@ -92,6 +93,10 @@ export default function SearchItem(input: props) {
           {style.styleName} {'\n'}
           {style.SPusage ? '[SP消費 ' + style.SPusage + ']' : ''}
           {style.SPequal ? '\t[' + style.SPequal + ' SP相当]' : ''}
+          {style.target && style.target > 0
+            ? '\t' + SkillTarget[style.target]
+            : null}
+          {style.hit && style.hit > 0 ? '\tヒット数' + style.hit : null}
           {'\n'}
           {style.skill}
         </Text>

@@ -1,9 +1,10 @@
-import {StyleSheet, Button} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import {useState} from 'react';
 import axios from 'axios';
+import {Button, Group, Separator, XGroup, YGroup, YStack} from 'tamagui';
 
 const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
 const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
@@ -32,12 +33,25 @@ export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{data}</Text>
+      <YStack padding="$3" space="$2" alignItems="center">
+        <Group orientation="horizontal">
+          <Group.Item>
+            <Button>First</Button>
+          </Group.Item>
+          <Group.Item>
+            <Button>Second</Button>
+          </Group.Item>
+          <Group.Item>
+            <Button>Third</Button>
+          </Group.Item>
+        </Group>
+      </YStack>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Button title="get googlesheet data" onPress={handleButton}></Button>
+      <Button onPress={handleButton}>get googlesheet data</Button>
       <EditScreenInfo path="app/(tabs)/two.tsx" />
     </View>
   );

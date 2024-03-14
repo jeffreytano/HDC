@@ -16,7 +16,6 @@ import {
   statModifier,
   createStat,
 } from '../../redux/dataType';
-import ChipItem from '../TeamBuilder/ChipItem';
 import {useDispatch} from 'react-redux';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ChangeBooster, ChangeChips} from '../../redux/reducers/teamDraft';
@@ -167,9 +166,9 @@ export default function BoosterPage({index}: {index: number}) {
             {'\n'}
           </Text>
           <IconButton
-            icon="close"
+            icon="close-circle-outline"
             iconColor={theme.dark ? '#FFFFFF' : '#000000'}
-            style={{alignSelf: 'flex-end'}}
+            style={{alignSelf: 'center'}}
             size={36}
             onPress={(event) => {
               dispatch(
@@ -184,10 +183,6 @@ export default function BoosterPage({index}: {index: number}) {
         </View>
       </TouchableHighlight>
       {chipArray.map((item, chipIndex) => {
-        console.log('selectedChip0', chip[0]);
-        console.log('selectedChip1', chip[1]);
-        console.log('selectedChip2', chip[2]);
-        console.log('selectedChip3', chip[3]);
         const selectedChip = {
           label: chip[chipIndex].name,
           value: chip[chipIndex].id,

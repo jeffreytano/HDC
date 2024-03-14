@@ -10,6 +10,7 @@ import dummyimage from '../../assets/images/hisamecchi.png';
 import {useTheme} from '@react-navigation/native';
 import Stat from '../../components/TeamBuilder/Stat';
 import BoosterPage from '../../components/EquipmentSelection/BoosterPage';
+import AccessoryPage from '../../components/EquipmentSelection/AccessoryPage';
 
 type ParamType = {
   equipment: string;
@@ -51,7 +52,7 @@ export default function equipment() {
       case 'booster':
         return <BoosterPage index={index} />;
       case 'accessories':
-        return <Page2 />;
+        return <AccessoryPage index={index} />;
       case 'orbs':
         return <Page3 />;
       default:

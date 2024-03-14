@@ -43,7 +43,7 @@ export default function TabOneScreen() {
   const fetchStyleDataFromGoogle = async (sheet: string) => {
     const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
     const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
-    const range = 'A2:P10000';
+    const range = 'A2:Q10000';
 
     const getStyleDataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${range}?valueRenderOption=FORMATTED_VALUE&key=${apiKey}`;
 

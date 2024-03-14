@@ -1,4 +1,10 @@
-import {TeamMemberData, boosterSet, stat} from '../dataType';
+import {
+  TeamMemberData,
+  accessory,
+  boosterSet,
+  stat,
+  styleData,
+} from '../dataType';
 
 export const EMPTY_MEMBER_DATA: TeamMemberData = {
   Sid: -1,
@@ -164,3 +170,45 @@ export const WEAPON = {
   2: '突',
   3: '打',
 };
+
+export const initialStyleData: styleData[] = [
+  {
+    Cid: '-1',
+    name: 'dummpy name',
+    chKey: '',
+    Sid: -1,
+    styleName: 'dummyStyleName',
+    searchKey: 'dummy searchkey',
+    SPusage: 0,
+    hit: 0,
+  },
+];
+
+export const styleImage = [...Array(999)].map(() => '');
+
+export const DEFAULT_ACCESSORY_SET: accessory[] = [
+  {type: 'ring', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+  {type: 'pierce', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+  {type: 'bracelet', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+  {type: 'chain', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+  {type: 'orb', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+  {type: 'soul', id: '', name: '', detail: '', stat: DEFAULT_STAT},
+];
+
+export const DEFAULT_TEAM_ACCESSORY: accessory[][] = [
+  DEFAULT_ACCESSORY_SET,
+  DEFAULT_ACCESSORY_SET,
+  DEFAULT_ACCESSORY_SET,
+  DEFAULT_ACCESSORY_SET,
+  DEFAULT_ACCESSORY_SET,
+  DEFAULT_ACCESSORY_SET,
+];
+
+export const SkillTarget = [
+  '単体',
+  '全体',
+  '味方前衛',
+  '味方全体',
+  '味方単体',
+  '味方後衛',
+];

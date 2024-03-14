@@ -6,6 +6,8 @@ import {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import {useColorScheme} from 'react-native';
 import store from '../redux/store';
+import {TamaguiProvider} from 'tamagui';
+import tamaguiConfig from '../tamagui.config';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,14 +49,24 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+  const [loaded] = useFonts({
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  });
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Provider store={store}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{headerShown: false}} />
-          <Stack.Screen name="modal" options={{presentation: 'modal'}} />
-        </Stack>
-      </Provider>
-    </ThemeProvider>
+    <TamaguiProvider
+      config={tamaguiConfig}
+      defaultTheme={colorScheme ? colorScheme : undefined}
+    >
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Provider store={store}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{headerShown: false}} />
+            <Stack.Screen name="modal" options={{presentation: 'modal'}} />
+          </Stack>
+        </Provider>
+      </ThemeProvider>
+    </TamaguiProvider>
   );
 }

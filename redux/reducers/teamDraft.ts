@@ -6,6 +6,7 @@ import {
   EMPTY_TEAM,
   EMPTY_STATMOD,
   DEFAULT_STAT,
+  DEFAULT_TEAM_ACCESSORY,
 } from '../constants/dataConstant';
 import {
   TeamMemberData,
@@ -17,6 +18,7 @@ import {
 import CharacterData from '../../assets/CharacterData.json';
 import TypeStat from '../../assets/TypeStat.json';
 import {chipDetails, statModifier} from '../dataType';
+import AccessoryPage from '../../components/EquipmentSelection/AccessoryPage';
 
 const baseSheet = JSON.parse(CharacterData) as Array<jsonCharStat>;
 const typeStatSheet = JSON.parse(TypeStat) as Array<typeStat>;
@@ -164,6 +166,7 @@ const teamDraftSlice = createSlice({
   initialState: {
     TeamMember: EMPTY_TEAM,
     BoosterSet: DEFAULT_BOOSTER_SETS,
+    AccessorySet: DEFAULT_TEAM_ACCESSORY,
     StatModifier: EMPTY_STATMOD,
   },
   reducers: {
