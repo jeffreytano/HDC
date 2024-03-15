@@ -4,7 +4,19 @@ import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import {useState} from 'react';
 import axios from 'axios';
-import {Button, Group, Separator, XGroup, YGroup, YStack} from 'tamagui';
+import {
+  Button,
+  Group,
+  Separator,
+  XGroup,
+  YGroup,
+  YStack,
+  XStack,
+  Card,
+  Image,
+  H2,
+  Paragraph,
+} from 'tamagui';
 
 const apiKey = 'AIzaSyANMJLnH3Cud73QuWp9STPk-lHJkPcsyic';
 const sheetId = '1RvrHZCDgH2u__zwtKdpdRflERtWPKThJIzMgz8vKCAE';
@@ -46,6 +58,20 @@ export default function TabTwoScreen() {
           </Group.Item>
         </Group>
       </YStack>
+      <XStack $sm={{flexDirection: 'column'}} paddingHorizontal="$4" space>
+        <Card elevate size="$4" bordered>
+          <Card.Header padded>
+            <H2>Sony A7IV</H2>
+            <Paragraph theme="alt2">Now available</Paragraph>
+          </Card.Header>
+          <Card.Footer padded>
+            <XStack flex={1} />
+            <Button borderRadius="$10">Purchase</Button>
+          </Card.Footer>
+          <Card.Background></Card.Background>
+        </Card>
+      </XStack>
+
       <View
         style={styles.separator}
         lightColor="#eee"

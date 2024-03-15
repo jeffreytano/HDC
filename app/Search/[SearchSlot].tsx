@@ -1,9 +1,17 @@
-import {ActivityIndicator, StyleSheet, TextComponent} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextComponent,
+  Modal,
+  TextInput,
+  FlatList,
+  ListRenderItemInfo,
+} from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
 import {useLocalSearchParams} from 'expo-router';
-import {TextInput, FlatList, ListRenderItemInfo} from 'react-native';
 import {useEffect, useState} from 'react';
 import SearchItem from '../../components/SearchComponent/SearchItem';
 import * as FileSystem from 'expo-file-system';
@@ -13,20 +21,48 @@ import readJsonFile from '../../components/readJsonFile';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
-import {styleData} from '../../redux/dataType';
+import {styleData, stat} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
+import {Button, Checkbox} from 'react-native-paper';
+import {Formik} from 'formik';
+import {
+  RARITY,
+  ELEMENT,
+  WEAPON,
+  CLASS,
+  ROLE,
+  SKILL_TARGET,
+} from '../../redux/constants/dataConstant';
 
 type SearchParamType = {
   SearchSlot: string;
 };
 
 export default function SearchSlot() {
+  const initialFormikValue = {
+    rarity: RARITY,
+    element: ELEMENT,
+    weapon: WEAPON,
+    class: CLASS,
+    role: ROLE,
+    target: SKILL_TARGET,
+    SP: -1,
+    SPRange: 'All',
+    SPequal: -1,
+    SPequalRange: 'All',
+    hit: -1,
+    hitRange: 'All',
+  };
+
   const {SearchSlot} = useLocalSearchParams<SearchParamType>();
   const [queryKeyword, setQueryKeyWords] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const [resultData, setResultData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
+  const [modalVisible, setModalVisible] = useState(true);
+  const [formikValue, setFormikValue] = useState(initialFormikValue);
+
   // const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
@@ -39,12 +75,58 @@ export default function SearchSlot() {
     // checkUpdate('CharacterDataBase');
   }, []);
 
+  const CheckBoxItem = ({label, group}: {label: string; group: string}) => {
+    let status = true;
+    switch (group) {
+      case 'rarity':
+        status = formikValue.rarity.includes(label);
+        break;
+      case 'element':
+        status = formikValue.element.includes(label);
+        break;
+      case 'class':
+        status = formikValue.class.includes(label);
+        break;
+      case 'role':
+        status = formikValue.role.includes(label);
+        break;
+      case 'target':
+        status = formikValue.target.includes(label);
+        break;
+      default:
+        status = true;
+    }
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Checkbox
+          status={status ? 'checked' : 'unchecked'}
+          onPress={() => handleFormikChange({label, group})}
+        />
+        <Text style={{alignSelf: 'center'}}>{label}</Text>
+      </View>
+    );
+  };
+
+  const handleFormikChange = ({
+    label,
+    group,
+  }: {
+    label: string;
+    group: string;
+  }) => {};
+
   useEffect(() => {
     if (styleData.length > 2) {
       setIsLoading(false);
     }
     setResultData(styleData);
   }, [styleData, styleImage]);
+
+  const handleSubmit = (values: any) => {
+    // Handle form submission
+    console.log(values);
+  };
 
   const theme = useTheme();
 
@@ -139,6 +221,22 @@ export default function SearchSlot() {
       borderWidth: 1,
       color: theme.dark ? '#FFFFFF' : '#000000',
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
+    },
+    modalContent: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF', //6200EE
+      padding: 16,
+      borderRadius: 8,
+    },
+    modalCheckBoxGroup: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      margin: 5,
+    },
   });
   return (
     <View style={styles.container}>
@@ -171,10 +269,75 @@ export default function SearchSlot() {
         contentContainerStyle={{paddingBottom: 60}}
         style={styles.container}
       ></FlatList>
-      {/* {styleData &&
-          styleData.map((item: StyleData, index: number) => (
-            <SearchItem style={item} key={index}></SearchItem>
-          ))} */}
+      <Modal visible={modalVisible} transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Formik initialValues={formikValue} onSubmit={handleSubmit}>
+              {({values, handleChange, handleSubmit}) => (
+                <View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {RARITY.map((item, index) => {
+                      return (
+                        <CheckBoxItem key={index} label={item} group="rarity" />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {ELEMENT.map((item, index) => {
+                      return (
+                        <CheckBoxItem
+                          key={index}
+                          label={item}
+                          group="element"
+                        />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {WEAPON.map((item, index) => {
+                      return (
+                        <CheckBoxItem key={index} label={item} group="weapon" />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {CLASS.map((item, index) => {
+                      return (
+                        <CheckBoxItem key={index} label={item} group="class" />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {ROLE.map((item, index) => {
+                      return (
+                        <CheckBoxItem key={index} label={item} group="role" />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.modalCheckBoxGroup}>
+                    {SKILL_TARGET.map((item, index) => {
+                      return (
+                        <CheckBoxItem key={index} label={item} group="target" />
+                      );
+                    })}
+                  </View>
+
+                  <Button
+                    mode={'contained-tonal'}
+                    style={{width: '30%', alignSelf: 'center', margin: 10}}
+                    onPress={() => {
+                      console.log('Submit Pressed');
+                      setModalVisible(false);
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </View>
+              )}
+            </Formik>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

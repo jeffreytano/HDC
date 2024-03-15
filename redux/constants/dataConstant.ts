@@ -145,31 +145,43 @@ export const DEFAULT_MEMBER: TeamMemberData = {
   },
 };
 
-export const SKILL_TARGET = {
-  0: 'N/A',
-  1: '単体',
-  2: '全体',
-  3: '味方前衛',
-  4: '味方全体',
-  5: '味方単体',
-  6: '味方後衛',
-};
+export const RARITY = ['A', 'S', 'SS'];
 
-export const ELEMENT = {
-  0: '無',
-  1: '火',
-  2: '氷',
-  3: '雷',
-  4: '光',
-  5: '闇',
-};
+export const SKILL_TARGET = [
+  'N/A',
+  '単体',
+  '全体',
+  '味方前衛',
+  '味方全体',
+  '味方単体',
+  '味方後衛',
+];
 
-export const WEAPON = {
-  0: '無',
-  1: '斬',
-  2: '突',
-  3: '打',
-};
+export const ELEMENT = ['無', '火', '氷', '雷', '光', '闇'];
+
+export const WEAPON = ['無', '斬', '突', '打'];
+
+export const CLASS = [
+  '31A',
+  '31B',
+  '31C',
+  '31D',
+  '31E',
+  '31F',
+  '31X',
+  '30G',
+  '31AB!',
+];
+
+export const ROLE = [
+  'Attacker',
+  'Breaker',
+  'Blaster',
+  'Buffer',
+  'Debuffer',
+  'Defender',
+  'Healer',
+];
 
 export const initialStyleData: styleData[] = [
   {
@@ -202,13 +214,4 @@ export const DEFAULT_TEAM_ACCESSORY: accessory[][] = [
   DEFAULT_ACCESSORY_SET,
   DEFAULT_ACCESSORY_SET,
   DEFAULT_ACCESSORY_SET,
-];
-
-export const SkillTarget = [
-  '単体',
-  '全体',
-  '味方前衛',
-  '味方全体',
-  '味方単体',
-  '味方後衛',
 ];
