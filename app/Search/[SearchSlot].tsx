@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {styleData, stat} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
-import {Button, Checkbox} from 'react-native-paper';
+import {Button, Checkbox, Divider} from 'react-native-paper';
 import {Formik} from 'formik';
 import {
   RARITY,
@@ -228,9 +228,8 @@ export default function SearchSlot() {
       backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
     },
     modalContent: {
-      backgroundColor: theme.dark ? '#323232' : '#FFFFFF', //6200EE
-      padding: 16,
-      borderRadius: 8,
+      backgroundColor: theme.dark ? '#222222' : '#FFFFFF', //6200EE
+      padding: 12,
     },
     modalCheckBoxGroup: {
       flexDirection: 'row',
@@ -275,6 +274,7 @@ export default function SearchSlot() {
             <Formik initialValues={formikValue} onSubmit={handleSubmit}>
               {({values, handleChange, handleSubmit}) => (
                 <View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {RARITY.map((item, index) => {
                       return (
@@ -282,6 +282,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {ELEMENT.map((item, index) => {
                       return (
@@ -293,6 +294,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {WEAPON.map((item, index) => {
                       return (
@@ -300,6 +302,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {CLASS.map((item, index) => {
                       return (
@@ -307,6 +310,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {ROLE.map((item, index) => {
                       return (
@@ -314,6 +318,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
+                  <Divider />
                   <View style={styles.modalCheckBoxGroup}>
                     {SKILL_TARGET.map((item, index) => {
                       return (
@@ -321,7 +326,7 @@ export default function SearchSlot() {
                       );
                     })}
                   </View>
-
+                  <Divider />
                   <Button
                     mode={'contained-tonal'}
                     style={{width: '30%', alignSelf: 'center', margin: 10}}
