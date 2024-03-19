@@ -28,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Team',
           tabBarStyle: {backgroundColor: theme.dark ? '#121212' : '#FFFFFF'},
           headerStyle: {backgroundColor: theme.dark ? '#6200EE' : '#FFFFFF'},
           headerTitleStyle: {color: theme.dark ? '#FFFFFF' : '#000000'},

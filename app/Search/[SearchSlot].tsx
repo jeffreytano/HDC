@@ -7,7 +7,7 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import Checkbox from 'expo-checkbox';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
@@ -23,8 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {styleData, stat} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
-import {Button, Checkbox, Divider} from 'react-native-paper';
-import {Formik} from 'formik';
+import {Button, Divider} from 'react-native-paper';
 import {
   RARITY,
   ELEMENT,
@@ -39,7 +38,7 @@ type SearchParamType = {
 };
 
 export default function SearchSlot() {
-  const initialFormikValue = {
+  const FilterOption = {
     rarity: RARITY,
     element: ELEMENT,
     weapon: WEAPON,
@@ -60,8 +59,8 @@ export default function SearchSlot() {
   const dispatch = useDispatch();
   const [resultData, setResultData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
-  const [modalVisible, setModalVisible] = useState(true);
-  const [formikValue, setFormikValue] = useState(initialFormikValue);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [filterValue, setFilterValue] = useState(FilterOption);
 
   // const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
@@ -79,19 +78,19 @@ export default function SearchSlot() {
     let status = true;
     switch (group) {
       case 'rarity':
-        status = formikValue.rarity.includes(label);
+        status = filterValue.rarity.includes(label);
         break;
       case 'element':
-        status = formikValue.element.includes(label);
+        status = filterValue.element.includes(label);
         break;
       case 'class':
-        status = formikValue.class.includes(label);
+        status = filterValue.class.includes(label);
         break;
       case 'role':
-        status = formikValue.role.includes(label);
+        status = filterValue.role.includes(label);
         break;
       case 'target':
-        status = formikValue.target.includes(label);
+        status = filterValue.target.includes(label);
         break;
       default:
         status = true;
@@ -100,21 +99,62 @@ export default function SearchSlot() {
     return (
       <View style={{flexDirection: 'row'}}>
         <Checkbox
-          status={status ? 'checked' : 'unchecked'}
-          onPress={() => handleFormikChange({label, group})}
+          value={status}
+          style={styles.checkbox}
+          color={theme.dark ? '#B794F6' : '#2E2E2D'}
+          onValueChange={() => handleFilterChange({label, group})}
         />
         <Text style={{alignSelf: 'center'}}>{label}</Text>
       </View>
     );
   };
+  const toggleCheckBoxInGroup = (array: Array<string>, label: string) => {
+    if (array.includes(label)) {
+      return array.filter((item) => item != label);
+    } else {
+      array.push(label);
+      return array;
+    }
+  };
 
-  const handleFormikChange = ({
+  const handleFilterChange = ({
     label,
     group,
   }: {
     label: string;
     group: string;
-  }) => {};
+  }) => {
+    let change;
+    let newFilter;
+    switch (group) {
+      case 'rarity':
+        change = toggleCheckBoxInGroup(filterValue.rarity, label);
+        newFilter = {...filterValue, rarity: change};
+        setFilterValue(newFilter);
+        break;
+      case 'element':
+        change = toggleCheckBoxInGroup(filterValue.element, label);
+        newFilter = {...filterValue, element: change};
+        setFilterValue(newFilter);
+        break;
+      case 'class':
+        change = toggleCheckBoxInGroup(filterValue.class, label);
+        newFilter = {...filterValue, class: change};
+        setFilterValue(newFilter);
+        break;
+      case 'role':
+        change = toggleCheckBoxInGroup(filterValue.role, label);
+        newFilter = {...filterValue, role: change};
+        setFilterValue(newFilter);
+        break;
+      case 'target':
+        change = toggleCheckBoxInGroup(filterValue.target, label);
+        newFilter = {...filterValue, target: change};
+        setFilterValue(newFilter);
+        break;
+      default:
+    }
+  };
 
   useEffect(() => {
     if (styleData.length > 2) {
@@ -122,11 +162,6 @@ export default function SearchSlot() {
     }
     setResultData(styleData);
   }, [styleData, styleImage]);
-
-  const handleSubmit = (values: any) => {
-    // Handle form submission
-    console.log(values);
-  };
 
   const theme = useTheme();
 
@@ -214,6 +249,7 @@ export default function SearchSlot() {
     },
     TextBar: {
       // backgroundColor: theme.colors.primary,
+      flex: 15,
       margin: 3,
       height: 40,
       paddingHorizontal: 20,
@@ -236,20 +272,34 @@ export default function SearchSlot() {
       flexWrap: 'wrap',
       margin: 5,
     },
+    checkbox: {
+      margin: 8,
+    },
   });
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.TextBar}
-        value={queryKeyword}
-        onChangeText={(newText) => {
-          // console.log(newText);
-          handleSearch(newText);
-        }}
-        placeholder="Search keyword here"
-        placeholderTextColor={theme.dark ? '#FFFFFF' : '#000000'}
-        cursorColor={theme.dark ? '#BDBDBD' : '#FFFFFF'}
-      />
+      <View style={{flexDirection: 'row'}}>
+        <TextInput
+          style={styles.TextBar}
+          value={queryKeyword}
+          onChangeText={(newText) => {
+            // console.log(newText);
+            handleSearch(newText);
+          }}
+          placeholder="Search keyword here"
+          placeholderTextColor={theme.dark ? '#FFFFFF' : '#000000'}
+          cursorColor={theme.dark ? '#BDBDBD' : '#FFFFFF'}
+        />
+        <Button
+          mode={'contained'}
+          style={{flex: 1}}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
+          Filter
+        </Button>
+      </View>
       <Text
         style={[
           styles.container,
@@ -271,75 +321,64 @@ export default function SearchSlot() {
       <Modal visible={modalVisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Formik initialValues={formikValue} onSubmit={handleSubmit}>
-              {({values, handleChange, handleSubmit}) => (
-                <View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {RARITY.map((item, index) => {
-                      return (
-                        <CheckBoxItem key={index} label={item} group="rarity" />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {ELEMENT.map((item, index) => {
-                      return (
-                        <CheckBoxItem
-                          key={index}
-                          label={item}
-                          group="element"
-                        />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {WEAPON.map((item, index) => {
-                      return (
-                        <CheckBoxItem key={index} label={item} group="weapon" />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {CLASS.map((item, index) => {
-                      return (
-                        <CheckBoxItem key={index} label={item} group="class" />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {ROLE.map((item, index) => {
-                      return (
-                        <CheckBoxItem key={index} label={item} group="role" />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <View style={styles.modalCheckBoxGroup}>
-                    {SKILL_TARGET.map((item, index) => {
-                      return (
-                        <CheckBoxItem key={index} label={item} group="target" />
-                      );
-                    })}
-                  </View>
-                  <Divider />
-                  <Button
-                    mode={'contained-tonal'}
-                    style={{width: '30%', alignSelf: 'center', margin: 10}}
-                    onPress={() => {
-                      console.log('Submit Pressed');
-                      setModalVisible(false);
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </View>
-              )}
-            </Formik>
+            <View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {RARITY.map((item, index) => {
+                  return (
+                    <CheckBoxItem key={index} label={item} group="rarity" />
+                  );
+                })}
+              </View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {ELEMENT.map((item, index) => {
+                  return (
+                    <CheckBoxItem key={index} label={item} group="element" />
+                  );
+                })}
+              </View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {WEAPON.map((item, index) => {
+                  return (
+                    <CheckBoxItem key={index} label={item} group="weapon" />
+                  );
+                })}
+              </View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {CLASS.map((item, index) => {
+                  return (
+                    <CheckBoxItem key={index} label={item} group="class" />
+                  );
+                })}
+              </View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {ROLE.map((item, index) => {
+                  return <CheckBoxItem key={index} label={item} group="role" />;
+                })}
+              </View>
+              <Divider />
+              <View style={styles.modalCheckBoxGroup}>
+                {SKILL_TARGET.map((item, index) => {
+                  return (
+                    <CheckBoxItem key={index} label={item} group="target" />
+                  );
+                })}
+              </View>
+              <Divider />
+              <Button
+                mode={'contained-tonal'}
+                style={{width: '30%', alignSelf: 'center', margin: 10}}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              >
+                Close
+              </Button>
+            </View>
           </View>
         </View>
       </Modal>
