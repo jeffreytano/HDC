@@ -6,8 +6,9 @@ import {
   TextInput,
   FlatList,
   ListRenderItemInfo,
+  Pressable,
 } from 'react-native';
-import Checkbox from 'expo-checkbox';
+// import Checkbox from 'expo-checkbox';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
@@ -23,28 +24,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {FetchStyleList, InsertImage} from '../../redux/reducers/styleData';
 import {styleData, stat} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
-import {Button, Divider} from 'react-native-paper';
+import {Button, Checkbox, Divider} from 'react-native-paper';
 import {
-  RARITY,
-  ELEMENT,
-  WEAPON,
-  CLASS,
-  ROLE,
-  SKILL_TARGET,
+  INI_CLASS,
+  INI_ELEMENT,
+  INI_RARITY,
+  INI_ROLE,
+  INI_SKILL_TARGET,
+  INI_WEAPON,
 } from '../../redux/constants/dataConstant';
 
 type SearchParamType = {
   SearchSlot: string;
 };
 
+// const inititalRarity: {[key: string]: boolean} = RARITY.reduce((acc, item) => {
+//   acc[item] = true;
+//   return acc;
+// }, {});
+
 export default function SearchSlot() {
   const FilterOption = {
-    rarity: RARITY,
-    element: ELEMENT,
-    weapon: WEAPON,
-    class: CLASS,
-    role: ROLE,
-    target: SKILL_TARGET,
+    rarity: INI_RARITY,
+    element: INI_ELEMENT,
+    weapon: INI_WEAPON,
+    class: INI_CLASS,
+    role: INI_ROLE,
+    target: INI_SKILL_TARGET,
     SP: -1,
     SPRange: 'All',
     SPequal: -1,
@@ -74,86 +80,16 @@ export default function SearchSlot() {
     // checkUpdate('CharacterDataBase');
   }, []);
 
-  const CheckBoxItem = ({label, group}: {label: string; group: string}) => {
-    let status = true;
-    switch (group) {
-      case 'rarity':
-        status = filterValue.rarity.includes(label);
-        break;
-      case 'element':
-        status = filterValue.element.includes(label);
-        break;
-      case 'class':
-        status = filterValue.class.includes(label);
-        break;
-      case 'role':
-        status = filterValue.role.includes(label);
-        break;
-      case 'target':
-        status = filterValue.target.includes(label);
-        break;
-      default:
-        status = true;
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <Checkbox
-          value={status}
-          style={styles.checkbox}
-          color={theme.dark ? '#B794F6' : '#2E2E2D'}
-          onValueChange={() => handleFilterChange({label, group})}
-        />
-        <Text style={{alignSelf: 'center'}}>{label}</Text>
-      </View>
-    );
-  };
-  const toggleCheckBoxInGroup = (array: Array<string>, label: string) => {
-    if (array.includes(label)) {
-      return array.filter((item) => item != label);
-    } else {
-      array.push(label);
-      return array;
-    }
-  };
-
-  const handleFilterChange = ({
-    label,
-    group,
-  }: {
-    label: string;
-    group: string;
-  }) => {
-    let change;
-    let newFilter;
-    switch (group) {
-      case 'rarity':
-        change = toggleCheckBoxInGroup(filterValue.rarity, label);
-        newFilter = {...filterValue, rarity: change};
-        setFilterValue(newFilter);
-        break;
-      case 'element':
-        change = toggleCheckBoxInGroup(filterValue.element, label);
-        newFilter = {...filterValue, element: change};
-        setFilterValue(newFilter);
-        break;
-      case 'class':
-        change = toggleCheckBoxInGroup(filterValue.class, label);
-        newFilter = {...filterValue, class: change};
-        setFilterValue(newFilter);
-        break;
-      case 'role':
-        change = toggleCheckBoxInGroup(filterValue.role, label);
-        newFilter = {...filterValue, role: change};
-        setFilterValue(newFilter);
-        break;
-      case 'target':
-        change = toggleCheckBoxInGroup(filterValue.target, label);
-        newFilter = {...filterValue, target: change};
-        setFilterValue(newFilter);
-        break;
-      default:
-    }
+  const handleFilterChange = <T extends keyof typeof FilterOption>(
+    name: string,
+    group: T,
+  ) => {
+    setFilterValue((oldFilterValue) => {
+      const newFilterValue = {...oldFilterValue};
+      // @ts-expect-error
+      newFilterValue[group][name] = !oldFilterValue[group][name];
+      return newFilterValue;
+    });
   };
 
   useEffect(() => {
@@ -273,7 +209,7 @@ export default function SearchSlot() {
       margin: 5,
     },
     checkbox: {
-      margin: 8,
+      margin: 10,
     },
   });
   return (
@@ -322,52 +258,44 @@ export default function SearchSlot() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {RARITY.map((item, index) => {
+              {['rarity', 'element', 'weapon', 'class', 'role', 'target'].map(
+                (groupName, index) => {
+                  const checkboxes =
+                    filterValue[groupName as keyof typeof filterValue];
+
                   return (
-                    <CheckBoxItem key={index} label={item} group="rarity" />
+                    <View key={index}>
+                      <Divider />
+                      <View style={styles.modalCheckBoxGroup}>
+                        {Object.entries(checkboxes).map(
+                          ([name, checked], index) => (
+                            <Pressable
+                              key={index}
+                              onPress={() =>
+                                handleFilterChange(
+                                  name,
+                                  groupName as keyof typeof filterValue,
+                                )
+                              }
+                            >
+                              <View style={{flexDirection: 'row'}}>
+                                <Checkbox
+                                  status={checked ? 'checked' : 'unchecked'}
+                                  // style={styles.checkbox}
+                                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                                />
+                                <Text style={{alignSelf: 'center'}}>
+                                  {name}
+                                </Text>
+                              </View>
+                            </Pressable>
+                          ),
+                        )}
+                      </View>
+                    </View>
                   );
-                })}
-              </View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {ELEMENT.map((item, index) => {
-                  return (
-                    <CheckBoxItem key={index} label={item} group="element" />
-                  );
-                })}
-              </View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {WEAPON.map((item, index) => {
-                  return (
-                    <CheckBoxItem key={index} label={item} group="weapon" />
-                  );
-                })}
-              </View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {CLASS.map((item, index) => {
-                  return (
-                    <CheckBoxItem key={index} label={item} group="class" />
-                  );
-                })}
-              </View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {ROLE.map((item, index) => {
-                  return <CheckBoxItem key={index} label={item} group="role" />;
-                })}
-              </View>
-              <Divider />
-              <View style={styles.modalCheckBoxGroup}>
-                {SKILL_TARGET.map((item, index) => {
-                  return (
-                    <CheckBoxItem key={index} label={item} group="target" />
-                  );
-                })}
-              </View>
+                },
+              )}
               <Divider />
               <Button
                 mode={'contained-tonal'}

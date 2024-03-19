@@ -183,6 +183,55 @@ export const ROLE = [
   'Healer',
 ];
 
+export const INI_RARITY = {
+  A: true,
+  S: true,
+  SS: true,
+};
+
+export const INI_SKILL_TARGET = {
+  'N/A': true,
+  単体: true,
+  全体: true,
+  味方前衛: true,
+  味方全体: true,
+  味方単体: true,
+  味方後衛: true,
+};
+
+export const INI_ELEMENT = {
+  無: true,
+  火: true,
+  氷: true,
+  雷: true,
+  光: true,
+  闇: true,
+};
+
+export const INI_WEAPON = {無: true, 斬: true, 突: true, 打: true};
+
+export const INI_CLASS = {
+  '31A': true,
+  '31B': true,
+  '31C': true,
+  '31D': true,
+  '31E': true,
+  '31F': true,
+  '31X': true,
+  '30G': true,
+  '31AB!': true,
+};
+
+export const INI_ROLE = {
+  Attacker: true,
+  Breaker: true,
+  Blaster: true,
+  Buffer: true,
+  Debuffer: true,
+  Defender: true,
+  Healer: true,
+};
+
 export const initialStyleData: styleData[] = [
   {
     Cid: '-1',
