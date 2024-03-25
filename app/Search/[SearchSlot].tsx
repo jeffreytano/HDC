@@ -12,7 +12,7 @@ import {
 import EditScreenInfo from '../../components/EditScreenInfo';
 import {Text, View} from '../../components/Themed';
 import TeamBox from '../../components/TeamBuilder/TeamBox';
-import {useLocalSearchParams} from 'expo-router';
+import {useLocalSearchParams, useRouter} from 'expo-router';
 import {useEffect, useState} from 'react';
 import SearchItem from '../../components/SearchComponent/SearchItem';
 import * as FileSystem from 'expo-file-system';
@@ -65,13 +65,11 @@ export default function SearchSlot() {
   const dispatch = useDispatch();
   const [resultData, setResultData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [filterValue, setFilterValue] = useState(FilterOption);
-
   // const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
   // const fileUri = FileSystem.documentDirectory + 'StyleDatabase.json';
 
+  const router = useRouter();
   const styleData = useSelector((state: RootState) => state.styleData.styles);
   const styleImage = useSelector((state: RootState) => state.styleData.image);
 
@@ -79,18 +77,6 @@ export default function SearchSlot() {
     console.log('slotId', SearchSlot);
     // checkUpdate('CharacterDataBase');
   }, []);
-
-  const handleFilterChange = <T extends keyof typeof FilterOption>(
-    name: string,
-    group: T,
-  ) => {
-    setFilterValue((oldFilterValue) => {
-      const newFilterValue = {...oldFilterValue};
-      // @ts-expect-error
-      newFilterValue[group][name] = !oldFilterValue[group][name];
-      return newFilterValue;
-    });
-  };
 
   useEffect(() => {
     if (styleData.length > 2) {
@@ -230,7 +216,9 @@ export default function SearchSlot() {
           mode={'contained'}
           style={{flex: 1}}
           onPress={() => {
-            setModalVisible(true);
+            router.push({
+              pathname: '/Search/FilterPage',
+            });
           }}
         >
           Filter
@@ -254,62 +242,6 @@ export default function SearchSlot() {
         contentContainerStyle={{paddingBottom: 60}}
         style={styles.container}
       ></FlatList>
-      <Modal visible={modalVisible} transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View>
-              {['rarity', 'element', 'weapon', 'class', 'role', 'target'].map(
-                (groupName, index) => {
-                  const checkboxes =
-                    filterValue[groupName as keyof typeof filterValue];
-
-                  return (
-                    <View key={index}>
-                      <Divider />
-                      <View style={styles.modalCheckBoxGroup}>
-                        {Object.entries(checkboxes).map(
-                          ([name, checked], index) => (
-                            <Pressable
-                              key={index}
-                              onPress={() =>
-                                handleFilterChange(
-                                  name,
-                                  groupName as keyof typeof filterValue,
-                                )
-                              }
-                            >
-                              <View style={{flexDirection: 'row'}}>
-                                <Checkbox
-                                  status={checked ? 'checked' : 'unchecked'}
-                                  // style={styles.checkbox}
-                                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
-                                />
-                                <Text style={{alignSelf: 'center'}}>
-                                  {name}
-                                </Text>
-                              </View>
-                            </Pressable>
-                          ),
-                        )}
-                      </View>
-                    </View>
-                  );
-                },
-              )}
-              <Divider />
-              <Button
-                mode={'contained-tonal'}
-                style={{width: '30%', alignSelf: 'center', margin: 10}}
-                onPress={() => {
-                  setModalVisible(false);
-                }}
-              >
-                Close
-              </Button>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }

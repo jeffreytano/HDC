@@ -1,3 +1,12 @@
+import {
+  INI_CLASS,
+  INI_ELEMENT,
+  INI_RARITY,
+  INI_ROLE,
+  INI_SKILL_TARGET,
+  INI_WEAPON,
+} from './constants/dataConstant';
+
 export interface TeamMemberData {
   Cid: number;
   charName?: string;
@@ -168,3 +177,11 @@ export interface accessory {
   detail: string;
   stat: stat;
 }
+
+export type group =
+  | typeof INI_CLASS
+  | typeof INI_ELEMENT
+  | typeof INI_RARITY
+  | typeof INI_ROLE
+  | typeof INI_SKILL_TARGET
+  | typeof INI_WEAPON;

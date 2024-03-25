@@ -184,52 +184,57 @@ export const ROLE = [
 ];
 
 export const INI_RARITY = {
-  A: true,
-  S: true,
-  SS: true,
+  All: true,
+  A: false,
+  S: false,
+  SS: false,
 };
 
 export const INI_SKILL_TARGET = {
-  'N/A': true,
-  単体: true,
-  全体: true,
-  味方前衛: true,
-  味方全体: true,
-  味方単体: true,
-  味方後衛: true,
+  All: true,
+  無: false,
+  単体: false,
+  全体: false,
+  味方前衛: false,
+  味方全体: false,
+  味方単体: false,
+  味方後衛: false,
 };
 
 export const INI_ELEMENT = {
-  無: true,
-  火: true,
-  氷: true,
-  雷: true,
-  光: true,
-  闇: true,
+  All: true,
+  無: false,
+  火: false,
+  氷: false,
+  雷: false,
+  光: false,
+  闇: false,
 };
 
-export const INI_WEAPON = {無: true, 斬: true, 突: true, 打: true};
+export const INI_WEAPON = {All: true, 斬: false, 突: false, 打: false};
 
 export const INI_CLASS = {
-  '31A': true,
-  '31B': true,
-  '31C': true,
-  '31D': true,
-  '31E': true,
-  '31F': true,
-  '31X': true,
-  '30G': true,
-  '31AB!': true,
+  All: true,
+  '31A': false,
+  '31B': false,
+  '31C': false,
+  '31D': false,
+  '31E': false,
+  '31F': false,
+  '31X': false,
+  '30G': false,
+  '31AB!': false,
 };
 
 export const INI_ROLE = {
-  Attacker: true,
-  Breaker: true,
-  Blaster: true,
-  Buffer: true,
-  Debuffer: true,
-  Defender: true,
-  Healer: true,
+  All: true,
+  Attacker: false,
+  Breaker: false,
+  Blaster: false,
+  Buffer: false,
+  Debuffer: false,
+  Defender: false,
+  Healer: false,
 };
 
 export const initialStyleData: styleData[] = [
