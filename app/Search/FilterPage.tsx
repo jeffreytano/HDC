@@ -7,9 +7,10 @@ import {
   FlatList,
   ListRenderItemInfo,
   Pressable,
+  ScrollView,
 } from 'react-native';
 import {Text, View} from '../../components/Themed';
-import {Button, Checkbox, Divider} from 'react-native-paper';
+import {Button, Checkbox, Divider, SegmentedButtons} from 'react-native-paper';
 import {
   CLASS,
   INI_CLASS,
@@ -18,13 +19,28 @@ import {
   INI_ROLE,
   INI_SKILL_TARGET,
   INI_WEAPON,
+  INI_DAMAGEBUFF,
+  INI_DEFBUFF,
+  INI_DAMAGEDEBUFF,
+  INI_DEFDEBUFF,
 } from '../../redux/constants/dataConstant';
 import {useTheme} from '@react-navigation/native';
 import {group} from '../../redux/dataType';
 import {useState} from 'react';
 import {useNavigation} from 'expo-router';
+import {Dropdown} from 'react-native-element-dropdown';
+import Layout from './_layout';
+import {SwitchThumb} from 'tamagui';
 
 export default function FilterPage() {
+  const INI_SELECTEDMODE = {All: true, 以上: false, のみ: false, 以下: false};
+  const skillEffect = {
+    damageBuff: INI_DAMAGEBUFF,
+    defendBuff: INI_DEFBUFF,
+    damageDebuff: INI_DAMAGEDEBUFF,
+    defendDebuff: INI_DEFDEBUFF,
+  };
+
   const FilterOption = {
     rarity: INI_RARITY,
     element: INI_ELEMENT,
@@ -33,11 +49,11 @@ export default function FilterPage() {
     role: INI_ROLE,
     target: INI_SKILL_TARGET,
     SP: -1,
-    SPRange: 'All',
+    SPMode: INI_SELECTEDMODE,
     SPequal: -1,
-    SPequalRange: 'All',
+    SpEqualMode: INI_SELECTEDMODE,
     hit: -1,
-    hitRange: 'All',
+    hitMode: INI_SELECTEDMODE,
   };
 
   const [rarity, setRarity] = useState(INI_RARITY);
@@ -46,39 +62,55 @@ export default function FilterPage() {
   const [classes, setClasses] = useState(INI_CLASS);
   const [role, setRole] = useState(INI_ROLE);
   const [target, setTarget] = useState(INI_SKILL_TARGET);
+  const [SPUsage, setSPUsage] = useState('1');
+  const [SpEqual, setSpEqual] = useState('0');
+  const [hit, setHit] = useState('0');
+  const [isSPFocus, setIsSPFocus] = useState(false);
+  const SPUsageList = Array.from({length: 20}, (_, index) => {
+    return {label: (index + 1).toString(), value: (index + 1).toString()};
+  });
+  const SPEqualList = Array.from({length: 41}, (_, index) => {
+    return {label: (index / 2).toString(), value: (index / 2).toString()};
+  });
+  const hitList = Array.from({length: 21}, (_, index) => {
+    return {label: index.toString(), value: index.toString()};
+  });
+  const [SPUsageMode, setSPUsageMode] = useState(INI_SELECTEDMODE);
+  const [SpEqualMode, setSpEqualMode] = useState(INI_SELECTEDMODE);
+  const [hitMode, setHitMode] = useState(INI_SELECTEDMODE);
+  const [showExtendedFilter, SetShowExtendedFilter] = useState(false);
+  const [damageBuff, setDamageBuff] = useState(INI_DAMAGEBUFF);
+  const [defendBuff, setDefendBuff] = useState(INI_DEFBUFF);
+  const [damageDebuff, setDamageDebuff] = useState(INI_DAMAGEDEBUFF);
+  const [defendDebuff, setDefendDebuff] = useState(INI_DEFDEBUFF);
   const nav = useNavigation();
   const theme = useTheme();
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.dark ? '#121212' : '#FFFFFF',
     },
-    TextBar: {
-      // backgroundColor: theme.colors.primary,
-      flex: 15,
-      margin: 3,
-      height: 40,
-      paddingHorizontal: 20,
-      borderColor: theme.dark ? '#B794F6' : '#2E2E2D',
-      borderWidth: 1,
-      color: theme.dark ? '#FFFFFF' : '#000000',
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
-    },
-    modalContent: {
-      backgroundColor: theme.dark ? '#222222' : '#FFFFFF', //6200EE
-      padding: 12,
-    },
-    modalCheckBoxGroup: {
+    GroupContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       margin: 5,
     },
     checkbox: {
       margin: 10,
+    },
+    dropdownContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#FFFFFF',
+    },
+    dropdownListContainer: {
+      backgroundColor: theme.dark ? '#323232' : '#CCCCCC',
+      margin: 10,
+      width: '18%',
+    },
+    text: {
+      color: theme.dark ? '#FFFFFF' : '#000000',
+    },
+    dropdownPlaceholderText: {
+      paddingHorizontal: 10,
+      color: theme.dark ? '#FFFFFF' : '#000000',
     },
   });
 
@@ -112,6 +144,42 @@ export default function FilterPage() {
         newValue['All'] = allChecked;
         return newValue;
       });
+    }
+  };
+
+  const handleExFilterChange = <T extends keyof typeof skillEffect>(
+    name: string,
+    group: T,
+  ) => {
+    switch (group) {
+      case 'damageBuff':
+        setDamageBuff((oldValue: any) => {
+          const newValue: typeof oldValue = {...oldValue};
+          newValue[name] = !newValue[name];
+          return newValue;
+        });
+        break;
+      case 'defendBuff':
+        setDefendBuff((oldValue: any) => {
+          const newValue: typeof oldValue = {...oldValue};
+          newValue[name] = !newValue[name];
+          return newValue;
+        });
+        break;
+      case 'damageDebuff':
+        setDamageDebuff((oldValue: any) => {
+          const newValue: typeof oldValue = {...oldValue};
+          newValue[name] = !newValue[name];
+          return newValue;
+        });
+        break;
+      case 'defendDebuff':
+        setDefendDebuff((oldValue: any) => {
+          const newValue: typeof oldValue = {...oldValue};
+          newValue[name] = !newValue[name];
+          return newValue;
+        });
+        break;
     }
   };
 
@@ -190,131 +258,391 @@ export default function FilterPage() {
           name,
         );
         break;
+      case 'SPMode':
+        handleFilterFunction(
+          setSPUsageMode,
+          // target,
+          ['以上', 'のみ', '以下'],
+          SPUsageMode.All,
+          name,
+        );
+        break;
+      case 'SpEqualMode':
+        handleFilterFunction(
+          setSpEqualMode,
+          // target,
+          ['以上', 'のみ', '以下'],
+          SpEqualMode.All,
+          name,
+        );
+        break;
+      case 'hitMode':
+        handleFilterFunction(
+          setHitMode,
+          // target,
+          ['以上', 'のみ', '以下'],
+          hitMode.All,
+          name,
+        );
+        break;
       default:
         return console.log('fell into default');
     }
   };
 
   return (
-    <View>
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(rarity).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'rarity')}
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.GroupContainer}>
+          {Object.entries(rarity).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'rarity')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={styles.GroupContainer}>
+          {Object.entries(classes).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'class')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={styles.GroupContainer}>
+          {Object.entries(weapon).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'weapon')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={styles.GroupContainer}>
+          {Object.entries(element).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'element')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={styles.GroupContainer}>
+          {Object.entries(role).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'role')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={styles.GroupContainer}>
+          {Object.entries(target).map(([name, checked], index) => (
+            <Pressable
+              key={index}
+              onPress={() => handleFilterChange(name, 'target')}
+            >
+              <View style={{flexDirection: 'row'}}>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  // style={styles.checkbox}
+                  color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                />
+                <Text style={{alignSelf: 'center'}}>{name}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Divider />
+        <View style={[styles.GroupContainer]}>
+          <Text
+            style={[styles.text, {paddingHorizontal: 10, alignSelf: 'center'}]}
           >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(classes).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'class')}
+            SP消費
+          </Text>
+          <Dropdown
+            dropdownPosition="auto"
+            placeholder="selected"
+            activeColor={theme.dark ? '#B794F6' : '#00BFA5'}
+            selectedTextStyle={styles.dropdownPlaceholderText}
+            placeholderStyle={styles.dropdownPlaceholderText}
+            // selectedStyle={styles.dropdownContainer}r
+            style={[
+              styles.dropdownListContainer,
+              // isSPFocus && {borderColor: 'blue'},
+            ]}
+            containerStyle={styles.dropdownContainer}
+            itemTextStyle={styles.text}
+            onChange={(item: {label: string; value: string}) => {
+              setSPUsage(item.value);
+            }}
+            // onFocus={() => setIsSPFocus(true)}
+            data={SPUsageList}
+            value={SPUsage}
+            labelField="label"
+            valueField="value"
+            onChangeText={(item) => console.log('change text')}
+          />
+          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+            {Object.entries(SPUsageMode).map(([name, checked], index) => (
+              <Pressable
+                key={index}
+                onPress={() => handleFilterChange(name, 'SPMode')}
+              >
+                <View style={{flexDirection: 'row'}}>
+                  <Checkbox
+                    status={checked ? 'checked' : 'unchecked'}
+                    // style={styles.checkbox}
+                    color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                  />
+                  <Text style={{alignSelf: 'center'}}>{name}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <Divider />
+        <View style={[styles.GroupContainer]}>
+          <Text
+            style={[styles.text, {paddingHorizontal: 10, alignSelf: 'center'}]}
           >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
+            SP相当
+          </Text>
+          <Dropdown
+            dropdownPosition="top"
+            placeholder="selected"
+            activeColor={theme.dark ? '#B794F6' : '#00BFA5'}
+            selectedTextStyle={styles.dropdownPlaceholderText}
+            placeholderStyle={styles.dropdownPlaceholderText}
+            // selectedStyle={styles.dropdownContainer}r
+            style={[
+              styles.dropdownListContainer,
+              // isSPFocus && {borderColor: 'blue'},
+            ]}
+            containerStyle={styles.dropdownContainer}
+            itemTextStyle={styles.text}
+            onChange={(item: {label: string; value: string}) => {
+              setSpEqual(item.value);
+            }}
+            // onFocus={() => setIsSPFocus(true)}
+            data={SPEqualList}
+            value={SpEqual}
+            labelField="label"
+            valueField="value"
+            onChangeText={(item) => console.log('change text')}
+          />
+          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+            {Object.entries(SpEqualMode).map(([name, checked], index) => (
+              <Pressable
+                key={index}
+                onPress={() => handleFilterChange(name, 'SpEqualMode')}
+              >
+                <View style={{flexDirection: 'row'}}>
+                  <Checkbox
+                    status={checked ? 'checked' : 'unchecked'}
+                    // style={styles.checkbox}
+                    color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                  />
+                  <Text style={{alignSelf: 'center'}}>{name}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <Divider />
+        <View style={[styles.GroupContainer]}>
+          <Text style={[styles.text, {paddingLeft: 10, alignSelf: 'center'}]}>
+            ヒット数
+          </Text>
+          <Dropdown
+            dropdownPosition="top"
+            placeholder="selected"
+            activeColor={theme.dark ? '#B794F6' : '#00BFA5'}
+            selectedTextStyle={styles.dropdownPlaceholderText}
+            placeholderStyle={styles.dropdownPlaceholderText}
+            // selectedStyle={styles.dropdownContainer}r
+            style={[
+              styles.dropdownListContainer,
+              // isSPFocus && {borderColor: 'blue'},
+            ]}
+            containerStyle={styles.dropdownContainer}
+            itemTextStyle={styles.text}
+            onChange={(item: {label: string; value: string}) => {
+              setHit(item.value);
+            }}
+            // onFocus={() => setIsSPFocus(true)}
+            data={hitList}
+            value={hit}
+            labelField="label"
+            valueField="value"
+            onChangeText={(item) => console.log('change text')}
+          />
+          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+            {Object.entries(hitMode).map(([name, checked], index) => (
+              <Pressable
+                key={index}
+                onPress={() => handleFilterChange(name, 'hitMode')}
+              >
+                <View style={{flexDirection: 'row'}}>
+                  <Checkbox
+                    status={checked ? 'checked' : 'unchecked'}
+                    // style={styles.checkbox}
+                    color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                  />
+                  <Text style={{alignSelf: 'center'}}>{name}</Text>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <Divider />
+        {showExtendedFilter && (
+          <>
+            <Text style={[styles.text, {margin: 10, alignSelf: 'center'}]}>
+              スキル効果
+            </Text>
+            <Divider />
+            <View style={styles.GroupContainer}>
+              {Object.entries(damageBuff).map(([name, checked], index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => handleExFilterChange(name, 'damageBuff')}
+                >
+                  <View style={{flexDirection: 'row'}}>
+                    <Checkbox
+                      status={checked ? 'checked' : 'unchecked'}
+                      // style={styles.checkbox}
+                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                    />
+                    <Text style={{alignSelf: 'center'}}>{name}</Text>
+                  </View>
+                </Pressable>
+              ))}
             </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(weapon).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'weapon')}
-          >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
+            <Divider />
+            <View style={styles.GroupContainer}>
+              {Object.entries(defendBuff).map(([name, checked], index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => handleExFilterChange(name, 'defendBuff')}
+                >
+                  <View style={{flexDirection: 'row'}}>
+                    <Checkbox
+                      status={checked ? 'checked' : 'unchecked'}
+                      // style={styles.checkbox}
+                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                    />
+                    <Text style={{alignSelf: 'center'}}>{name}</Text>
+                  </View>
+                </Pressable>
+              ))}
             </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(element).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'element')}
-          >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
+            <Divider />
+            <View style={styles.GroupContainer}>
+              {Object.entries(damageDebuff).map(([name, checked], index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => handleExFilterChange(name, 'damageDebuff')}
+                >
+                  <View style={{flexDirection: 'row'}}>
+                    <Checkbox
+                      status={checked ? 'checked' : 'unchecked'}
+                      // style={styles.checkbox}
+                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                    />
+                    <Text style={{alignSelf: 'center'}}>{name}</Text>
+                  </View>
+                </Pressable>
+              ))}
             </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(role).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'role')}
-          >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
+            <Divider />
+            <View style={styles.GroupContainer}>
+              {Object.entries(defendDebuff).map(([name, checked], index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => handleExFilterChange(name, 'defendDebuff')}
+                >
+                  <View style={{flexDirection: 'row'}}>
+                    <Checkbox
+                      status={checked ? 'checked' : 'unchecked'}
+                      // style={styles.checkbox}
+                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
+                    />
+                    <Text style={{alignSelf: 'center'}}>{name}</Text>
+                  </View>
+                </Pressable>
+              ))}
             </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <View style={styles.modalCheckBoxGroup}>
-        {Object.entries(target).map(([name, checked], index) => (
-          <Pressable
-            key={index}
-            onPress={() => handleFilterChange(name, 'target')}
-          >
-            <View style={{flexDirection: 'row'}}>
-              <Checkbox
-                status={checked ? 'checked' : 'unchecked'}
-                // style={styles.checkbox}
-                color={theme.dark ? '#B794F6' : '#2E2E2D'}
-              />
-              <Text style={{alignSelf: 'center'}}>{name}</Text>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-      <Divider />
-      <Button
-        mode={'contained-tonal'}
-        style={{width: '30%', alignSelf: 'center', margin: 10}}
-        onPress={() => {
-          console.log('close');
-          nav.goBack();
-        }}
-      >
-        Submit
-      </Button>
-    </View>
+            <Divider />
+          </>
+        )}
+        <Button
+          mode={'contained-tonal'}
+          style={{width: '40%', alignSelf: 'center', margin: 10}}
+          onPress={() => {
+            SetShowExtendedFilter(!showExtendedFilter);
+          }}
+        >
+          スキル効果選択
+        </Button>
+        <Button
+          mode={'contained-tonal'}
+          style={{width: '30%', alignSelf: 'center', margin: 10}}
+          onPress={() => {
+            console.log('close');
+            nav.goBack();
+          }}
+        >
+          Submit
+        </Button>
+      </ScrollView>
+    </>
   );
 }

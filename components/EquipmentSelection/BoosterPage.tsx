@@ -209,16 +209,13 @@ export default function BoosterPage({index}: {index: number}) {
                 ]}
                 containerStyle={styles.dropdownContainer}
                 itemTextStyle={styles.text}
-                onChange={(value: any) => {
-                  handleValueChange(chipIndex, value);
+                onChange={(item: {label: string; value: string}) => {
+                  handleValueChange(chipIndex, item);
                 }}
                 onFocus={() => setIsFocus(true)}
                 value={selectedChip}
-                //@ts-ignore
                 data={itemList}
-                //@ts-ignore
                 labelField={'label'}
-                //@ts-ignore
                 valueField={'value'}
               />
             </View>

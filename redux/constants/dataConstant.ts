@@ -237,6 +237,53 @@ export const INI_ROLE = {
   Healer: false,
 };
 
+export const INI_SELECTEDMODE = {
+  All: true,
+  以上: false,
+  のみ: false,
+  以下: false,
+};
+export const INI_DAMAGEBUFF = {
+  エンハンス: false,
+  ドーピング: false,
+  属性エンハンス: false,
+  クリティカル率: false,
+  クリティカルダメージ: false,
+  チャージ: false,
+  属性フィールド小: false,
+  属性フィールド: false,
+  属性フィールド強: false,
+  心眼: false,
+  闘志: false,
+  士気: false,
+};
+export const INI_DEFBUFF = {
+  防御力上昇: false,
+  SP回復: false,
+  DP回復: false,
+  DP復活: false,
+  無敵: false,
+  ウイルス回復: false,
+  スキル回数回復: false,
+  デバフ無効: false,
+};
+export const INI_DAMAGEDEBUFF = {
+  防御力下降: false,
+  属性防御力下降: false,
+  脆弱: false,
+  厄: false,
+  耐性解除: false,
+  バフ解除: false,
+};
+export const INI_DEFDEBUFF = {
+  封印: false,
+  スタン: false,
+  混乱: false,
+  攻撃力下降: false,
+  敵の防御力上昇: false,
+  麻痺: false,
+};
+
 export const initialStyleData: styleData[] = [
   {
     Cid: '-1',
