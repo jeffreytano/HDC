@@ -12,7 +12,13 @@ export default function Layout() {
       <Stack.Screen
         name="FilterPage"
         options={{
-          headerTitle: 'Filter',
+          headerTitle: 'フィルター',
+        }}
+      />
+      <Stack.Screen
+        name="SkillEffectFilter"
+        options={{
+          headerTitle: 'スキル効果',
         }}
       />
     </Stack>

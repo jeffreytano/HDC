@@ -29,8 +29,9 @@ import {group} from '../../redux/dataType';
 import {useState} from 'react';
 import {useNavigation} from 'expo-router';
 import {Dropdown} from 'react-native-element-dropdown';
-import Layout from './_layout';
-import {SwitchThumb} from 'tamagui';
+import {changeFilter} from '../../redux/reducers/styleData';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
 
 export default function FilterPage() {
   const INI_SELECTEDMODE = {All: true, 以上: false, のみ: false, 以下: false};
@@ -56,6 +57,10 @@ export default function FilterPage() {
     hitMode: INI_SELECTEDMODE,
   };
 
+  const initial_rarity: typeof INI_RARITY = useSelector(
+    (state: RootState) => state.styleData.rarity,
+  );
+
   const [rarity, setRarity] = useState(INI_RARITY);
   const [element, setElement] = useState(INI_ELEMENT);
   const [weapon, setWeapon] = useState(INI_WEAPON);
@@ -78,13 +83,13 @@ export default function FilterPage() {
   const [SPUsageMode, setSPUsageMode] = useState(INI_SELECTEDMODE);
   const [SpEqualMode, setSpEqualMode] = useState(INI_SELECTEDMODE);
   const [hitMode, setHitMode] = useState(INI_SELECTEDMODE);
-  const [showExtendedFilter, SetShowExtendedFilter] = useState(false);
   const [damageBuff, setDamageBuff] = useState(INI_DAMAGEBUFF);
   const [defendBuff, setDefendBuff] = useState(INI_DEFBUFF);
   const [damageDebuff, setDamageDebuff] = useState(INI_DAMAGEDEBUFF);
   const [defendDebuff, setDefendDebuff] = useState(INI_DEFDEBUFF);
   const nav = useNavigation();
   const theme = useTheme();
+  const dispatch = useDispatch();
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.dark ? '#121212' : '#FFFFFF',
@@ -290,6 +295,39 @@ export default function FilterPage() {
     }
   };
 
+  const transformPayload = (
+    item:
+      | typeof INI_RARITY
+      | typeof INI_CLASS
+      | typeof INI_ELEMENT
+      | typeof INI_WEAPON
+      | typeof INI_ROLE
+      | typeof INI_SKILL_TARGET,
+  ) => {
+    if (item.All) {
+      return ['All'];
+    } else {
+      return Object.entries(item)
+        .filter(([_, value]) => value === true)
+        .map(([key]) => key);
+    }
+  };
+
+  const submitFilter = () => {
+    const payload = {
+      rarity: transformPayload(rarity),
+      classes: transformPayload(classes),
+      weapon: transformPayload(weapon),
+      element: transformPayload(element),
+      role: transformPayload(role),
+      target: transformPayload(target),
+      SpUsage: {SP: SPUsage, Mode: SPUsageMode},
+      SpEqual: {SP: SpEqual, Mode: SpEqualMode},
+      hit: {hit: hit, Mode: hitMode},
+    };
+    dispatch(changeFilter(payload));
+    nav.goBack();
+  };
   return (
     <>
       <ScrollView style={styles.container}>
@@ -543,87 +581,7 @@ export default function FilterPage() {
           </View>
         </View>
         <Divider />
-        {showExtendedFilter && (
-          <>
-            <Text style={[styles.text, {margin: 10, alignSelf: 'center'}]}>
-              スキル効果
-            </Text>
-            <Divider />
-            <View style={styles.GroupContainer}>
-              {Object.entries(damageBuff).map(([name, checked], index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => handleExFilterChange(name, 'damageBuff')}
-                >
-                  <View style={{flexDirection: 'row'}}>
-                    <Checkbox
-                      status={checked ? 'checked' : 'unchecked'}
-                      // style={styles.checkbox}
-                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
-                    />
-                    <Text style={{alignSelf: 'center'}}>{name}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Divider />
-            <View style={styles.GroupContainer}>
-              {Object.entries(defendBuff).map(([name, checked], index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => handleExFilterChange(name, 'defendBuff')}
-                >
-                  <View style={{flexDirection: 'row'}}>
-                    <Checkbox
-                      status={checked ? 'checked' : 'unchecked'}
-                      // style={styles.checkbox}
-                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
-                    />
-                    <Text style={{alignSelf: 'center'}}>{name}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Divider />
-            <View style={styles.GroupContainer}>
-              {Object.entries(damageDebuff).map(([name, checked], index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => handleExFilterChange(name, 'damageDebuff')}
-                >
-                  <View style={{flexDirection: 'row'}}>
-                    <Checkbox
-                      status={checked ? 'checked' : 'unchecked'}
-                      // style={styles.checkbox}
-                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
-                    />
-                    <Text style={{alignSelf: 'center'}}>{name}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Divider />
-            <View style={styles.GroupContainer}>
-              {Object.entries(defendDebuff).map(([name, checked], index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => handleExFilterChange(name, 'defendDebuff')}
-                >
-                  <View style={{flexDirection: 'row'}}>
-                    <Checkbox
-                      status={checked ? 'checked' : 'unchecked'}
-                      // style={styles.checkbox}
-                      color={theme.dark ? '#B794F6' : '#2E2E2D'}
-                    />
-                    <Text style={{alignSelf: 'center'}}>{name}</Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Divider />
-          </>
-        )}
-        <Button
+        {/* <Button
           mode={'contained-tonal'}
           style={{width: '40%', alignSelf: 'center', margin: 10}}
           onPress={() => {
@@ -631,16 +589,25 @@ export default function FilterPage() {
           }}
         >
           スキル効果選択
+        </Button> */}
+        <Button
+          mode={'contained-tonal'}
+          style={{width: '30%', alignSelf: 'center', margin: 10}}
+          onPress={() => {
+            console.log('reset');
+          }}
+        >
+          Reset
         </Button>
         <Button
           mode={'contained-tonal'}
           style={{width: '30%', alignSelf: 'center', margin: 10}}
           onPress={() => {
-            console.log('close');
-            nav.goBack();
+            submitFilter();
+            nav.canGoBack();
           }}
         >
-          Submit
+          Save
         </Button>
       </ScrollView>
     </>

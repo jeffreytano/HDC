@@ -34,16 +34,12 @@ import {
   INI_WEAPON,
 } from '../../redux/constants/dataConstant';
 
-type SearchParamType = {
-  SearchSlot: string;
-};
-
 // const inititalRarity: {[key: string]: boolean} = RARITY.reduce((acc, item) => {
 //   acc[item] = true;
 //   return acc;
 // }, {});
 
-export default function SearchSlot() {
+export default function CloneSearchSlot({slotId}: {slotId: string}) {
   const FilterOption = {
     rarity: INI_RARITY,
     element: INI_ELEMENT,
@@ -59,7 +55,6 @@ export default function SearchSlot() {
     hitRange: 'All',
   };
 
-  const {SearchSlot} = useLocalSearchParams<SearchParamType>();
   const [queryKeyword, setQueryKeyWords] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -74,7 +69,7 @@ export default function SearchSlot() {
   const styleImage = useSelector((state: RootState) => state.styleData.image);
 
   useEffect(() => {
-    console.log('slotId', SearchSlot);
+    console.log('slotId', slotId);
     // checkUpdate('CharacterDataBase');
   }, []);
 
@@ -160,7 +155,7 @@ export default function SearchSlot() {
   };
 
   const renderItem = (listItem: ListRenderItemInfo<styleData>) => (
-    <SearchItem slotId={SearchSlot} style={listItem.item}></SearchItem>
+    <SearchItem slotId={slotId} style={listItem.item}></SearchItem>
   );
 
   const keyExtractor = (item: styleData) => item.Sid.toString(); // Use a unique identifier from your data
@@ -212,25 +207,12 @@ export default function SearchSlot() {
           placeholderTextColor={theme.dark ? '#FFFFFF' : '#000000'}
           cursorColor={theme.dark ? '#BDBDBD' : '#FFFFFF'}
         />
-      </View>
-      <View style={{flexDirection: 'row'}}>
-        <Text
-          style={[
-            styles.container,
-            {
-              color: theme.dark ? '#FFFFFF' : '#000000',
-              flex: 4,
-            },
-          ]}
-        >
-          Result found: {styleData?.length}
-        </Text>
         <Button
           mode={'contained'}
           style={{flex: 1}}
           onPress={() => {
             router.push({
-              pathname: './SkillEffectFilter',
+              pathname: '/Search/GroupedSearch',
             });
           }}
         >
@@ -241,14 +223,23 @@ export default function SearchSlot() {
           style={{flex: 1}}
           onPress={() => {
             router.push({
-              pathname: './FilterPage',
+              pathname: '/Search/FilterPage',
             });
           }}
         >
           Filter
         </Button>
       </View>
-
+      <Text
+        style={[
+          styles.container,
+          {
+            color: theme.dark ? '#FFFFFF' : '#000000',
+          },
+        ]}
+      >
+        Result found: {styleData?.length}
+      </Text>
       {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
       <FlatList
         data={resultData}
