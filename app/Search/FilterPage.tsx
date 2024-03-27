@@ -33,6 +33,14 @@ import {changeFilter} from '../../redux/reducers/styleData';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 
+type filterGroup =
+  | typeof INI_RARITY
+  | typeof INI_CLASS
+  | typeof INI_ELEMENT
+  | typeof INI_WEAPON
+  | typeof INI_ROLE
+  | typeof INI_SKILL_TARGET;
+
 export default function FilterPage() {
   const INI_SELECTEDMODE = {All: true, 以上: false, のみ: false, 以下: false};
   const skillEffect = {
@@ -57,11 +65,24 @@ export default function FilterPage() {
     hitMode: INI_SELECTEDMODE,
   };
 
-  const initial_rarity: typeof INI_RARITY = useSelector(
+  const initial_rarity: filterGroup = useSelector(
     (state: RootState) => state.styleData.rarity,
   );
 
-  const [rarity, setRarity] = useState(INI_RARITY);
+  console.log(initial_rarity);
+
+  const transformFilterArray = (array: Array<string>, base: filterGroup) => {
+    const newValue = base;
+    newValue['All'] = false;
+    array.map((key: string) => {
+      newValue[key as keyof typeof base] = true;
+      console.log(newValue[key as keyof typeof base]);
+      console.log(key, newValue);
+    });
+    return newValue;
+  };
+
+  const [rarity, setRarity] = useState(initial_rarity);
   const [element, setElement] = useState(INI_ELEMENT);
   const [weapon, setWeapon] = useState(INI_WEAPON);
   const [classes, setClasses] = useState(INI_CLASS);
@@ -295,15 +316,7 @@ export default function FilterPage() {
     }
   };
 
-  const transformPayload = (
-    item:
-      | typeof INI_RARITY
-      | typeof INI_CLASS
-      | typeof INI_ELEMENT
-      | typeof INI_WEAPON
-      | typeof INI_ROLE
-      | typeof INI_SKILL_TARGET,
-  ) => {
+  const transformPayload = (item: filterGroup) => {
     if (item.All) {
       return ['All'];
     } else {
@@ -315,12 +328,12 @@ export default function FilterPage() {
 
   const submitFilter = () => {
     const payload = {
-      rarity: transformPayload(rarity),
-      classes: transformPayload(classes),
-      weapon: transformPayload(weapon),
-      element: transformPayload(element),
-      role: transformPayload(role),
-      target: transformPayload(target),
+      rarity: rarity,
+      classes: classes,
+      weapon: weapon,
+      element: element,
+      role: role,
+      target: target,
       SpUsage: {SP: SPUsage, Mode: SPUsageMode},
       SpEqual: {SP: SpEqual, Mode: SpEqualMode},
       hit: {hit: hit, Mode: hitMode},

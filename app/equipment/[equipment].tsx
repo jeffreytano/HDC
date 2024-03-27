@@ -44,7 +44,6 @@ export default function equipment() {
     },
   });
 
-  const Page2 = () => <Text style={styles.text}>This is Page 2</Text>;
   const Page3 = () => <Text style={styles.text}>This is Page 3</Text>;
 
   const renderPage = () => {
