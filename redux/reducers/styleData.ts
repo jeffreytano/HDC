@@ -54,8 +54,6 @@ const styleDataSlice = createSlice({
       state.SpUsage = SpUsage;
       state.SpEqual = SpEqual;
       state.hit = hit;
-
-      console.log(state.rarity, state.element);
     },
     // rarity: (state, action) => {
     //   const rarityChange = action.payload;

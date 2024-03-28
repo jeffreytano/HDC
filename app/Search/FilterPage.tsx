@@ -69,7 +69,25 @@ export default function FilterPage() {
     (state: RootState) => state.styleData.rarity,
   );
 
-  console.log(initial_rarity);
+  const initial_element: filterGroup = useSelector(
+    (state: RootState) => state.styleData.element,
+  );
+
+  const initial_weapon: filterGroup = useSelector(
+    (state: RootState) => state.styleData.weapon,
+  );
+
+  const initial_class: filterGroup = useSelector(
+    (state: RootState) => state.styleData.class,
+  );
+
+  const initial_role: filterGroup = useSelector(
+    (state: RootState) => state.styleData.role,
+  );
+
+  const initial_target: filterGroup = useSelector(
+    (state: RootState) => state.styleData.target,
+  );
 
   const transformFilterArray = (array: Array<string>, base: filterGroup) => {
     const newValue = base;
@@ -83,11 +101,11 @@ export default function FilterPage() {
   };
 
   const [rarity, setRarity] = useState(initial_rarity);
-  const [element, setElement] = useState(INI_ELEMENT);
-  const [weapon, setWeapon] = useState(INI_WEAPON);
-  const [classes, setClasses] = useState(INI_CLASS);
-  const [role, setRole] = useState(INI_ROLE);
-  const [target, setTarget] = useState(INI_SKILL_TARGET);
+  const [element, setElement] = useState(initial_element);
+  const [weapon, setWeapon] = useState(initial_weapon);
+  const [classes, setClasses] = useState(initial_class);
+  const [role, setRole] = useState(initial_role);
+  const [target, setTarget] = useState(initial_target);
   const [SPUsage, setSPUsage] = useState('1');
   const [SpEqual, setSpEqual] = useState('0');
   const [hit, setHit] = useState('0');
@@ -608,6 +626,18 @@ export default function FilterPage() {
           style={{width: '30%', alignSelf: 'center', margin: 10}}
           onPress={() => {
             console.log('reset');
+            setRarity(INI_RARITY);
+            setClasses(INI_CLASS);
+            setWeapon(INI_WEAPON);
+            setElement(INI_ELEMENT);
+            setRole(INI_ROLE);
+            setTarget(INI_SKILL_TARGET);
+            setSPUsage('1');
+            setSPUsageMode(INI_SELECTEDMODE);
+            setSpEqual('0');
+            setSpEqualMode(INI_SELECTEDMODE);
+            setHit('0');
+            setHitMode(INI_SELECTEDMODE);
           }}
         >
           Reset

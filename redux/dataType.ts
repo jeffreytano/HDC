@@ -36,16 +36,16 @@ export interface styleDataDetail {
 export interface styleData {
   Cid: string;
   name: string;
-  class?: string;
-  weapon?: number;
+  class: string;
+  weapon: number;
   chKey: string;
   Sid: number;
   styleName: string;
-  rarity?: 'A' | 'S' | 'SS' | 'Free';
+  rarity: 'A' | 'S' | 'SS' | 'Free';
   searchKey: string;
-  role?: string;
-  element?: number;
-  target?: number;
+  role: string;
+  element: number;
+  target: number;
   image?: string;
   skill?: string;
   statType?: string;

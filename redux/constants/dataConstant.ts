@@ -288,6 +288,12 @@ export const initialStyleData: styleData[] = [
   {
     Cid: '-1',
     name: 'dummpy name',
+    class: '31A',
+    rarity: 'SS',
+    element: 0,
+    weapon: 0,
+    role: 'Attacker',
+    target: 0,
     chKey: '',
     Sid: -1,
     styleName: 'dummyStyleName',

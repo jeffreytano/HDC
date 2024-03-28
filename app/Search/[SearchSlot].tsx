@@ -26,17 +26,28 @@ import {styleData, stat} from '../../redux/dataType';
 import {useTheme} from '@react-navigation/native';
 import {Button, Checkbox, Divider} from 'react-native-paper';
 import {
+  ELEMENT,
   INI_CLASS,
   INI_ELEMENT,
   INI_RARITY,
   INI_ROLE,
   INI_SKILL_TARGET,
   INI_WEAPON,
+  SKILL_TARGET,
+  WEAPON,
 } from '../../redux/constants/dataConstant';
 
 type SearchParamType = {
   SearchSlot: string;
 };
+
+type filterGroup =
+  | typeof INI_RARITY
+  | typeof INI_CLASS
+  | typeof INI_ELEMENT
+  | typeof INI_WEAPON
+  | typeof INI_ROLE
+  | typeof INI_SKILL_TARGET;
 
 // const inititalRarity: {[key: string]: boolean} = RARITY.reduce((acc, item) => {
 //   acc[item] = true;
@@ -64,6 +75,7 @@ export default function SearchSlot() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const [resultData, setResultData] = useState<styleData[]>();
+  const [filteredData, setFilteredData] = useState<styleData[]>();
   const [imageData, setImageData] = useState('');
   // const [styleData, setStyleData] = useState<styleData[]>();
   // let styleData = [];
@@ -72,6 +84,93 @@ export default function SearchSlot() {
   const router = useRouter();
   const styleData = useSelector((state: RootState) => state.styleData.styles);
   const styleImage = useSelector((state: RootState) => state.styleData.image);
+
+  const rarity: filterGroup = useSelector(
+    (state: RootState) => state.styleData.rarity,
+  );
+
+  const element: filterGroup = useSelector(
+    (state: RootState) => state.styleData.element,
+  );
+
+  const weapon: filterGroup = useSelector(
+    (state: RootState) => state.styleData.weapon,
+  );
+
+  const classes: filterGroup = useSelector(
+    (state: RootState) => state.styleData.class,
+  );
+
+  const role: filterGroup = useSelector(
+    (state: RootState) => state.styleData.role,
+  );
+
+  const target: filterGroup = useSelector(
+    (state: RootState) => state.styleData.target,
+  );
+
+  const transformPayload = (item: filterGroup) => {
+    if (item.All) {
+      return ['All'];
+    } else {
+      return Object.entries(item)
+        .filter(([_, value]) => value === true)
+        .map(([key]) => key);
+    }
+  };
+
+  const initialFilter = [
+    INI_RARITY,
+    INI_ELEMENT,
+    INI_WEAPON,
+    INI_CLASS,
+    INI_ROLE,
+    INI_SKILL_TARGET,
+  ];
+  const filterKeyIndex = [
+    'rarity',
+    'element',
+    'weapon',
+    'class',
+    'role',
+    'target',
+  ];
+  const filter = [rarity, element, weapon, classes, role, target].map(
+    (item: filterGroup) => {
+      return transformPayload(item);
+    },
+  );
+
+  const filterStyle = (
+    target: styleData,
+    filter: Array<string>,
+    key: string,
+  ) => {
+    if (filter[0] === 'All') {
+      return true;
+    }
+    switch (key) {
+      case 'element':
+        return filter.some(
+          (element) =>
+            element === ELEMENT[target[key as keyof styleData] as number],
+        );
+      case 'weapon':
+        return filter.some(
+          (element) =>
+            element === WEAPON[target[key as keyof styleData] as number],
+        );
+      case 'target':
+        return filter.some(
+          (element) =>
+            element === SKILL_TARGET[target[key as keyof styleData] as number],
+        );
+      default:
+        return filter.some(
+          (element) => element === target[key as keyof styleData],
+        );
+    }
+  };
 
   useEffect(() => {
     console.log('slotId', SearchSlot);
@@ -82,24 +181,38 @@ export default function SearchSlot() {
     if (styleData.length > 2) {
       setIsLoading(false);
     }
-    setResultData(styleData);
-  }, [styleData, styleImage]);
+    const allStyle = styleData;
+
+    let filteredStyle = allStyle.filter((style: styleData) => {
+      const result = filter.map((filter: Array<string>, index: number) => {
+        const key = filterKeyIndex[index];
+        return filterStyle(style, filter, key);
+      });
+      return !result.some((value) => value === false);
+    });
+    setFilteredData(filteredStyle);
+  }, [styleData, styleImage, rarity, element, weapon, classes, role, target]);
+
+  useEffect(() => {
+    handleSearch(queryKeyword);
+  }, [filteredData]);
 
   const theme = useTheme();
 
   const handleSearch = (query: string) => {
-    if (query && styleData) {
-      const newData = styleData.filter((item) => {
+    console.log('handled search');
+    if (query && filteredData) {
+      const newData = filteredData.filter((item) => {
         if (item?.searchKey || item?.styleName || item?.chKey || item.class) {
           const itemData = item?.searchKey
             ? item.searchKey.toUpperCase()
             : ''.toUpperCase();
           const textData = query.toUpperCase();
-          const styleData = item?.styleName.toUpperCase();
+          const filteredData = item?.styleName.toUpperCase();
           const chData = item?.chKey.toUpperCase();
           const chClass = item?.class?.toUpperCase();
           return (
-            styleData
+            filteredData
               .concat(' ', chClass ? chClass : '', ' ', itemData, ' ', chData)
               .indexOf(textData) > -1
           );
@@ -108,7 +221,7 @@ export default function SearchSlot() {
       setResultData(newData);
       setQueryKeyWords(query);
     } else {
-      setResultData(styleData);
+      setResultData(filteredData);
       setQueryKeyWords(query);
     }
   };
