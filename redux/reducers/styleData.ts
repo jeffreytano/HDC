@@ -21,9 +21,9 @@ const styleDataSlice = createSlice({
     element: INI_ELEMENT,
     role: INI_ROLE,
     target: INI_SKILL_TARGET,
-    SpUsage: {SP: 0, Mode: 'All'},
-    SpEqual: {SP: 0, Mode: 'All'},
-    hit: {hit: 0, Mode: 'All'},
+    SpUsage: {value: 1, Mode: 'All'},
+    SpEqual: {value: 0, Mode: 'All'},
+    hit: {value: 0, Mode: 'All'},
   },
   reducers: {
     FetchStyleList: (state, action) => {
@@ -54,6 +54,8 @@ const styleDataSlice = createSlice({
       state.SpUsage = SpUsage;
       state.SpEqual = SpEqual;
       state.hit = hit;
+
+      console.log('redux', state.SpUsage, state.SpEqual, state.hit);
     },
     // rarity: (state, action) => {
     //   const rarityChange = action.payload;

@@ -299,6 +299,7 @@ export const initialStyleData: styleData[] = [
     styleName: 'dummyStyleName',
     searchKey: 'dummy searchkey',
     SPusage: 0,
+    SPequal: 0,
     hit: 0,
   },
 ];

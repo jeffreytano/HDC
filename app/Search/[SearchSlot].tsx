@@ -108,6 +108,9 @@ export default function SearchSlot() {
   const target: filterGroup = useSelector(
     (state: RootState) => state.styleData.target,
   );
+  const SpUsage = useSelector((state: RootState) => state.styleData.SpUsage);
+  const SpEqual = useSelector((state: RootState) => state.styleData.SpEqual);
+  const hit = useSelector((state: RootState) => state.styleData.hit);
 
   const transformPayload = (item: filterGroup) => {
     if (item.All) {
@@ -134,6 +137,9 @@ export default function SearchSlot() {
     'class',
     'role',
     'target',
+    'SpUsage',
+    'SpEqual',
+    'hit',
   ];
   const filter = [rarity, element, weapon, classes, role, target].map(
     (item: filterGroup) => {
@@ -165,10 +171,44 @@ export default function SearchSlot() {
           (element) =>
             element === SKILL_TARGET[target[key as keyof styleData] as number],
         );
+
       default:
         return filter.some(
           (element) => element === target[key as keyof styleData],
         );
+    }
+  };
+
+  const filterByNumbers = (
+    target: styleData,
+    filter: {value: number; Mode: string},
+    key: string,
+  ) => {
+    const {value, Mode} = filter;
+    if (Mode === 'All') {
+      return true;
+    }
+    switch (key) {
+      case 'SpUsage':
+        if (Mode == '以上') {
+          return target.SPusage >= value;
+        } else if (Mode == 'のみ') {
+          return target.SPusage == value;
+        } else return target.SPusage <= value;
+      case 'SpEqual':
+        if (Mode == '以上') {
+          return target.SPequal >= value;
+        } else if (Mode == 'のみ') {
+          return target.SPequal == value;
+        } else return target.SPequal <= value;
+      case 'hit':
+        if (Mode == '以上') {
+          return target.hit >= value;
+        } else if (Mode == 'のみ') {
+          return target.hit == value;
+        } else return target.hit <= value;
+      default:
+        return true;
     }
   };
 
@@ -188,7 +228,13 @@ export default function SearchSlot() {
         const key = filterKeyIndex[index];
         return filterStyle(style, filter, key);
       });
-      return !result.some((value) => value === false);
+      const numberResult = [SpUsage, SpEqual, hit].map(
+        (item: any, index: number) => {
+          const key = ['SpUsage', 'SpEqual', 'hit'][index];
+          return filterByNumbers(style, item, key);
+        },
+      );
+      return !result.concat(numberResult).some((value) => value === false);
     });
     setFilteredData(filteredStyle);
   }, [styleData, styleImage, rarity, element, weapon, classes, role, target]);

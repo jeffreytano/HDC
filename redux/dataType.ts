@@ -49,9 +49,9 @@ export interface styleData {
   image?: string;
   skill?: string;
   statType?: string;
-  SPequal?: number;
-  SPusage?: number;
-  hit?: number;
+  SPequal: number;
+  SPusage: number;
+  hit: number;
 }
 
 export interface jsonCharStat {

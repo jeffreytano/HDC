@@ -89,13 +89,21 @@ export default function FilterPage() {
     (state: RootState) => state.styleData.target,
   );
 
+  const initial_SpUsage = useSelector(
+    (state: RootState) => state.styleData.SpUsage,
+  );
+
+  const initial_SpEqual = useSelector(
+    (state: RootState) => state.styleData.SpEqual,
+  );
+
+  const initial_hit = useSelector((state: RootState) => state.styleData.hit);
+
   const transformFilterArray = (array: Array<string>, base: filterGroup) => {
     const newValue = base;
     newValue['All'] = false;
     array.map((key: string) => {
       newValue[key as keyof typeof base] = true;
-      console.log(newValue[key as keyof typeof base]);
-      console.log(key, newValue);
     });
     return newValue;
   };
@@ -106,9 +114,9 @@ export default function FilterPage() {
   const [classes, setClasses] = useState(initial_class);
   const [role, setRole] = useState(initial_role);
   const [target, setTarget] = useState(initial_target);
-  const [SPUsage, setSPUsage] = useState('1');
-  const [SpEqual, setSpEqual] = useState('0');
-  const [hit, setHit] = useState('0');
+  const [SPUsage, setSPUsage] = useState(initial_SpUsage.value.toString());
+  const [SpEqual, setSpEqual] = useState(initial_SpEqual.value.toString());
+  const [hit, setHit] = useState(initial_hit.value.toString());
   const [isSPFocus, setIsSPFocus] = useState(false);
   const SPUsageList = Array.from({length: 20}, (_, index) => {
     return {label: (index + 1).toString(), value: (index + 1).toString()};
@@ -119,6 +127,13 @@ export default function FilterPage() {
   const hitList = Array.from({length: 21}, (_, index) => {
     return {label: index.toString(), value: index.toString()};
   });
+  // const [SPUsageMode, setSPUsageMode] = useState(
+  //   transformModeArray(initial_SpUsage.Mode),
+  // );
+  // const [SpEqualMode, setSpEqualMode] = useState(
+  //   transformModeArray(initial_SpEqual.Mode),
+  // );
+  // const [hitMode, setHitMode] = useState(transformModeArray(initial_hit.Mode));
   const [SPUsageMode, setSPUsageMode] = useState(INI_SELECTEDMODE);
   const [SpEqualMode, setSpEqualMode] = useState(INI_SELECTEDMODE);
   const [hitMode, setHitMode] = useState(INI_SELECTEDMODE);
@@ -334,7 +349,7 @@ export default function FilterPage() {
     }
   };
 
-  const transformPayload = (item: filterGroup) => {
+  const transformPayload = (item: filterGroup | typeof INI_SELECTEDMODE) => {
     if (item.All) {
       return ['All'];
     } else {
@@ -345,6 +360,8 @@ export default function FilterPage() {
   };
 
   const submitFilter = () => {
+    console.log(SPUsageMode);
+    console.log(transformPayload(SPUsageMode));
     const payload = {
       rarity: rarity,
       classes: classes,
@@ -352,9 +369,9 @@ export default function FilterPage() {
       element: element,
       role: role,
       target: target,
-      SpUsage: {SP: SPUsage, Mode: SPUsageMode},
-      SpEqual: {SP: SpEqual, Mode: SpEqualMode},
-      hit: {hit: hit, Mode: hitMode},
+      SpUsage: {value: SPUsage, Mode: transformPayload(SPUsageMode)},
+      SpEqual: {value: SpEqual, Mode: transformPayload(SpEqualMode)},
+      hit: {value: hit, Mode: transformPayload(hitMode)},
     };
     dispatch(changeFilter(payload));
     nav.goBack();
